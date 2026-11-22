@@ -13,11 +13,11 @@ DuxConsole/
 │   │   ├── glyphs/                  # InputGlyph (<kbd> vs SVG), StatusBadge, AvatarBadge
 │   │   ├── surfaces/                # SlantedSurface, SlantedImage
 │   │   └── text/                    # TestText, SectionTitle, MetricLabel
-│   └── widgets/                     # Bloques compuestos (WindowCarousel, MediaPlayerCard, AudioMixerRow...)
+│   └── widgets/                     # Bloques compuestos (CarouselView, WindowCarousel, MediaPlayerCard, AudioMixerRow...)
 ├── core/
 │   ├── shell/                       # ConsoleOverlay, InputManager, IconsPadManager, I18n, StyleTokens, ScreenBase, ScreenRegistry, SlideManager
 │   ├── interaction/                 # FocusZone, LayerManager
-│   └── motion/                      # MotionTokens, InfiniteCarousel, MorphModal, SlideTransition
+│   └── motion/                      # MotionTokens, MorphModal, SlideTransition
 ├── locales/                         # Traducciones JSON (es.json, en.json, ...)
 ├── screens/
 │   ├── slides/                      # Vistas principales (capa "dashboard")
@@ -52,11 +52,11 @@ DuxConsole/
 | Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
 | Tokens de estilo | `core/shell/StyleTokens.qml` | Colores, `accentColor`, `skewAngle`, roles `"chrome"`/`"card"` y tintado de iconos desde `uiconfig.json` |
 | Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |
-| Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, expansión (`I.Select`) y bloqueo `inert` |
-| Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas y curvas) e `InfiniteCarousel.qml` |
+| Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, ajuste de índice cuando cambia el total, expansión (`I.Select`) y bloqueo `inert` |
+| Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas y curvas) |
 | Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml`, `ActionHints.qml` |
 | Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` (`InputGlyph.qml`), `surfaces/` (`SlantedSurface.qml`, `SlantedImage.qml`) y `text/` (`TestText.qml`) |
-| Widgets | `components/widgets/` | Bloques compuestos reutilizables |
+| Widgets | `components/widgets/` | Bloques compuestos reutilizables, incluido `CarouselView.qml` (limita delegados visibles y rota el modelo con `PathView`) |
 | Slides | `screens/slides/` | `TestScreen.qml`, `TestScreen2.qml` |
 | Overlays / Modals | `screens/overlays/`, `screens/modals/` | Ruedas orbitales (`"wheel"`) y modales (`"modal"`) |
 | Servicios | `services/` | `DconsoleBridge` (socket Go) y wrappers de `qs.Services` |

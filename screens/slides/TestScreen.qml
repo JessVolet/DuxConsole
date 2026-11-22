@@ -1,11 +1,13 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import qs.Common
 import "../../core/shell"
 import "../../core/interaction"
-import "../../core/motion"
 import "../../components/chrome"
 import "../../components/primitives/buttons"
 import "../../components/primitives/text"
+import "../../components/widgets"
 import "../modals"
 
 ScreenBase {
@@ -113,23 +115,26 @@ ScreenBase {
             layerName: "dashboard"
             layerManager: root.layerManager
             navUp: zoneButton
-            subItemCount: 6
+            subItemCount: carousel.count
             width: parent.width
             height: carousel.implicitHeight
             ringRadius: Theme.cornerRadius
 
             onExpandRequested: root.layerManager?.push("modal")
 
-            InfiniteCarousel {
+            CarouselView {
                 id: carousel
                 anchors.fill: parent
                 currentIndex: zoneCarousel.currentSubIndex
                 motionTokens: root.motionTokens
                 model: 6
                 delegate: FocusCard {
-                    property int index: 0
+                    required property int index
+                    width: selected ? carousel.selectedWidth : carousel.cardWidth
+                    height: selected ? carousel.selectedHeight : carousel.cardHeight
                     styleTokens: root.styleTokens
-                    selected: zoneCarousel.currentSubIndex === index
+                    motionTokens: root.motionTokens
+                    selected: index === carousel.selectedIndex
                     focused: zoneCarousel.active
                     title: root.tr("demo.item_prefix", "Item") + " #" + (index + 1)
                     subtitle: selected ? root.lastModalSelection : ""

@@ -8,10 +8,24 @@ SlantedSurface {
 
     property string title: ""
     property string subtitle: ""
+    property var motionTokens: null
 
     role: "card"
     implicitWidth: 180
     implicitHeight: 120
+
+    Behavior on width {
+        NumberAnimation {
+            duration: card.motionTokens ? card.motionTokens.durationNormal : 0
+            easing.type: card.motionTokens ? card.motionTokens.easingSnappy : Easing.Linear
+        }
+    }
+    Behavior on height {
+        NumberAnimation {
+            duration: card.motionTokens ? card.motionTokens.durationNormal : 0
+            easing.type: card.motionTokens ? card.motionTokens.easingSnappy : Easing.Linear
+        }
+    }
 
     Column {
         anchors.centerIn: parent

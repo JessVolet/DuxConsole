@@ -20,7 +20,6 @@
 - [x] `core/motion/MotionTokens.qml` (singleton / manager conectado a `uiconfig.json`: `animationsEnabled`, `speedScale`, curvas estándar).
 - [x] `core/shell/StyleTokens.qml` (recarga en vivo vía `uiconfig.json`: `accentColor`, `skewAngle`, `surfaceColor`, `iconTintEnabled`).
 - [x] Conectar `components/chrome/FocusRing.qml` a `MotionTokens` y `StyleTokens.accentColor` (eliminar duraciones hardcodeadas).
-- [x] `core/motion/InfiniteCarousel.qml` (carrusel horizontal infinito controlado por `FocusZone.currentSubIndex`).
 - [x] `components/primitives/surfaces/`: `SlantedSurface.qml` y `SlantedImage.qml` (`FocusCard.qml` basada en `SlantedSurface`).
 - [ ] `core/motion/MorphModal.qml` (wrapper animado que expande/contrae desde el rectángulo de la `FocusZone` origen vía `mapToItem()`).
 - [ ] `core/motion/SlideTransition.qml` (transición direccional izquierda/derecha en `SlideManager.qml`).
@@ -29,6 +28,7 @@
 - [x] `components/chrome/Bg.qml` y `components/chrome/FocusRing.qml`.
 - [x] `components/primitives/glyphs/InputGlyph.qml` y `components/primitives/text/TestText.qml`.
 - [x] `components/primitives/buttons/`: `ActionButton.qml`, `FocusCard.qml` (`PillButton.qml`, `ToggleChip.qml` pendientes).
+- [x] `components/widgets/CarouselView.qml` (muestra solo los elementos disponibles hasta seis; con más, conserva una ventana circular de seis delegados).
 - [ ] `components/primitives/sliders/`: `ConsoleSlider.qml`, `VolumeSlider.qml`, `ProgressBar.qml`.
 - [ ] `components/primitives/text/`: `SectionTitle.qml`, `MetricLabel.qml`.
 - [ ] `components/primitives/glyphs/`: `StatusBadge.qml`, `AvatarBadge.qml`.

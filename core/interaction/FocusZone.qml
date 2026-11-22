@@ -98,6 +98,13 @@ Item {
             layerManager.registerZone(zone)
     }
 
+    onSubItemCountChanged: {
+        if (subItemCount <= 0)
+            currentSubIndex = 0
+        else if (currentSubIndex < 0 || currentSubIndex >= subItemCount)
+            currentSubIndex = ((currentSubIndex % subItemCount) + subItemCount) % subItemCount
+    }
+
     Component.onCompleted: {
         if (layerManager)
             layerManager.registerZone(zone)

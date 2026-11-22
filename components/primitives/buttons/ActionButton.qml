@@ -22,7 +22,6 @@ SlantedSurface {
         spacing: Theme.spacingM
 
         InputGlyph {
-            anchors.verticalCenter: parent.verticalCenter
             visible: button.action !== ""
             iconsPadManager: button.iconsPadManager
             styleTokens: button.styleTokens
@@ -30,7 +29,6 @@ SlantedSurface {
         }
 
         StyledText {
-            anchors.verticalCenter: parent.verticalCenter
             text: button.label
             font.pixelSize: Theme.fontSizeMedium
             font.weight: Font.DemiBold

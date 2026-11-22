@@ -79,7 +79,7 @@ DuxConsole/
 3. `ConsoleOverlay` enruta las acciones:
    - `I.Refuse`: intenta cerrar la capa superior con `layerManager.pop()`; si `topLayer` ya es `"dashboard"`, cierra el overlay.
    - `I.ActionSlide.L` / `I.ActionSlide.R`: cambian de pantalla en `SlideManager` solo cuando `layerManager.topLayer === "dashboard"`.
-   - D-Pad, `I.ActionOption.L/R`, `I.Accept`, `I.Action`, `I.Select`: se delegan a `LayerManager.handleAction(...)`.
+   - D-Pad, `I.ActionOption.L/R`, `I.Accept`, `I.Action`, `I.Select`: se delegan a `NavigationManager.handleAction(...)`.
 4. `LayerManager` (`core/interaction/LayerManager.qml`) mantiene la pila de capas (`dashboard` -> `wheel` / `modal`) y recuerda la última `FocusZone` activa de cada capa.
 5. `FocusZone` (`core/interaction/FocusZone.qml`) aplica la regla `inert` cuando su `layerName` no coincide con `layerManager.topLayer`, bloqueando navegación, activación, expansión y ciclo rápido `LT`/`RT`.
 6. `FocusRing` (`components/chrome/FocusRing.qml`) sigue suavemente la geometría de `layerManager.activeZone` en el espacio de coordenadas del overlay.

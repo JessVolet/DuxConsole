@@ -33,5 +33,9 @@
     "expand": "Expandir",
     "cycle": "Cambiar ítem",
     "navigate": "Navegar"
+  },
+  "error": {
+    "title": "DuxConsole — Error de carga",
+    "close_hint": "Esc / B para cerrar el overlay"
   }
 }

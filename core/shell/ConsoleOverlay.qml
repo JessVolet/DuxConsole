@@ -14,7 +14,9 @@ PanelWindow {
 
     visible: active
     onActiveChanged: {
-        if (!active) {
+        if (active) {
+            navigationManager.ensureFocus(layerManager.topLayer)
+        } else {
             inputManager.resetState()
             layerManager.reset()
         }
@@ -110,6 +112,7 @@ PanelWindow {
         }
 
         ErrorBanner {
+            i18n: i18n
             sourcePath: slideManager.failedSource
             errorMessage: slideManager.loadError
         }

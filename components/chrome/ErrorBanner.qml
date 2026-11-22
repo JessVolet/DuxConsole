@@ -5,7 +5,7 @@ import qs.Widgets
 Rectangle {
     id: banner
 
-    property string title: "DuxConsole — Error de carga"
+    property var i18n: null
     property string errorMessage: ""
     property string sourcePath: ""
 
@@ -32,7 +32,7 @@ Rectangle {
             spacing: Theme.spacingM
 
             StyledText {
-                text: banner.title
+                text: banner.i18n ? banner.i18n.t("error.title", "") : ""
                 font.pixelSize: Theme.fontSizeLarge
                 font.weight: Font.Bold
                 color: "#FCA5A5"
@@ -56,7 +56,7 @@ Rectangle {
             }
 
             StyledText {
-                text: "Esc / B para cerrar el overlay"
+                text: banner.i18n ? banner.i18n.t("error.close_hint", "") : ""
                 font.pixelSize: Theme.fontSizeSmall
                 color: "#94A3B8"
             }

@@ -71,7 +71,7 @@ Item {
             }
             if (!relPath && entry.source) {
                 relPath = entry.source
-                isMonochrome = true
+                isMonochrome = (colorMode !== "colored")
             }
         }
 

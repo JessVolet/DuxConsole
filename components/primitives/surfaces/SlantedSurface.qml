@@ -15,6 +15,7 @@ Item {
     property int focusedBorderWidth: 3
     property int selectedBorderWidth: 2
     property real radius: Theme.cornerRadius
+    property real surfaceOpacity: 1.0
     property int borderWidth: !disabled && focused
         ? focusedBorderWidth
         : (!disabled && selected ? selectedBorderWidth : 1)
@@ -34,7 +35,7 @@ Item {
                 : "#1D202B"
         }
         return styleTokens
-            ? styleTokens.surfaceColor(role)
+            ? styleTokens.surfaceColor(role, surfaceOpacity)
             : Theme.surfaceContainerHigh
     }
 

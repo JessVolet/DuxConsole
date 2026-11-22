@@ -128,11 +128,11 @@ Item {
             motionTokens: wc.motionTokens
             focused: zone.active
             maxVisibleItems: width < 720 ? 3 : (width < 980 ? 4 : 6)
-            cardWidth: Math.min(200, width / maxVisibleItems)
-            cardHeight: cardWidth * 0.68
-            selectedWidth: Math.min(380, width * 0.48)
-            selectedHeight: Math.min(184, selectedWidth * 0.48)
-            spacing: Math.min(20, width * 0.018)
+            cardWidth: wc.iconOnly ? Math.min(132, width / maxVisibleItems) : Math.min(200, width / maxVisibleItems)
+            cardHeight: cardWidth * (wc.iconOnly ? 0.9 : 0.68)
+            selectedWidth: wc.iconOnly ? Math.min(210, width * 0.28) : Math.min(380, width * 0.48)
+            selectedHeight: wc.iconOnly ? selectedWidth * 0.88 : Math.min(184, selectedWidth * 0.48)
+            spacing: Math.min(wc.iconOnly ? 14 : 20, width * 0.018)
             model: wc.windows
             delegate: SlantedSurface {
                 id: winCard
@@ -145,6 +145,7 @@ Item {
                     : ({ source: "", fallbackLabel: "" })
 
                 role: "card"
+                surfaceOpacity: winCard.selected ? 0.82 : 1.0
                 styleTokens: wc.styleTokens
                 motionTokens: wc.motionTokens
 
@@ -153,7 +154,7 @@ Item {
                     anchors.centerIn: parent
                     width: Math.min(
                         winCard.width * 0.72,
-                        (winCard.selected ? 112 : 56) * carousel.layoutScale
+                        (winCard.selected ? 144 : 72) * carousel.layoutScale
                     )
                     height: width
                     styleTokens: wc.styleTokens

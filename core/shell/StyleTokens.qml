@@ -13,6 +13,7 @@ Item {
     property bool blurEnabled: true
     property real scrimOpacity: 0.58
     property real uiScale: 1.0
+    property real cardOpacity: 0.86
 
     property string iconColorMode: "dms"         // "dms" | "colored" | "custom"
     property string iconStyle: "filled"          // "filled" | "outline"
@@ -45,9 +46,11 @@ Item {
         return themeMode === "light" || (themeMode === "hybrid" && role === "chrome")
     }
 
-    function surfaceColor(role) {
-        // Política visual: superficies de componentes siempre sólidas y opacas (alfa 1.0)
-        return _isLightRole(role) ? Qt.rgba(0.95, 0.96, 0.97, 1.0) : Qt.rgba(0.08, 0.09, 0.11, 1.0)
+    function surfaceColor(role, opacityMultiplier) {
+        const alpha = role === "card"
+            ? Math.max(0.55, Math.min(1.0, cardOpacity * (opacityMultiplier ?? 1.0)))
+            : 1.0
+        return _isLightRole(role) ? Qt.rgba(0.95, 0.96, 0.97, alpha) : Qt.rgba(0.08, 0.09, 0.11, alpha)
     }
 
     function disabledSurfaceColor(role) {
@@ -85,6 +88,8 @@ Item {
             try {
                 const cfg = JSON.parse(text())
                 if (cfg?.theme) {
+                    if (typeof cfg.theme.cardOpacity === "number")
+                        tokens.cardOpacity = Math.max(0.55, Math.min(1.0, cfg.theme.cardOpacity))
                     if (typeof cfg.theme.mode === "string")
                         tokens.themeMode = cfg.theme.mode
                     if (typeof cfg.theme.accentSource === "string")

@@ -49,15 +49,13 @@ Item {
             value: cards.titleValue
         }
 
-        Flow {
+        Column {
             id: secondaryCards
             width: layout.width
-            spacing: Theme.spacingS
+            spacing: Theme.spacingM
 
             WindowInfoCard {
-                width: cards.narrow
-                       ? secondaryCards.width
-                       : Math.max(0, secondaryCards.width - monitorCard.width - secondaryCards.spacing)
+                width: secondaryCards.width
                 compact: cards.compact
                 styleTokens: cards.styleTokens
                 motionTokens: cards.motionTokens
@@ -67,7 +65,7 @@ Item {
 
             WindowInfoCard {
                 id: monitorCard
-                width: cards.narrow ? secondaryCards.width : Math.min(240, secondaryCards.width * 0.34)
+                width: secondaryCards.width
                 compact: cards.compact
                 styleTokens: cards.styleTokens
                 motionTokens: cards.motionTokens

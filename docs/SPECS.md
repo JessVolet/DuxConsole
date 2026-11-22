@@ -29,7 +29,7 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 | :--- | :--- | :--- |
 | `inputconfig.json` | `core/shell/InputManager.qml` | Mapeo `keyboard` y `gamepad` a acciones semánticas (`I.*`), `gestures` (`repeatInitialMs`, `repeatIntervalMs`, `repeatable`, `holds`, `chords`). |
 | `iconsconfig.json` | `core/shell/IconsPadManager.qml` | Mapeo por dispositivo (`keyboard`, `xbox`, `playstation`, `switch`, `steamdeck`) con variantes `mono` (`filled`/`outline`) y `colored` (`filled`/`outline`) apuntando a `assets/InputIcons/`. |
-| `uiconfig.json` | `core/shell/I18n.qml` / `StyleTokens.qml` / `MotionTokens.qml` | Idioma (`language`), animaciones (`animations.enabled`, `animations.speed`, `animations.fadeInMs`, `animations.fadeOutMs`), tema (`theme.*`) y glifos (`icons.colorMode`: `"dms"` \| `"colored"` \| `"custom"`, con migración `"native"` → `"colored"`; `icons.style`: `"filled"` \| `"outline"`; `icons.customColor`; `icons.showBackdrop`: `bool`). |
+| `uiconfig.json` | `core/shell/I18n.qml` / `StyleTokens.qml` / `MotionTokens.qml` | Idioma (`language`), animaciones (`animations.enabled`, `animations.speed`, `animations.fadeInMs`, `animations.fadeOutMs`), tema (`theme.*`, incluyendo `theme.cardOpacity`) y glifos (`icons.colorMode`: `"dms"` \| `"colored"` \| `"custom"`, con migración `"native"` → `"colored"`; `icons.style`: `"filled"` \| `"outline"`; `icons.customColor`; `icons.showBackdrop`: `bool`). |
 | `locales/<lang>.json` | `core/shell/I18n.qml` | Diccionarios por idioma (`es.json`, `en.json`, ...) resueltos mediante `t(key, fallback)`. |
 
 ---
@@ -64,9 +64,9 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 
 ## 4. Contrato Visual y Primitivas
 
-- **Composición del Overlay y Política de Superficies Sólidas (`Bg.qml` + `StyleTokens.qml`)**:
+- **Composición del Overlay y Política de Superficies (`Bg.qml` + `StyleTokens.qml`)**:
   - `Bg.qml` es el **único** componente con transparencia global (`StyleTokens.scrimColor()`, configurable vía `theme.scrimOpacity`, default `0.58`) para mantener visible el juego/escritorio detrás.
-  - Todas las superficies de componentes (`SlantedSurface`, `ActionButton`, `FocusCard`, `TopBar`, `FooterBar`, `ActionHints`, `MediaPlayerCard`, modales) son **100% sólidas y opacas** (`alpha === 1.0`, `opacity === 1.0`), sin blur ni transparencias accidentales; los estados `disabled` usan `StyleTokens.disabledSurfaceColor()` y `disabledOnSurfaceColor()` en lugar de reducir `opacity`. Soporta modos `hybrid`, `dark` y `light`. `Bg.qml` mantiene el scrim global configurable; los modales no añaden un segundo scrim.
+  - Las superficies de contenido (`SlantedSurface` con role `card`) admiten transparencia intencional controlada por `theme.cardOpacity` y `surfaceOpacity`; las superficies de chrome siguen opacas. Los estados `disabled` usan `StyleTokens.disabledSurfaceColor()` y `disabledOnSurfaceColor()` en lugar de reducir `opacity`. Soporta modos `hybrid`, `dark` y `light`. `Bg.qml` mantiene el scrim global configurable; los modales no añaden un segundo scrim.
 - **Chrome persistente (`TopBar.qml` + `FooterBar.qml`)**: Instanciado una sola vez en `ConsoleOverlay.qml` fuera del `Loader` de `SlideManager.qml`, por lo que permanece montado al cambiar entre slides. `SlideManager` se ancla entre `topBar.bottom` y `footerBar.top`.
   - `TopBar`: 3 cápsulas sólidas/opacas independientes sobre un `Item` transparente (sin barra continua compartida): **Brand** izquierda (`CircularProgressGlyph` Guide + `assets/dux-logo.svg` + `DUXSHELL`/`CONSOLE`), **Navigation** centrada (`LB`/`RB` fuera de la cápsula + píldora de acento para el slide activo de `ScreenRegistry`), **Status** derecha (batería mando `--` si desconectado + `UPower` + `SystemClock` + `CircularProgressGlyph` Start + perfil).
   - `FooterBar` + `ActionHints`: tarjetas individuales en `Flow` (`Qt.RightToLeft`) ancladas abajo a la derecha consumiendo `NavigationManager.activeHints`. Como `wlr-layer-shell` en Quickshell no expone blur por tarjeta individual, cada tarjeta usa una superficie sólida/opaca de alto contraste como fallback legible sin `MultiEffect` falso.

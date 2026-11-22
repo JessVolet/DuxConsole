@@ -126,7 +126,7 @@ flowchart TD
 
 ### `components/widgets/WindowInfoCard.qml` y `WindowInfoCards.qml`
 - **Problema**: La ventana seleccionada necesita separar título, descripción de aplicación/workspace y monitor para facilitar su lectura rápida.
-- **Solución**: `WindowInfoCards` compone tres `WindowInfoCard` reutilizables con contenido localizado y distribución responsiva.
+- **Solución**: `WindowInfoCards` compone tres `WindowInfoCard` reutilizables con contenido localizado y distribución vertical para dar ancho a la descripción; el título usa una jerarquía tipográfica mayor y las superficies usan transparencia configurada en `uiconfig.json`.
 
 ### `components/chrome/ModalPanel.qml` y `components/primitives/text/StatusMessage.qml`
 - **Problema**: Los modales necesitan una superficie reutilizable y mensajes de error consistentes sin dibujar `StyledRect`/`StyledText` inline.

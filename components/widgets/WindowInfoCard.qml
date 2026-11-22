@@ -12,17 +12,18 @@ SlantedSurface {
     property bool compact: false
 
     role: "card"
-    implicitHeight: compact ? (prominent ? 72 : 56) : (prominent ? 112 : 80)
+    surfaceOpacity: prominent ? 0.82 : 1.0
+    implicitHeight: compact ? (prominent ? 128 : 64) : (prominent ? 160 : 88)
 
     Column {
         anchors.fill: parent
-        anchors.margins: infoCard.compact ? Theme.spacingXS : Theme.spacingM
-        spacing: Theme.spacingXS
+        anchors.margins: infoCard.compact ? Theme.spacingS : Theme.spacingM
+        spacing: Theme.spacingS
 
         StyledText {
             width: parent.width
             text: infoCard.label
-            font.pixelSize: Theme.fontSizeSmall
+            font.pixelSize: Theme.fontSizeMedium
             font.weight: Font.Medium
             color: infoCard.styleTokens
                    ? infoCard.styleTokens.disabledOnSurfaceColor("card")
@@ -33,7 +34,7 @@ SlantedSurface {
         StyledText {
             width: parent.width
             text: infoCard.value
-            font.pixelSize: infoCard.prominent ? Theme.fontSizeLarge : Theme.fontSizeMedium
+            font.pixelSize: infoCard.prominent ? Theme.fontSizeLarge * 1.5 : Theme.fontSizeLarge
             font.weight: infoCard.prominent ? Font.Bold : Font.Medium
             color: infoCard.styleTokens
                    ? infoCard.styleTokens.onSurfaceColor("card")

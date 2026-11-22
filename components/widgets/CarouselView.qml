@@ -80,7 +80,7 @@ Item {
             readonly property bool selected: PathView.isCurrentItem
             readonly property bool inPath: PathView.onPath
             readonly property real sideDistance: x + width / 2 - view.width / 2
-            readonly property real translateX: selected || Math.abs(sideDistance) < 1
+            property real translateX: selected || Math.abs(sideDistance) < 1
                 ? 0
                 : (sideDistance < 0 ? -carousel.shiftOffset : carousel.shiftOffset)
 

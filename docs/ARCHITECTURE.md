@@ -16,7 +16,7 @@ DuxConsole/
 │   └── widgets/                     # Bloques compuestos (CarouselView, WindowCarousel, MediaPlayerCard, AudioMixerRow...)
 ├── core/
 │   ├── shell/                       # ConsoleOverlay, InputManager, IconsPadManager, I18n, StyleTokens, ScreenBase, ScreenRegistry, SlideManager
-│   ├── interaction/                 # FocusZone, LayerManager
+│   ├── interaction/                 # FocusZone, LayerManager, NavigationManager
 │   └── motion/                      # MotionTokens, MorphModal, SlideTransition
 ├── locales/                         # Traducciones JSON (es.json, en.json, ...)
 ├── screens/
@@ -52,7 +52,8 @@ DuxConsole/
 | Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
 | Tokens de estilo | `core/shell/StyleTokens.qml` | Colores, `accentColor`, `skewAngle`, roles `"chrome"`/`"card"` y tintado de iconos desde `uiconfig.json` |
 | Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |
-| Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, ajuste de índice cuando cambia el total, expansión (`I.Select`) y bloqueo `inert` |
+| Navegación espacial | `core/interaction/NavigationManager.qml` | Foco automático (`defaultFocus`/arriba-izq), cono direccional, validación de capacidades y `activeHints` |
+| Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, `defaultFocus`, `expandable` (`I.Select`), `actionHints` y bloqueo `inert` |
 | Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas, curvas y fades configurables) |
 | Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml`, `ActionHints.qml` |
 | Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` (`InputGlyph.qml`), `surfaces/` (`SlantedSurface.qml`, `SlantedImage.qml`) y `text/` (`TestText.qml`) |

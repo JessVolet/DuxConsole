@@ -6,6 +6,7 @@ Item {
     required property var registry
     required property var inputManager
     property var layerManager: null
+    property var navigationManager: null
     property var iconsPadManager: null
     property var i18n: null
     property var styleTokens: null
@@ -35,6 +36,8 @@ Item {
                 item.inputManager = manager.inputManager
             if ("layerManager" in item)
                 item.layerManager = manager.layerManager
+            if ("navigationManager" in item)
+                item.navigationManager = manager.navigationManager
             if ("iconsPadManager" in item)
                 item.iconsPadManager = manager.iconsPadManager
             if ("i18n" in item)

@@ -12,6 +12,7 @@ QtObject {
     property var focusMemory: ({})
     property var registeredZones: []
     property var activeZone: null
+    property var navigationManager: null
 
     signal layerPushed(string layer)
     signal layerPopped(string layer)

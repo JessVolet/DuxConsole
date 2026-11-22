@@ -10,7 +10,8 @@
 ## FASE 1 — Núcleo de Entrada, Capas, Glifos e I18n (`core/shell` + `core/interaction`)
 - [x] `core/shell/InputManager.qml` + `inputconfig.json` (teclado, mapa gamepad, holds, acordes Guide+acción, repetición controlada, recarga en caliente).
 - [x] `core/interaction/LayerManager.qml` (pila de capas, `topLayer`, memoria de foco por capa, despacho de `I.Select`).
-- [x] `core/interaction/FocusZone.qml` (D-Pad macro, LT/RT micro, `activated`, `secondaryTriggered`, `expandRequested`).
+- [x] `core/interaction/NavigationManager.qml` (navegación espacial automática, `defaultFocus`, validación de capacidades y `activeHints`).
+- [x] `core/interaction/FocusZone.qml` (D-Pad macro, LT/RT micro, `defaultFocus`, `expandable`, `actionHints`, `activated`, `secondaryTriggered`, `expandRequested`).
 - [x] `core/shell/IconsPadManager.qml` + `iconsconfig.json` (34 SVGs Xbox/PS de Kenney + fallback teclado).
 - [x] `core/shell/I18n.qml` + `locales/es.json` y `locales/en.json` + `"language"` en `uiconfig.json`.
 - [x] Pulir `core/shell/ScreenBase.qml`: fijar `anchors.fill: parent` y centralizar helper `tr(key, fallback)` para eliminar duplicación en slides.

@@ -52,8 +52,11 @@ ScreenBase {
                 zoneId: "zone-button"
                 layerName: "dashboard"
                 layerManager: root.layerManager
-                navRight: zoneTheme
-                navDown: zoneCarousel
+                navigationManager: root.navigationManager
+                defaultFocus: true
+                actionHints: [
+                    { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }
+                ]
                 width: btnDevice.width
                 height: btnDevice.height
                 ringRadius: Theme.cornerRadius
@@ -76,8 +79,10 @@ ScreenBase {
                 zoneId: "zone-theme"
                 layerName: "dashboard"
                 layerManager: root.layerManager
-                navLeft: zoneButton
-                navDown: zoneCarousel
+                navigationManager: root.navigationManager
+                actionHints: [
+                    { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }
+                ]
                 width: btnTheme.width
                 height: btnTheme.height
                 ringRadius: Theme.cornerRadius
@@ -99,23 +104,19 @@ ScreenBase {
         }
 
         // Zona 3: Carrusel infinito con FocusCard inclinadas (LT/RT) + modal (I.Select)
-        ActionHints {
-            iconsPadManager: root.iconsPadManager
-            i18n: root.i18n
-            hints: [
-                { action: "I.ActionOption.L", labelKey: "hints.cycle", fallback: "Cycle item" },
-                { action: "I.ActionOption.R", labelKey: "hints.cycle", fallback: "Cycle item" },
-                { action: "I.Select", labelKey: "hints.expand", fallback: "Expand" }
-            ]
-        }
-
         FocusZone {
             id: zoneCarousel
             zoneId: "zone-carousel"
             layerName: "dashboard"
             layerManager: root.layerManager
-            navUp: zoneButton
+            navigationManager: root.navigationManager
+            expandable: true
             subItemCount: carousel.count
+            actionHints: [
+                { action: "I.ActionOption.L", labelKey: "hints.cycle", fallback: "Cycle item" },
+                { action: "I.ActionOption.R", labelKey: "hints.cycle", fallback: "Cycle item" },
+                { action: "I.Select", labelKey: "hints.expand", fallback: "Expand" }
+            ]
             width: parent.width
             height: carousel.implicitHeight
             ringRadius: Theme.cornerRadius
@@ -144,11 +145,7 @@ ScreenBase {
         anchors.bottom: parent.bottom
         iconsPadManager: root.iconsPadManager
         i18n: root.i18n
-        hints: [
-            { action: "I.Dpad.Up", labelKey: "hints.navigate", fallback: "Navigate" },
-            { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" },
-            { action: "I.Refuse", labelKey: "hints.back", fallback: "Back / Close" }
-        ]
+        hints: root.navigationManager ? root.navigationManager.activeHints : []
     }
 
     ItemOptionsModal {

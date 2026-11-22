@@ -35,7 +35,15 @@ PanelWindow {
     color: "transparent"
 
     ScreenRegistry { id: screenRegistry }
-    LayerManager { id: layerManager }
+    LayerManager {
+        id: layerManager
+        navigationManager: navigationManager
+    }
+    NavigationManager {
+        id: navigationManager
+        layerManager: layerManager
+        rootContainer: overlayContent
+    }
     I18n { id: i18n }
     StyleTokens { id: styleTokens }
     MotionTokens { id: motionTokens }
@@ -64,7 +72,7 @@ PanelWindow {
             } else if (action === "I.ActionSlide.L") {
                 slideManager.prev()
             } else {
-                layerManager.handleAction(action, payload)
+                navigationManager.handleAction(action, payload)
             }
         }
     }
@@ -85,6 +93,7 @@ PanelWindow {
             registry: screenRegistry
             inputManager: inputManager
             layerManager: layerManager
+            navigationManager: navigationManager
             iconsPadManager: iconsPadManager
             i18n: i18n
             styleTokens: styleTokens

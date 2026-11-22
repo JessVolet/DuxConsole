@@ -6,6 +6,10 @@ Item {
     property string zoneId: ""
     property string layerName: "dashboard"
     property var layerManager: null
+    property var navigationManager: null
+    property bool defaultFocus: false
+    property bool expandable: false
+    property var actionHints: []
 
     // Regla inert: bloqueada cuando su capa no está activa en la pila
     readonly property bool inert: layerManager ? !layerManager.isLayerActive(layerName) : false
@@ -93,9 +97,23 @@ Item {
         }
     }
 
-    onLayerManagerChanged: {
+    function _syncRegistration() {
         if (layerManager)
             layerManager.registerZone(zone)
+        const nav = navigationManager ?? layerManager?.navigationManager
+        if (nav)
+            nav.registerZone(zone)
+    }
+
+    onLayerManagerChanged: _syncRegistration()
+    onNavigationManagerChanged: _syncRegistration()
+
+    onVisibleChanged: {
+        if (visible) {
+            const nav = navigationManager ?? layerManager?.navigationManager
+            if (nav)
+                nav.ensureFocus(layerName)
+        }
     }
 
     onSubItemCountChanged: {
@@ -105,13 +123,13 @@ Item {
             currentSubIndex = ((currentSubIndex % subItemCount) + subItemCount) % subItemCount
     }
 
-    Component.onCompleted: {
-        if (layerManager)
-            layerManager.registerZone(zone)
-    }
+    Component.onCompleted: _syncRegistration()
 
     Component.onDestruction: {
         if (layerManager)
             layerManager.unregisterZone(zone)
+        const nav = navigationManager ?? layerManager?.navigationManager
+        if (nav)
+            nav.unregisterZone(zone)
     }
 }

@@ -231,6 +231,8 @@ QtObject {
             return zone.activate()
         case "I.Action":
             return zone.triggerSecondary()
+        case "I.Options":
+            return zone.triggerOptions()
         case "I.Select":
             return zone.expandable ? zone.requestExpand() : false
         default:

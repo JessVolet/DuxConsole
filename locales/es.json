@@ -40,5 +40,22 @@
   },
   "topbar": {
     "profile_fallback": "Consola"
+  },
+  "windows": {
+    "unavailable": "Niri IPC no disponible",
+    "empty": "No hay ventanas abiertas",
+    "hint_focus": "Enfocar ventana",
+    "hint_options": "Opciones de ventana",
+    "actions_title": "Acciones de ventana",
+    "closed_notice": "La ventana ya no existe",
+    "action_move_monitor": "Mover a monitor",
+    "action_move_workspace": "Mover a workspace",
+    "action_enter_fullscreen": "Entrar a fullscreen",
+    "action_exit_fullscreen": "Salir de fullscreen",
+    "action_close": "Cerrar ventana",
+    "action_force_kill": "Forzar cierre",
+    "confirm_force_kill": "Confirmar cierre forzado",
+    "kill_warning": "Advertencia: finalizar el proceso puede cerrar varias ventanas y perder trabajo no guardado.",
+    "current": "actual"
   }
 }

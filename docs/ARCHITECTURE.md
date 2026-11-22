@@ -112,6 +112,16 @@ flowchart TD
 - **Problema**: Quickshell necesita recibir eventos de gamepad del daemon Go `dconsole` y notificarle si el overlay está abierto para activar el fail-safe.
 - **Solución**: Cliente `Quickshell.Io.Socket` conectado a `$XDG_RUNTIME_DIR/dconsole.sock` con reconexión cada `2000 ms`, `SplitParser` NDJSON hacia `InputManager` y envío de `{ type: "overlay", active }`.
 
+### `services/WindowManager.qml`
+- **Problema**: Las pantallas y widgets necesitan enumerar ventanas, workspaces y monitores reales de Niri y ejecutar acciones sobre una ventana por ID sin acoplar sockets ni comandos IPC en el QML visual.
+- **Solución**: Conecta dos sockets a `$NIRI_SOCKET`: `eventSocket` suscrito a `"EventStream"` para actualización reactiva sin polling (`WindowsChanged`, `WindowOpenedOrChanged`, `WindowClosed`, `WindowFocusChanged`, `WorkspacesChanged`, `WorkspaceActivated`, `WindowLayoutsChanged`) y `cmdSocket` serializado para `Outputs` y `Action` (`FocusWindow`, `MoveWindowToMonitor`, `MoveWindowToWorkspace`, `FullscreenWindow`, `CloseWindow`). Incluye reconexión automática (`2000 ms`), estado `unavailable` si no hay Niri y capacidad separada `forceKillWindow` bloqueada si no hay PID verificado del usuario.
+
+### `components/widgets/WindowCarousel.qml` y `screens/modals/WindowActionsModal.qml`
+- **Problema**: Un carrusel genérico con índices numéricos pierde la ventana seleccionada cuando se abren o cierran ventanas externamente.
+- **Solución**: `WindowCarousel` envuelve `CarouselView` en una sola `FocusZone` manteniendo `selectedWindowId` estable por ID, y `WindowActionsModal` expone mover a monitor, mover a workspace, fullscreen, cierre normal y cierre forzado seguro en capa `"modal"` con `I.Refuse` restaurando el foco exacto al carrusel.
+- **Problema**: Quickshell necesita recibir eventos de gamepad del daemon Go `dconsole` y notificarle si el overlay está abierto para activar el fail-safe.
+- **Solución**: Cliente `Quickshell.Io.Socket` conectado a `$XDG_RUNTIME_DIR/dconsole.sock` con reconexión cada `2000 ms`, `SplitParser` NDJSON hacia `InputManager` y envío de `{ type: "overlay", active }`.
+
 ---
 
 ## 6. `components/` y `screens/`

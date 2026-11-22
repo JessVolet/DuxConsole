@@ -11,7 +11,10 @@ Item {
     property var i18n: null
     property var styleTokens: null
     property var motionTokens: null
+    property var windowManager: null
     property int currentIndex: 0
+
+    signal closeOverlayRequested()
 
     readonly property var currentScreenMeta: registry.screens[currentIndex] ?? null
     property string loadError: ""
@@ -62,10 +65,19 @@ Item {
                 item.styleTokens = manager.styleTokens
             if ("motionTokens" in item)
                 item.motionTokens = manager.motionTokens
+            if ("windowManager" in item)
+                item.windowManager = manager.windowManager
             if ("registry" in item)
                 item.registry = manager.registry
             if ("currentSlideIndex" in item)
                 item.currentSlideIndex = Qt.binding(() => manager.currentIndex)
+        }
+    }
+
+    Connections {
+        target: slideLoader.item ?? null
+        function onCloseOverlayRequested() {
+            manager.closeOverlayRequested()
         }
     }
 }

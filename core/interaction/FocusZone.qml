@@ -32,6 +32,7 @@ Item {
 
     signal activated(int subIndex)
     signal secondaryTriggered(int subIndex)
+    signal optionsTriggered(int subIndex)
     signal expandRequested(int subIndex)
     signal subItemCycled(int newIndex, int delta)
     signal dpadUnhandled(string direction)
@@ -72,6 +73,13 @@ Item {
         if (inert)
             return false
         secondaryTriggered(currentSubIndex)
+        return true
+    }
+
+    function triggerOptions() {
+        if (inert)
+            return false
+        optionsTriggered(currentSubIndex)
         return true
     }
 

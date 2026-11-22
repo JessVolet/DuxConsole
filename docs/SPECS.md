@@ -48,6 +48,16 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
   - `I.Refuse` ejecuta `layerManager.pop()`; solo cierra el overlay si `topLayer` ya es `"dashboard"`.
   - `I.ActionSlide.L` y `I.ActionSlide.R` quedan bloqueados cuando `topLayer !== "dashboard"`.
   - `I.Select` se despacha desde `NavigationManager.handleAction()` hacia `FocusZone.requestExpand()` solo si `expandable === true`.
+  - `I.Options` se despacha desde `NavigationManager.handleAction()` hacia `FocusZone.triggerOptions()` (`optionsTriggered`) para abrir el menú contextual de la ventana seleccionada.
+
+---
+
+## 4. Contrato del Adaptador `WindowManager` (`services/WindowManager.qml`)
+
+- **Protocolo**: Niri IPC (`$NIRI_SOCKET`), compatible con `niri 26.04` mediante dos sockets separados (`eventSocket` con `"EventStream"` reactivo sin polling + `cmdSocket` serializado para `Outputs` y `Action`s). Reconexión automática cada `2000 ms` y estado `unavailable` cuando no hay socket.
+- **Modelo normalizado**: `windows` (`{ id, title, appId, appName, workspaceId, workspaceIndex, workspaceName, output, isFocused, isFloating, isFullscreen, pid }`), `workspaces` (`{ id, idx, name, output, isActive, isFocused }`), `outputs` (`{ name, make, model, logicalWidth, logicalHeight }`).
+- **Acciones por ID explícito**: `focusWindow(id)`, `moveWindowToMonitor(id, output)`, `moveWindowToWorkspace(id, wsId)`, `toggleFullscreen(id)`, `closeWindow(id)`.
+- **Terminación forzada (`forceKillWindow`)**: capacidad separada que exige `pid > 1`, verificación de propietario (`Uid` en `/proc/<pid>/status`) y exclusión de procesos protegidos (`niri`, `quickshell`, `dms`, `dconsole`, `systemd`, etc.). Si Niri IPC no expone `pid`, `canForceKill()` retorna `false` y la UI muestra la acción deshabilitada.
 
 ---
 

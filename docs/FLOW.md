@@ -57,6 +57,7 @@ flowchart TD
     NM -->|"I.Dpad.*"| MACRO["Macro-navegación entre FocusZones<br/>(cono direccional + _intervalGap)"]
     NM -->|"I.ActionOption.L / R<br/>(si subItemCount > 0)"| MICRO["FocusZone.cycleSubItem()<br/>Actualiza CarouselView sin mover foco"]
     NM -->|"I.Select<br/>(si expandable === true)"| EXP["FocusZone.requestExpand()<br/>-> layerManager.push('modal')"]
+    NM -->|"I.Options"| OPT["FocusZone.triggerOptions()<br/>-> WindowActionsModal (capa 'modal')"]
     NM -->|"I.Accept / I.Action"| ACT["FocusZone.activate() / triggerSecondary()"]
 ```
 

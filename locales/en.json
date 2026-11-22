@@ -40,5 +40,22 @@
   },
   "topbar": {
     "profile_fallback": "Console"
+  },
+  "windows": {
+    "unavailable": "Niri IPC unavailable",
+    "empty": "No open windows",
+    "hint_focus": "Focus window",
+    "hint_options": "Window options",
+    "actions_title": "Window Actions",
+    "closed_notice": "Window no longer exists",
+    "action_move_monitor": "Move to monitor",
+    "action_move_workspace": "Move to workspace",
+    "action_enter_fullscreen": "Enter fullscreen",
+    "action_exit_fullscreen": "Exit fullscreen",
+    "action_close": "Close window",
+    "action_force_kill": "Force close",
+    "confirm_force_kill": "Confirm force close",
+    "kill_warning": "Warning: terminating the process may affect multiple windows and lose unsaved work.",
+    "current": "current"
   }
 }

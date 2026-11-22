@@ -37,12 +37,13 @@
 - [x] Refactorizar `screens/slides/TestScreen.qml` para consumir únicamente primitives, `ActionHints` y un modal reutilizable (0 UI inline).
 
 ## FASE 4 — Servicios del Sistema (`services/` — Integración DMS)
-- [ ] `services/SystemServices.qml`: wrapper limpio sobre `qs.Services` (`AudioService`, `BrightnessService`, `BluetoothService`, `NightModeService`, `PowerProfileWatcher`, `MprisController`, `NiriService`/`HyprlandService`).
+- [x] `services/WindowManager.qml`: adaptador reactivo Niri IPC (`$NIRI_SOCKET` `EventStream` + cola de comandos `FocusWindow`, `MoveWindowToMonitor`, `MoveWindowToWorkspace`, `FullscreenWindow`, `CloseWindow` y `forceKillWindow` verificado).
+- [ ] `services/SystemServices.qml`: wrapper limpio sobre `qs.Services` (`AudioService`, `BrightnessService`, `BluetoothService`, `NightModeService`, `PowerProfileWatcher`, `MprisController`).
 - [ ] `services/StartupCheck.qml`: validación de dependencias opcionales (`dconsole` daemon, InputPlumber, `gpu-screen-recorder`).
 
 ## FASE 5 — Widgets y Pantallas Reales (`components/widgets/` + `screens/`)
-- [ ] Widgets (`components/widgets/`): `WindowCarousel.qml`, `MediaPlayerCard.qml`, `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
-- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`.
+- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`; [ ] `MediaPlayerCard.qml`, `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
+- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowActionsModal.qml`.
 - [ ] Ruedas Orbitales (`screens/overlays/`): `OrbitalMenu.qml` (`SystemWheel` con hold `I.Guide` y `QuickWheel` con acorde `I.Guide + I.ActionSlide.R`).
 - [ ] Slides (`screens/slides/`):
   - [ ] `HomeScreen.qml` (ventanas activas, reproductor MPRIS, captura rápida, estado).

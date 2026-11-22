@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
+import qs.Widgets
 import "../../core/shell"
 import "../../core/interaction"
 import "../../components/primitives/buttons"
@@ -15,7 +16,8 @@ ScreenBase {
     screenId: "test1"
     title: root.tr("nav.home", "Home")
 
-    property string lastModalSelection: ""
+    property int modalTargetWindowId: -1
+    property string ipcErrorNotice: ""
     readonly property var _devices: ["keyboard", "xbox", "playstation"]
     readonly property var _themeModes: ["hybrid", "dark", "light"]
 
@@ -121,13 +123,6 @@ ScreenBase {
                         }
                     }
                 }
-
-                ActionButton {
-                    enabled: false
-                    styleTokens: root.styleTokens
-                    motionTokens: root.motionTokens
-                    label: root.tr("demo.disabled_button", "Disabled state")
-                }
             }
 
             Column {
@@ -141,71 +136,63 @@ ScreenBase {
 
                 SlantedImage {
                     width: Math.min(420, parent.width)
-                    height: 180
+                    height: 160
                     styleTokens: root.styleTokens
                     motionTokens: root.motionTokens
                     source: root.previewImageUrl
                     fallbackText: root.tr("demo.preview_fallback", "No preview")
-                    focused: zoneCarousel.active
+                    focused: false
                 }
             }
         }
 
-        // Sección de carrusel (FocusZone única con micro-navegación LT/RT)
+        // Sección de carrusel real de ventanas Niri (FocusZone única con LT/RT + I.Accept + I.Options)
         SectionTitle {
             styleTokens: root.styleTokens
             title: root.tr("demo.carousel_section", "ControlFriendly Carousel (LT / RT)")
-            subtitle: root.lastModalSelection !== ""
-                      ? root.tr("demo.modal_selected", "Selected") + ": " + root.lastModalSelection
-                      : ""
+            subtitle: root.ipcErrorNotice !== ""
+                      ? root.ipcErrorNotice
+                      : (windowCarousel.selectedWindow
+                         ? windowCarousel.selectedWindow.appName + " — " + windowCarousel.selectedWindow.title
+                         : "")
         }
 
-        FocusZone {
-            id: zoneCarousel
-            zoneId: "zone-carousel"
-            layerName: "dashboard"
+        WindowCarousel {
+            id: windowCarousel
+            width: layoutCol.width
+            windowManager: root.windowManager
             layerManager: root.layerManager
             navigationManager: root.navigationManager
-            expandable: true
-            subItemCount: carousel.count
-            actionHints: [
-                { action: "I.ActionOption.L", labelKey: "hints.cycle", fallback: "Cycle item" },
-                { action: "I.ActionOption.R", labelKey: "hints.cycle", fallback: "Cycle item" },
-                { action: "I.Select", labelKey: "hints.expand", fallback: "Expand" }
-            ]
-            width: layoutCol.width
-            height: carousel.implicitHeight
-            ringRadius: Theme.cornerRadius
+            styleTokens: root.styleTokens
+            motionTokens: root.motionTokens
+            i18n: root.i18n
 
-            onExpandRequested: root.layerManager?.push("modal")
+            onActivateWindowRequested: winId => {
+                root.ipcErrorNotice = ""
+                root.windowManager?.focusWindow(winId, (ok, err) => {
+                    if (ok)
+                        root.closeOverlayRequested()
+                    else
+                        root.ipcErrorNotice = String(err)
+                })
+            }
 
-            CarouselView {
-                id: carousel
-                anchors.fill: parent
-                currentIndex: zoneCarousel.currentSubIndex
-                motionTokens: root.motionTokens
-                focused: zoneCarousel.active
-                model: 6
-                delegate: FocusCard {
-                    property int index: 0
-                    styleTokens: root.styleTokens
-                    motionTokens: root.motionTokens
-                    title: root.tr("demo.item_prefix", "Item") + " #" + (index + 1)
-                    subtitle: selected ? root.lastModalSelection : ""
-                }
+            onWindowOptionsRequested: winId => {
+                root.ipcErrorNotice = ""
+                root.modalTargetWindowId = winId
+                root.layerManager?.push("modal")
             }
         }
     }
 
-    ItemOptionsModal {
+    WindowActionsModal {
+        windowManager: root.windowManager
         layerManager: root.layerManager
+        navigationManager: root.navigationManager
+        styleTokens: root.styleTokens
+        motionTokens: root.motionTokens
+        iconsPadManager: root.iconsPadManager
         i18n: root.i18n
-        title: root.tr("demo.modal_title", "Item Options") + " (#" + (zoneCarousel.currentSubIndex + 1) + ")"
-        options: [
-            { labelKey: "demo.modal_option_1", fallback: "Launch" },
-            { labelKey: "demo.modal_option_2", fallback: "Pin" },
-            { labelKey: "demo.modal_option_3", fallback: "Details" }
-        ]
-        onOptionSelected: (_, label) => root.lastModalSelection = label
+        targetWindowId: root.modalTargetWindowId
     }
 }

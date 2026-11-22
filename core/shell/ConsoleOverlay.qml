@@ -63,6 +63,10 @@ PanelWindow {
         overlayActive: overlay.active
     }
 
+    WindowManager {
+        id: windowManager
+    }
+
     InputManager {
         id: inputManager
         onTriggered: (action, payload) => {
@@ -125,6 +129,8 @@ PanelWindow {
             i18n: i18n
             styleTokens: styleTokens
             motionTokens: motionTokens
+            windowManager: windowManager
+            onCloseOverlayRequested: overlay.closeRequested()
         }
 
         FooterBar {

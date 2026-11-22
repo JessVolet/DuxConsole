@@ -36,14 +36,26 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 
 ## 3. Contrato de Capas y Navegación (`LayerManager` + `NavigationManager` + `FocusZone`)
 
+- **Separación estricta de 3 niveles ControlFriendly**:
+  - **Macro-navegación (`I.Dpad.*`)**: navega exclusivamente entre `FocusZone`s de la capa activa (cono direccional o overrides `navUp`/`navDown`/`navLeft`/`navRight`). No altera `currentSubIndex`.
+  - **Micro-navegación (`I.ActionOption.L/R` — LT/RT o `1`/`3`)**: cicla sub-ítems dentro de la `FocusZone` activa solo cuando `subItemCount > 0`, manteniendo el foco global y con wrap-around circular.
+  - **Slides (`I.ActionSlide.L/R` — LB/RB o `Q`/`E`)**: cambia de pantalla en `SlideManager` únicamente cuando `layerManager.topLayer === "dashboard"`.
 - **Pila de capas**: `dashboard` → `wheel` → `modal` (`LayerManager.topLayer` / `activeLayer`).
-- **Autoridad única de selección (`NavigationManager`)**: `NavigationManager` centraliza el registro de zonas, `ensureFocus(layerName)`, la navegación espacial (`move(direction)`) y `activeHints`. `LayerManager` mantiene la pila y `focusMemory` sin seleccionar zonas por su cuenta.
+- **Autoridad única (`NavigationManager`)**: centraliza registro de zonas, `ensureFocus(layerName)`, `move(direction)`, validación de capacidades y `activeHints`. `FocusZone` encapsula capacidades (`defaultFocus`, `expandable`, `subItemCount`, `actionHints`) y `LayerManager` administra la pila y `focusMemory`.
 - **Memoria de foco y prioridad**: al empujar (`push(layer)`) una capa nueva, `LayerManager` guarda la `FocusZone` activa en `focusMemory`. Al restaurar o entrar a una capa, `NavigationManager.ensureFocus()` prioriza: 1) foco recordado válido en `focusMemory`, 2) zona con `defaultFocus: true`, 3) fallback espacial arriba-izquierda.
 - **Regla `inert`**: toda `FocusZone` cuyo `layerName !== layerManager.topLayer` queda bloqueada (`inert: true`), ignorando D-Pad, `LT`/`RT`, activación y expansión.
 - **Enrutamiento global en `ConsoleOverlay.qml`**:
   - `I.Refuse` ejecuta `layerManager.pop()`; solo cierra el overlay si `topLayer` ya es `"dashboard"`.
   - `I.ActionSlide.L` y `I.ActionSlide.R` quedan bloqueados cuando `topLayer !== "dashboard"`.
   - `I.Select` se despacha desde `NavigationManager.handleAction()` hacia `FocusZone.requestExpand()` solo si `expandable === true`.
+
+---
+
+## 4. Contrato Visual y Primitivas
+
+- **Composición del Overlay (`components/chrome/Bg.qml` + `StyleTokens.qml`)**: `Bg` usa `StyleTokens.scrimColor()` (configurable vía `theme.scrimOpacity`, default `0.58`) para mantener visible el juego/escritorio detrás sin lavados blancos accidentales. Soporta modos `hybrid` (chrome claro, cards oscuras translúcidas), `dark` y `light`, y roles semánticos `surfaceColor(role)` / `onSurfaceColor(role)` / `borderColor(role)`.
+- **`SlantedSurface.qml`**: `role` (`"card"` | `"chrome"`), `skewAngle`, `focused`, `selected`, `disabled`, `radius`, `borderWidth`, `motionTokens`. Aplica `Matrix4x4` shear solo a `bgShape`; `content` permanece recto y sin deformación de hit-testing.
+- **`SlantedImage.qml`**: recorta una `Image` recta (sin shear) usando `MultiEffect` (`maskEnabled: true`) contra la máscara inclinada y redondeada de `SlantedSurface`; soporta `fillMode`, estados `Loading`/fallback, gradiente inferior y `overlayContent`. Limitación conocida: requiere `layer.enabled: true` en el contenedor enmascarado.
 
 ---
 

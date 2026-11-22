@@ -46,6 +46,10 @@ Item {
                 item.styleTokens = manager.styleTokens
             if ("motionTokens" in item)
                 item.motionTokens = manager.motionTokens
+            if ("registry" in item)
+                item.registry = manager.registry
+            if ("currentSlideIndex" in item)
+                item.currentSlideIndex = Qt.binding(() => manager.currentIndex)
         }
     }
 }

@@ -20,7 +20,12 @@
     "modal_option_1": "Launch",
     "modal_option_2": "Pin",
     "modal_option_3": "Details",
-    "modal_selected": "Selected"
+    "modal_selected": "Selected",
+    "controls_section": "Lab Controls",
+    "preview_section": "Slanted Preview",
+    "preview_fallback": "No preview",
+    "carousel_section": "ControlFriendly Carousel (LT / RT)",
+    "disabled_button": "Disabled state"
   },
   "hints": {
     "accept": "Accept",

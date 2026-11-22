@@ -31,9 +31,9 @@
 - [x] `components/primitives/buttons/`: `ActionButton.qml`, `FocusCard.qml` (`PillButton.qml`, `ToggleChip.qml` pendientes).
 - [x] `components/widgets/CarouselView.qml` (escala al ancho disponible, muestra hasta seis y mantiene hasta dos en caché para fades de entrada/salida al rotar modelos mayores).
 - [ ] `components/primitives/sliders/`: `ConsoleSlider.qml`, `VolumeSlider.qml`, `ProgressBar.qml`.
-- [ ] `components/primitives/text/`: `SectionTitle.qml`, `MetricLabel.qml`.
+- [ ] `components/primitives/text/`: `MetricLabel.qml`; [x] `SectionTitle.qml`, `TestText.qml`.
 - [ ] `components/primitives/glyphs/`: `StatusBadge.qml`, `AvatarBadge.qml`.
-- [ ] `components/chrome/`: `BarraMenu.qml` (tabs dinámicas desde `ScreenRegistry` + `I18n`), `StatusBar.qml` (reloj, batería, red); [x] `ActionHints.qml` (barra inferior contextual dinámica).
+- [ ] `components/chrome/`: `BarraMenu.qml`, `StatusBar.qml`; [x] `TopBar.qml` (tabs dinámicas + estado), `ActionHints.qml` (barra inferior contextual dinámica).
 - [x] Refactorizar `screens/slides/TestScreen.qml` para consumir únicamente primitives, `ActionHints` y un modal reutilizable (0 UI inline).
 
 ## FASE 4 — Servicios del Sistema (`services/` — Integración DMS)

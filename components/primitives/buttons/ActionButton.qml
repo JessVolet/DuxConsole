@@ -2,20 +2,19 @@ import QtQuick
 import qs.Common
 import qs.Widgets
 import "../glyphs"
+import "../surfaces"
 
-StyledRect {
+SlantedSurface {
     id: button
 
     property string label: ""
-    property bool focused: false
     property string action: ""
     property var iconsPadManager: null
-    property var styleTokens: null
 
+    role: "chrome"
     implicitWidth: Math.max(220, contentRow.implicitWidth + Theme.spacingXL * 2)
-    implicitHeight: 56
+    implicitHeight: 52
     radius: Theme.cornerRadius
-    color: focused ? Theme.primaryContainer : Theme.surfaceContainerHigh
 
     Row {
         id: contentRow
@@ -33,9 +32,11 @@ StyledRect {
         StyledText {
             anchors.verticalCenter: parent.verticalCenter
             text: button.label
-            font.pixelSize: Theme.fontSizeLarge
+            font.pixelSize: Theme.fontSizeMedium
             font.weight: Font.DemiBold
-            color: button.focused ? Theme.onPrimaryContainer : Theme.onSurface
+            color: button.styleTokens
+                   ? button.styleTokens.onSurfaceColor(button.role)
+                   : Theme.onSurface
         }
     }
 }

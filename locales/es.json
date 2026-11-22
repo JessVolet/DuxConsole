@@ -20,7 +20,12 @@
     "modal_option_1": "Ejecutar",
     "modal_option_2": "Fijar",
     "modal_option_3": "Detalles",
-    "modal_selected": "Seleccionado"
+    "modal_selected": "Seleccionado",
+    "controls_section": "Controles de laboratorio",
+    "preview_section": "Vista previa inclinada",
+    "preview_fallback": "Sin vista previa",
+    "carousel_section": "Carrusel ControlFriendly (LT / RT)",
+    "disabled_button": "Estado deshabilitado"
   },
   "hints": {
     "accept": "Aceptar",

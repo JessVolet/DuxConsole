@@ -6,6 +6,7 @@ import "../../core/shell"
 import "../../core/interaction"
 import "../../components/chrome"
 import "../../components/primitives/buttons"
+import "../../components/primitives/surfaces"
 import "../../components/primitives/text"
 import "../../components/widgets"
 import "../modals"
@@ -18,6 +19,15 @@ ScreenBase {
     property string lastModalSelection: ""
     readonly property var _devices: ["keyboard", "xbox", "playstation"]
     readonly property var _themeModes: ["hybrid", "dark", "light"]
+
+    readonly property url previewImageUrl: {
+        const dev = root.inputManager?.activeDevice ?? "keyboard"
+        if (dev === "xbox")
+            return Qt.resolvedUrl("../../assets/InputIcons/Preview Xbox Series.png")
+        if (dev === "playstation")
+            return Qt.resolvedUrl("../../assets/InputIcons/Preview PlayStation Series.png")
+        return Qt.resolvedUrl("../../assets/InputIcons/Preview Keyboard & Mouse.png")
+    }
 
     function cycleDevice() {
         if (!root.inputManager)
@@ -34,78 +44,143 @@ ScreenBase {
     }
 
     Column {
+        id: layoutCol
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
+        anchors.bottom: bottomHints.top
+        anchors.bottomMargin: Theme.spacingM
         spacing: Theme.spacingL
 
-        TestText {
-            label: root.tr("demo.title", "DuxConsole — ControlFriendly Demo")
+        // Chrome superior
+        TopBar {
+            width: layoutCol.width
+            styleTokens: root.styleTokens
+            motionTokens: root.motionTokens
+            i18n: root.i18n
+            iconsPadManager: root.iconsPadManager
+            screens: root.registry ? root.registry.screens : []
+            currentIndex: root.currentSlideIndex
+            statusText: (root.inputManager?.activeDevice ?? "keyboard")
+                        + " · "
+                        + root.tr("demo.theme_modes." + (root.styleTokens?.themeMode ?? "hybrid"),
+                                  root.styleTokens?.themeMode ?? "hybrid")
         }
 
+        // Área principal de contenido (controles a la izquierda + SlantedImage a la derecha)
         Row {
-            spacing: Theme.spacingM
+            width: layoutCol.width
+            spacing: Theme.spacingXL
 
-            // Zona 1: Botón para rotar dispositivo de glifos
-            FocusZone {
-                id: zoneButton
-                zoneId: "zone-button"
-                layerName: "dashboard"
-                layerManager: root.layerManager
-                navigationManager: root.navigationManager
-                defaultFocus: true
-                actionHints: [
-                    { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }
-                ]
-                width: btnDevice.width
-                height: btnDevice.height
-                ringRadius: Theme.cornerRadius
+            Column {
+                width: Math.min(440, layoutCol.width * 0.55)
+                spacing: Theme.spacingM
 
-                onActivated: root.cycleDevice()
-
-                ActionButton {
-                    id: btnDevice
-                    focused: zoneButton.active
-                    iconsPadManager: root.iconsPadManager
+                SectionTitle {
                     styleTokens: root.styleTokens
-                    action: "I.Accept"
-                    label: root.tr("demo.button_label", "Switch glyph device")
-                           + " (" + (root.inputManager?.activeDevice ?? "keyboard") + ")"
+                    title: root.tr("demo.controls_section", "Lab Controls")
+                    subtitle: root.tr("demo.title", "DuxConsole — ControlFriendly Demo")
                 }
-            }
 
-            // Zona 2: Botón para rotar theme.mode (hybrid -> dark -> light)
-            FocusZone {
-                id: zoneTheme
-                zoneId: "zone-theme"
-                layerName: "dashboard"
-                layerManager: root.layerManager
-                navigationManager: root.navigationManager
-                actionHints: [
-                    { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }
-                ]
-                width: btnTheme.width
-                height: btnTheme.height
-                ringRadius: Theme.cornerRadius
+                // Zona 1: Botón para rotar dispositivo de glifos
+                FocusZone {
+                    id: zoneButton
+                    zoneId: "zone-button"
+                    layerName: "dashboard"
+                    layerManager: root.layerManager
+                    navigationManager: root.navigationManager
+                    defaultFocus: true
+                    actionHints: [
+                        { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }
+                    ]
+                    width: btnDevice.width
+                    height: btnDevice.height
+                    ringRadius: Theme.cornerRadius
 
-                onActivated: root.cycleThemeMode()
+                    onActivated: root.cycleDevice()
 
-                ActionButton {
-                    id: btnTheme
-                    focused: zoneTheme.active
-                    iconsPadManager: root.iconsPadManager
-                    styleTokens: root.styleTokens
-                    action: "I.Accept"
-                    label: {
-                        const mode = root.styleTokens?.themeMode ?? "hybrid"
-                        return root.tr("demo.theme_label", "Theme mode")
-                               + " (" + root.tr("demo.theme_modes." + mode, mode) + ")"
+                    ActionButton {
+                        id: btnDevice
+                        focused: zoneButton.active
+                        styleTokens: root.styleTokens
+                        motionTokens: root.motionTokens
+                        iconsPadManager: root.iconsPadManager
+                        action: "I.Accept"
+                        label: root.tr("demo.button_label", "Switch glyph device")
+                               + " (" + (root.inputManager?.activeDevice ?? "keyboard") + ")"
                     }
                 }
+
+                // Zona 2: Botón para rotar theme.mode (hybrid -> dark -> light)
+                FocusZone {
+                    id: zoneTheme
+                    zoneId: "zone-theme"
+                    layerName: "dashboard"
+                    layerManager: root.layerManager
+                    navigationManager: root.navigationManager
+                    actionHints: [
+                        { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }
+                    ]
+                    width: btnTheme.width
+                    height: btnTheme.height
+                    ringRadius: Theme.cornerRadius
+
+                    onActivated: root.cycleThemeMode()
+
+                    ActionButton {
+                        id: btnTheme
+                        focused: zoneTheme.active
+                        styleTokens: root.styleTokens
+                        motionTokens: root.motionTokens
+                        iconsPadManager: root.iconsPadManager
+                        action: "I.Accept"
+                        label: {
+                            const mode = root.styleTokens?.themeMode ?? "hybrid"
+                            return root.tr("demo.theme_label", "Theme mode")
+                                   + " (" + root.tr("demo.theme_modes." + mode, mode) + ")"
+                        }
+                    }
+                }
+
+                // Muestra de estado disabled (no participa en foco)
+                ActionButton {
+                    enabled: false
+                    styleTokens: root.styleTokens
+                    motionTokens: root.motionTokens
+                    label: root.tr("demo.disabled_button", "Disabled state")
+                }
+            }
+
+            Column {
+                width: Math.max(240, layoutCol.width - Math.min(440, layoutCol.width * 0.55) - Theme.spacingXL)
+                spacing: Theme.spacingM
+
+                SectionTitle {
+                    styleTokens: root.styleTokens
+                    title: root.tr("demo.preview_section", "Slanted Preview")
+                }
+
+                SlantedImage {
+                    width: Math.min(420, parent.width)
+                    height: 180
+                    styleTokens: root.styleTokens
+                    motionTokens: root.motionTokens
+                    source: root.previewImageUrl
+                    fallbackText: root.tr("demo.preview_fallback", "No preview")
+                    focused: zoneCarousel.active
+                }
             }
         }
 
-        // Zona 3: Carrusel infinito con FocusCard inclinadas (LT/RT) + modal (I.Select)
+        // Sección de carrusel (FocusZone única con micro-navegación LT/RT)
+        SectionTitle {
+            styleTokens: root.styleTokens
+            title: root.tr("demo.carousel_section", "ControlFriendly Carousel (LT / RT)")
+            subtitle: root.lastModalSelection !== ""
+                      ? root.tr("demo.modal_selected", "Selected") + ": " + root.lastModalSelection
+                      : ""
+        }
+
         FocusZone {
             id: zoneCarousel
             zoneId: "zone-carousel"
@@ -119,7 +194,7 @@ ScreenBase {
                 { action: "I.ActionOption.R", labelKey: "hints.cycle", fallback: "Cycle item" },
                 { action: "I.Select", labelKey: "hints.expand", fallback: "Expand" }
             ]
-            width: parent.width
+            width: layoutCol.width
             height: carousel.implicitHeight
             ringRadius: Theme.cornerRadius
 
@@ -135,6 +210,7 @@ ScreenBase {
                 delegate: FocusCard {
                     property int index: 0
                     styleTokens: root.styleTokens
+                    motionTokens: root.motionTokens
                     title: root.tr("demo.item_prefix", "Item") + " #" + (index + 1)
                     subtitle: selected ? root.lastModalSelection : ""
                 }
@@ -143,6 +219,7 @@ ScreenBase {
     }
 
     ActionHints {
+        id: bottomHints
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         iconsPadManager: root.iconsPadManager

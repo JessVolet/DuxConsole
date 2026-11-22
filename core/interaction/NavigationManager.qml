@@ -155,34 +155,36 @@ QtObject {
             const ny = dstRect.y + dstRect.height / 2
             const dx = nx - cx
             const dy = ny - cy
+            const gapX = _intervalGap(srcRect.x, srcRect.x + srcRect.width, dstRect.x, dstRect.x + dstRect.width)
+            const gapY = _intervalGap(srcRect.y, srcRect.y + srcRect.height, dstRect.y, dstRect.y + dstRect.height)
 
             let primary = 0
             let secondary = 0
 
             switch (direction) {
             case "up":
-                if (dy >= -4 || Math.abs(dx) > Math.abs(dy) * 2.0)
+                if (dy >= -4 || gapX > Math.abs(dy) * 2.0)
                     continue
                 primary = -dy
-                secondary = Math.abs(dx)
+                secondary = gapX
                 break
             case "down":
-                if (dy <= 4 || Math.abs(dx) > Math.abs(dy) * 2.0)
+                if (dy <= 4 || gapX > Math.abs(dy) * 2.0)
                     continue
                 primary = dy
-                secondary = Math.abs(dx)
+                secondary = gapX
                 break
             case "left":
-                if (dx >= -4 || Math.abs(dy) > Math.abs(dx) * 2.0)
+                if (dx >= -4 || gapY > Math.abs(dx) * 2.0)
                     continue
                 primary = -dx
-                secondary = Math.abs(dy)
+                secondary = gapY
                 break
             case "right":
-                if (dx <= 4 || Math.abs(dy) > Math.abs(dx) * 2.0)
+                if (dx <= 4 || gapY > Math.abs(dx) * 2.0)
                     continue
                 primary = dx
-                secondary = Math.abs(dy)
+                secondary = gapY
                 break
             default:
                 continue
@@ -251,6 +253,12 @@ QtObject {
                 return z
         }
         return null
+    }
+
+    function _intervalGap(a1, a2, b1, b2) {
+        if (a1 <= b2 && b1 <= a2)
+            return 0
+        return Math.max(a1 - b2, b1 - a2)
     }
 
     function _isFocusable(zone) {

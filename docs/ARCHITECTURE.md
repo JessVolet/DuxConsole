@@ -55,8 +55,8 @@ DuxConsole/
 | Navegación espacial | `core/interaction/NavigationManager.qml` | Autoridad única para registro de zonas, `ensureFocus`, cono direccional, capacidades y `activeHints` |
 | Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, `defaultFocus`, `expandable` (`I.Select`), `actionHints` y bloqueo `inert` |
 | Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas, curvas y fades configurables) |
-| Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml`, `ActionHints.qml` |
-| Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` (`InputGlyph.qml`), `surfaces/` (`SlantedSurface.qml`, `SlantedImage.qml`) y `text/` (`TestText.qml`) |
+| Chrome | `components/chrome/` | `Bg.qml` (scrim configurable), `TopBar.qml` (tabs + estado), `FocusRing.qml`, `ActionHints.qml` |
+| Primitivas | `components/primitives/` | `buttons/` (`ActionButton.qml`, `FocusCard.qml`), `sliders/`, `glyphs/` (`InputGlyph.qml`), `surfaces/` (`SlantedSurface.qml`, `SlantedImage.qml`) y `text/` (`SectionTitle.qml`, `TestText.qml`) |
 | Widgets | `components/widgets/` | Bloques compuestos reutilizables, incluido `CarouselView.qml` (hasta seis visibles y dos en transición, escalado al ancho y rotación circular con fades) |
 | Slides | `screens/slides/` | `TestScreen.qml`, `TestScreen2.qml` |
 | Overlays / Modals | `screens/overlays/`, `screens/modals/` | Ruedas orbitales (`"wheel"`) y modales (`"modal"`) |

@@ -13,6 +13,8 @@ Item {
     property var i18n: null
     property var styleTokens: null
     property var motionTokens: null
+    property var registry: null
+    property int currentSlideIndex: 0
     default property alias content: body.data
 
     anchors.fill: parent

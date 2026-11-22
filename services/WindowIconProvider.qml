@@ -13,7 +13,7 @@ QtObject {
             return { type: "none", source: "", fallbackLabel: "" }
 
         const appId = win.appId || ""
-        const appName = win.appName || "Window"
+        const appName = win.appName || ""
 
         if (appId !== "") {
             let path = Quickshell.iconPath(appId, true)

@@ -11,7 +11,6 @@ Item {
     property color customAccent: "#A855F7"
     property real skewAngle: -8
     property bool blurEnabled: true
-    property real surfaceOpacity: 0.80
     property real scrimOpacity: 0.58
     property real uiScale: 1.0
 
@@ -63,6 +62,8 @@ Item {
         return _isLightRole(role) ? "#6B7280" : "#64748B"
     }
 
+    readonly property color errorColor: Theme.error ?? "#B00020"
+
     function borderColor(role) {
         return _isLightRole(role) ? Qt.rgba(0, 0, 0, 0.14) : Qt.rgba(1, 1, 1, 0.14)
     }
@@ -94,8 +95,6 @@ Item {
                         tokens.skewAngle = cfg.theme.skewAngle
                     if (typeof cfg.theme.blurEnabled === "boolean")
                         tokens.blurEnabled = cfg.theme.blurEnabled
-                    if (typeof cfg.theme.surfaceOpacity === "number")
-                        tokens.surfaceOpacity = cfg.theme.surfaceOpacity
                     if (typeof cfg.theme.scrimOpacity === "number")
                         tokens.scrimOpacity = cfg.theme.scrimOpacity
                     if (typeof cfg.theme.scale === "number")

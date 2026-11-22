@@ -55,6 +55,8 @@
   "windows": {
     "unavailable": "Niri IPC no disponible",
     "empty": "No hay ventanas abiertas",
+    "unknown_app": "Aplicación",
+    "workspace_prefix": "Espacio",
     "hint_focus": "Enfocar ventana",
     "hint_options": "Opciones de ventana",
     "actions_title": "Acciones de ventana",
@@ -64,9 +66,17 @@
     "action_enter_fullscreen": "Entrar a fullscreen",
     "action_exit_fullscreen": "Salir de fullscreen",
     "action_close": "Cerrar ventana",
-    "action_force_kill": "Forzar cierre",
-    "confirm_force_kill": "Confirmar cierre forzado",
-    "kill_warning": "Advertencia: finalizar el proceso puede cerrar varias ventanas y perder trabajo no guardado.",
-    "current": "actual"
+    "current": "actual",
+    "errors": {
+      "window_not_found": "La ventana ya no está disponible.",
+      "monitor_unavailable": "El monitor seleccionado no está disponible.",
+      "workspace_unavailable": "El espacio seleccionado no está disponible.",
+      "niri_socket_unavailable": "Niri IPC no está disponible.",
+      "command_socket_disconnected": "Se perdió la conexión de comandos con Niri.",
+      "ipc_invalid_response": "Niri devolvió una respuesta no válida.",
+      "ipc_rejected": "Niri no pudo completar la acción solicitada.",
+      "ipc_unknown_response": "Niri devolvió una respuesta desconocida.",
+      "unknown": "No se pudo completar la acción de ventana."
+    }
   }
 }

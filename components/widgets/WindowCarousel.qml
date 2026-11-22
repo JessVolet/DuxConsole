@@ -4,13 +4,13 @@ import QtQuick
 import qs.Common
 import qs.Widgets
 import "../../core/interaction"
-import "../../services"
 import "../primitives/surfaces"
 
 Item {
     id: wc
 
     property var windowManager: null
+    property var windowIconProvider: null
     property var layerManager: null
     property var navigationManager: null
     property var styleTokens: null
@@ -32,12 +32,14 @@ Item {
         return windows.length > 0 ? windows[0] : null
     }
 
+    function tr(key, fallback) {
+        return i18n ? i18n.t(key, fallback) : fallback
+    }
+
     signal activateWindowRequested(int windowId)
     signal windowOptionsRequested(int windowId)
 
     implicitHeight: Math.max(200, carousel.implicitHeight)
-
-    WindowIconProvider { id: iconProvider }
 
     function _syncSelectionFromList() {
         if (windows.length === 0) {
@@ -50,7 +52,10 @@ Item {
             if (zone.currentSubIndex !== idx)
                 zone.currentSubIndex = idx
         } else {
-            const clamped = Math.max(0, Math.min(windows.length - 1, zone.currentSubIndex))
+            const focusedIndex = windows.findIndex(w => w.isFocused)
+            const clamped = selectedWindowId < 0 && focusedIndex >= 0
+                ? focusedIndex
+                : Math.max(0, Math.min(windows.length - 1, zone.currentSubIndex))
             selectedWindowId = windows[clamped].id
             zone.currentSubIndex = clamped
         }
@@ -120,11 +125,12 @@ Item {
             currentIndex: zone.currentSubIndex
             motionTokens: wc.motionTokens
             focused: zone.active
-            cardWidth: 200
-            cardHeight: 136
-            selectedWidth: 380
-            selectedHeight: 184
-            spacing: 20
+            maxVisibleItems: width < 720 ? 3 : (width < 980 ? 4 : 6)
+            cardWidth: Math.min(200, width / maxVisibleItems)
+            cardHeight: cardWidth * 0.68
+            selectedWidth: Math.min(380, width * 0.48)
+            selectedHeight: Math.min(184, selectedWidth * 0.48)
+            spacing: Math.min(20, width * 0.018)
             model: wc.windows
             delegate: SlantedSurface {
                 id: winCard
@@ -132,7 +138,9 @@ Item {
                 property var itemData: null
 
                 readonly property var win: itemData && typeof itemData === "object" ? itemData : null
-                readonly property var iconInfo: iconProvider.resolve(win)
+                readonly property var iconInfo: wc.windowIconProvider && win
+                    ? wc.windowIconProvider.resolve(win)
+                    : ({ source: "", fallbackLabel: "" })
 
                 role: "card"
                 styleTokens: wc.styleTokens
@@ -140,36 +148,40 @@ Item {
 
                 Column {
                     anchors.fill: parent
-                    anchors.margins: Theme.spacingM
-                    spacing: Theme.spacingS
+                    anchors.margins: Theme.spacingM * carousel.layoutScale
+                    spacing: Theme.spacingS * carousel.layoutScale
 
                     // Área superior: miniatura / icono real de aplicación / fallback
                     Row {
                         width: parent.width
-                        spacing: Theme.spacingM
+                        spacing: Theme.spacingM * carousel.layoutScale
 
                         SlantedImage {
-                            width: winCard.selected ? 52 : 38
-                            height: winCard.selected ? 52 : 38
+                            width: Math.max(12, (winCard.selected ? 52 : 38) * carousel.layoutScale)
+                            height: width
                             styleTokens: wc.styleTokens
                             motionTokens: wc.motionTokens
                             source: winCard.iconInfo.source
                             fillMode: Image.PreserveAspectFit
                             showGradientOverlay: false
-                            fallbackText: winCard.iconInfo.fallbackLabel
+                            fallbackText: winCard.iconInfo.fallbackLabel || wc.tr("windows.unknown_app", "Application")
                             focused: winCard.focused && winCard.selected
                         }
 
                         Column {
-                            width: Math.max(60, parent.width - (winCard.selected ? 52 : 38) - Theme.spacingM)
+                            width: Math.max(0, parent.width - ((winCard.selected ? 52 : 38) * carousel.layoutScale) - Theme.spacingM * carousel.layoutScale)
                             spacing: 2
+                            visible: winCard.selected
 
                             Row {
                                 width: parent.width
                                 spacing: Theme.spacingS
 
                                 StyledText {
-                                    text: winCard.win ? winCard.win.appName : ""
+                                    width: Math.max(0, parent.width - (winCard.win?.isFullscreen ? Theme.fontSizeSmall + Theme.spacingS : 0))
+                                    text: winCard.win && winCard.win.appName
+                                          ? winCard.win.appName
+                                          : wc.tr("windows.unknown_app", "Application")
                                     font.pixelSize: winCard.selected ? Theme.fontSizeLarge : Theme.fontSizeMedium
                                     font.weight: Font.Bold
                                     color: wc.styleTokens ? wc.styleTokens.onSurfaceColor("card") : (Theme.surfaceText ?? "#F2F4F8")
@@ -186,12 +198,13 @@ Item {
 
                             StyledText {
                                 width: parent.width
+                                visible: winCard.selected
                                 text: winCard.win
-                                      ? ("WS " + winCard.win.workspaceIndex
+                                      ? (wc.tr("windows.workspace_prefix", "Workspace") + " " + winCard.win.workspaceIndex
                                          + (winCard.win.workspaceName ? " (" + winCard.win.workspaceName + ")" : "")
                                          + (winCard.win.output ? " · " + winCard.win.output : ""))
                                       : ""
-                                font.pixelSize: 11
+                                font.pixelSize: Theme.fontSizeSmall
                                 font.weight: Font.Medium
                                 color: wc.styleTokens ? wc.styleTokens.accentColor : Theme.primary
                                 elide: Text.ElideRight
@@ -202,8 +215,9 @@ Item {
                     // Título de ventana (más líneas visibles cuando está seleccionada)
                     StyledText {
                         width: parent.width
+                        visible: winCard.selected
                         text: winCard.win ? winCard.win.title : ""
-                        font.pixelSize: Theme.fontSizeSmall
+                        font.pixelSize: Math.max(Theme.fontSizeSmall * 0.75, Theme.fontSizeSmall * carousel.layoutScale)
                         color: wc.styleTokens
                                ? wc.styleTokens.onSurfaceColor("card")
                                : (Theme.surfaceVariantText ?? "#9CA3AF")

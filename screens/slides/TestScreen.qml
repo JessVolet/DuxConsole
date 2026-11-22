@@ -173,7 +173,7 @@ ScreenBase {
                     if (ok)
                         root.closeOverlayRequested()
                     else
-                        root.ipcErrorNotice = String(err)
+                        root.ipcErrorNotice = root.tr("windows.errors." + String(err), root.tr("windows.errors.unknown", "The window action could not be completed."))
                 })
             }
 

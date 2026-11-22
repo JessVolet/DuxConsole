@@ -67,6 +67,10 @@ PanelWindow {
         id: windowManager
     }
 
+    WindowIconProvider {
+        id: windowIconProvider
+    }
+
     InputManager {
         id: inputManager
         onTriggered: (action, payload) => {
@@ -130,6 +134,7 @@ PanelWindow {
             styleTokens: styleTokens
             motionTokens: motionTokens
             windowManager: windowManager
+            windowIconProvider: windowIconProvider
             onCloseOverlayRequested: overlay.closeRequested()
         }
 

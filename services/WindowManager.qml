@@ -22,18 +22,13 @@ Item {
     property var _rawOutputs: ({})
     property var _pendingCmds: []
     property bool _cmdBusy: false
-    property var _protectedComms: [
-        "niri", "quickshell", "qs", "dms", "systemd", "dbus-daemon",
-        "dbus-broker", "dconsole", "xwayland", "wayland", "pipewire", "wireplumber"
-    ]
-
-    function _formatAppName(appId, title) {
+    function _formatAppName(appId) {
         if (appId && appId.length > 0) {
             const parts = appId.split(".")
             const base = parts[parts.length - 1]
             return base.charAt(0).toUpperCase() + base.slice(1)
         }
-        return title || "Window"
+        return ""
     }
 
     function _rebuildState() {
@@ -81,15 +76,14 @@ Item {
                 id: w.id,
                 title: w.title ?? "",
                 appId: w.app_id ?? "",
-                appName: _formatAppName(w.app_id, w.title),
+                appName: _formatAppName(w.app_id),
                 workspaceId: w.workspace_id ?? null,
                 workspaceIndex: ws ? ws.idx : -1,
                 workspaceName: ws ? ws.name : "",
                 output: ws ? ws.output : "",
                 isFocused: Boolean(w.is_focused),
                 isFloating: Boolean(w.is_floating),
-                isFullscreen: isFs,
-                pid: typeof w.pid === "number" ? w.pid : -1
+                isFullscreen: isFs
             })
         }
         normWin.sort((a, b) => {
@@ -176,7 +170,7 @@ Item {
 
     function _sendIpc(payload, callback) {
         if (socketPath === "") {
-            lastError = "NIRI_SOCKET no disponible"
+            lastError = "niri_socket_unavailable"
             if (callback) callback(false, lastError)
             return
         }
@@ -219,7 +213,7 @@ Item {
 
     function focusWindow(winId, callback) {
         if (!windowById(winId)) {
-            if (callback) callback(false, "Ventana inexistente")
+            if (callback) callback(false, "window_not_found")
             return
         }
         _sendIpc({ Action: { FocusWindow: { id: winId } } }, callback)
@@ -227,11 +221,11 @@ Item {
 
     function moveWindowToMonitor(winId, outputName, callback) {
         if (!windowById(winId)) {
-            if (callback) callback(false, "Ventana inexistente")
+            if (callback) callback(false, "window_not_found")
             return
         }
         if (!outputs.some(o => o.name === outputName)) {
-            if (callback) callback(false, "Monitor no disponible")
+            if (callback) callback(false, "monitor_unavailable")
             return
         }
         _sendIpc({ Action: { MoveWindowToMonitor: { id: winId, output: outputName } } }, callback)
@@ -239,12 +233,12 @@ Item {
 
     function moveWindowToWorkspace(winId, workspaceId, callback) {
         if (!windowById(winId)) {
-            if (callback) callback(false, "Ventana inexistente")
+            if (callback) callback(false, "window_not_found")
             return
         }
         const ws = workspaces.find(w => w.id === workspaceId)
         if (!ws) {
-            if (callback) callback(false, "Workspace no disponible")
+            if (callback) callback(false, "workspace_unavailable")
             return
         }
         const refObj = ws.name !== "" ? ({ Name: ws.name }) : ({ Index: ws.idx })
@@ -253,7 +247,7 @@ Item {
 
     function toggleFullscreen(winId, callback) {
         if (!windowById(winId)) {
-            if (callback) callback(false, "Ventana inexistente")
+            if (callback) callback(false, "window_not_found")
             return
         }
         _sendIpc({ Action: { FullscreenWindow: { id: winId } } }, callback)
@@ -261,87 +255,10 @@ Item {
 
     function closeWindow(winId, callback) {
         if (!windowById(winId)) {
-            if (callback) callback(false, "Ventana inexistente")
+            if (callback) callback(false, "window_not_found")
             return
         }
         _sendIpc({ Action: { CloseWindow: { id: winId } } }, callback)
-    }
-
-    // Capacidad separada para terminación forzada: requiere PID verificado y no protegido
-    function canForceKill(winId) {
-        const w = windowById(winId)
-        if (!w || w.pid <= 1)
-            return false
-        const appLower = (w.appId || "").toLowerCase()
-        for (let i = 0; i < _protectedComms.length; i++) {
-            if (appLower === _protectedComms[i])
-                return false
-        }
-        return true
-    }
-
-    function forceKillReason(winId) {
-        const w = windowById(winId)
-        if (!w) return "Ventana inexistente"
-        if (w.pid <= 1) return "PID no expuesto por Niri IPC"
-        if (!canForceKill(winId)) return "Proceso protegido del sistema"
-        return ""
-    }
-
-    function forceKillWindow(winId, callback) {
-        const w = windowById(winId)
-        if (!w || !canForceKill(winId)) {
-            if (callback) callback(false, forceKillReason(winId))
-            return
-        }
-        const pid = w.pid
-        killVerifyProc.targetPid = pid
-        killVerifyProc.pendingCallback = callback || null
-        killVerifyProc.command = [
-            "sh", "-c",
-            "comm=$(cat /proc/" + pid + "/comm 2>/dev/null || true); " +
-            "uid=$(awk '/^Uid:/{print $2}' /proc/" + pid + "/status 2>/dev/null || true); " +
-            "echo \"$uid|$comm\""
-        ]
-        killVerifyProc.running = true
-    }
-
-    Process {
-        id: killVerifyProc
-        property int targetPid: -1
-        property var pendingCallback: null
-        stdout: SplitParser {
-            onRead: data => {
-                const parts = data.trim().split("|")
-                const procUid = parts[0] || ""
-                const comm = (parts[1] || "").toLowerCase()
-                const myUid = Quickshell.env("UID") || ""
-                const cb = killVerifyProc.pendingCallback
-                killVerifyProc.pendingCallback = null
-
-                if (!comm || (myUid !== "" && procUid !== myUid)) {
-                    if (cb) cb(false, "No se pudo verificar propiedad del proceso")
-                    return
-                }
-                if (wm._protectedComms.indexOf(comm) !== -1) {
-                    if (cb) cb(false, "Proceso protegido: " + comm)
-                    return
-                }
-                killExecProc.command = ["kill", "-TERM", String(killVerifyProc.targetPid)]
-                killExecProc.pendingCallback = cb
-                killExecProc.running = true
-            }
-        }
-    }
-
-    Process {
-        id: killExecProc
-        property var pendingCallback: null
-        onExited: (code, _) => {
-            const cb = killExecProc.pendingCallback
-            killExecProc.pendingCallback = null
-            if (cb) cb(code === 0, code === 0 ? "SIGTERM enviado" : "Error al enviar SIGTERM")
-        }
     }
 
     Socket {
@@ -383,7 +300,7 @@ Item {
             if (connected && wm._cmdBusy && wm._pendingCmds.length > 0) {
                 write(JSON.stringify(wm._pendingCmds[0].payload) + "\n")
             } else if (!connected && wm._cmdBusy) {
-                wm._finishCmd(false, "Socket de comandos desconectado")
+                wm._finishCmd(false, "command_socket_disconnected")
             }
         }
 
@@ -395,15 +312,15 @@ Item {
                 try {
                     resp = JSON.parse(line)
                 } catch (_) {
-                    wm._finishCmd(false, "Respuesta IPC inválida")
+                    wm._finishCmd(false, "ipc_invalid_response")
                     return
                 }
                 if (resp && resp.Ok !== undefined)
                     wm._finishCmd(true, resp.Ok)
                 else if (resp && resp.Err !== undefined)
-                    wm._finishCmd(false, String(resp.Err))
+                    wm._finishCmd(false, "ipc_rejected")
                 else
-                    wm._finishCmd(false, "Respuesta desconocida")
+                    wm._finishCmd(false, "ipc_unknown_response")
             }
         }
     }

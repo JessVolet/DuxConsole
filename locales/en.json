@@ -55,6 +55,8 @@
   "windows": {
     "unavailable": "Niri IPC unavailable",
     "empty": "No open windows",
+    "unknown_app": "Application",
+    "workspace_prefix": "Workspace",
     "hint_focus": "Focus window",
     "hint_options": "Window options",
     "actions_title": "Window Actions",
@@ -64,9 +66,17 @@
     "action_enter_fullscreen": "Enter fullscreen",
     "action_exit_fullscreen": "Exit fullscreen",
     "action_close": "Close window",
-    "action_force_kill": "Force close",
-    "confirm_force_kill": "Confirm force close",
-    "kill_warning": "Warning: terminating the process may affect multiple windows and lose unsaved work.",
-    "current": "current"
+    "current": "current",
+    "errors": {
+      "window_not_found": "The window is no longer available.",
+      "monitor_unavailable": "The selected monitor is unavailable.",
+      "workspace_unavailable": "The selected workspace is unavailable.",
+      "niri_socket_unavailable": "Niri IPC is unavailable.",
+      "command_socket_disconnected": "The Niri command connection was lost.",
+      "ipc_invalid_response": "Niri returned an invalid response.",
+      "ipc_rejected": "Niri could not complete the requested action.",
+      "ipc_unknown_response": "Niri returned an unknown response.",
+      "unknown": "The window action could not be completed."
+    }
   }
 }

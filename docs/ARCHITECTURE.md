@@ -41,7 +41,7 @@ flowchart TD
 
 ### `uiconfig.json`
 - **Problema**: Ajustar idioma, animaciones, opacidad o modo visual sin recompilar ni editar QML.
-- **Solución**: Centraliza `language`, `animations` (`enabled`, `speed`, `fadeInMs`, `fadeOutMs`), `theme` (`mode`, `accentSource`, `customAccent`, `skewAngle`, `surfaceOpacity`, `scrimOpacity`) e `icons` (`colorMode`, `style`, `customColor`, `showBackdrop`).
+- **Solución**: Centraliza `language`, `animations` (`enabled`, `speed`, `fadeInMs`, `fadeOutMs`), `theme` (`mode`, `accentSource`, `customAccent`, `skewAngle`, `scrimOpacity`) e `icons` (`colorMode`, `style`, `customColor`, `showBackdrop`). Las superficies de componentes son sólidas; solo `Bg.qml` controla transparencia global.
 
 ### `locales/es.json` y `locales/en.json`
 - **Problema**: Textos literales en QML impiden cambiar de idioma en caliente.
@@ -53,7 +53,7 @@ flowchart TD
 
 ### `core/shell/ConsoleOverlay.qml`
 - **Problema**: Se necesita una ventana Wayland fullscreen que capture teclado de forma exclusiva al abrirse, coordine entrada, capas, foco, estilos y reporte errores si una pantalla falla.
-- **Solución**: Actúa como *Composition Root* (`PanelWindow` en `WlrLayer.Overlay`). Instancia `ScreenRegistry`, `LayerManager`, `NavigationManager`, `I18n`, `StyleTokens`, `MotionTokens`, `IconsPadManager`, `DconsoleBridge` e `InputManager`. En `onActiveChanged` asegura foco al abrir (`ensureFocus`) y limpia estado al cerrar (`resetState`, `reset`).
+- **Solución**: Actúa como *Composition Root* (`PanelWindow` en `WlrLayer.Overlay`). Instancia `ScreenRegistry`, `LayerManager`, `NavigationManager`, `I18n`, `StyleTokens`, `MotionTokens`, `IconsPadManager`, `DconsoleBridge`, `WindowManager`, `WindowIconProvider` e `InputManager`. Inyecta los servicios de ventana a través de `SlideManager`; en `onActiveChanged` asegura foco al abrir (`ensureFocus`) y limpia estado al cerrar (`resetState`, `reset`).
 - **Qué dibuja**: Monta `Bg`, el contenido de `SlideManager`, `FocusRing` y `ErrorBanner`.
 
 ### `core/shell/InputManager.qml`
@@ -78,11 +78,11 @@ flowchart TD
 
 ### `core/shell/SlideManager.qml`
 - **Problema**: Cargar slides dinámicamente, inyectarles los gestores compartidos y capturar fallos de carga QML sin dejar pantalla en blanco.
-- **Solución**: Usa un `Loader` enlazado a `ScreenRegistry.screens[currentIndex]`, inyecta `inputManager`, `layerManager`, `navigationManager`, `iconsPadManager`, `i18n`, `styleTokens`, `motionTokens`, `registry` y `currentSlideIndex`. Si `status === Loader.Error`, captura `errorString()` vía `Qt.createComponent()` para `ErrorBanner`.
+- **Solución**: Usa un `Loader` enlazado a `ScreenRegistry.screens[currentIndex]`, inyecta `inputManager`, `layerManager`, `navigationManager`, `iconsPadManager`, `i18n`, `styleTokens`, `motionTokens`, `windowManager`, `windowIconProvider`, `registry` y `currentSlideIndex`. Si `status === Loader.Error`, captura `errorString()` vía `Qt.createComponent()` para `ErrorBanner`.
 
 ### `core/shell/ScreenBase.qml`
 - **Problema**: Evitar que cada slide repita márgenes, propiedades de servicios inyectados y helpers de traducción.
-- **Solución**: `Item` base (`anchors.fill: parent`) con contenedor interior con márgenes `Theme.spacingXL`, propiedades inyectadas y helper `tr(key, fallback)`.
+- **Solución**: `Item` base (`anchors.fill: parent`) con contenedor interior con márgenes `Theme.spacingXL`, propiedades inyectadas (incluye los adaptadores de ventana) y helper `tr(key, fallback)`.
 
 ---
 
@@ -114,17 +114,23 @@ flowchart TD
 
 ### `services/WindowManager.qml`
 - **Problema**: Las pantallas y widgets necesitan enumerar ventanas, workspaces y monitores reales de Niri y ejecutar acciones sobre una ventana por ID sin acoplar sockets ni comandos IPC en el QML visual.
-- **Solución**: Conecta dos sockets a `$NIRI_SOCKET`: `eventSocket` suscrito a `"EventStream"` para actualización reactiva sin polling (`WindowsChanged`, `WindowOpenedOrChanged`, `WindowClosed`, `WindowFocusChanged`, `WorkspacesChanged`, `WorkspaceActivated`, `WindowLayoutsChanged`) y `cmdSocket` serializado para `Outputs` y `Action` (`FocusWindow`, `MoveWindowToMonitor`, `MoveWindowToWorkspace`, `FullscreenWindow`, `CloseWindow`). Incluye reconexión automática (`2000 ms`), estado `unavailable` si no hay Niri y capacidad separada `forceKillWindow` bloqueada si no hay PID verificado del usuario.
+- **Solución**: Conecta dos sockets a `$NIRI_SOCKET`: `eventSocket` suscrito a `"EventStream"` para actualización reactiva sin polling (`WindowsChanged`, `WindowOpenedOrChanged`, `WindowClosed`, `WindowFocusChanged`, `WorkspacesChanged`, `WorkspaceActivated`, `WindowLayoutsChanged`) y `cmdSocket` serializado para `Outputs` y `Action` (`FocusWindow`, `MoveWindowToMonitor`, `MoveWindowToWorkspace`, `FullscreenWindow`, `CloseWindow`). Incluye reconexión automática (`2000 ms`) y estado `unavailable` si no hay Niri. El servicio no expone PID ni termina procesos.
 
 ### `services/WindowIconProvider.qml`
 - **Problema**: Niri IPC y Quickshell Wayland no exponen capturas de píxeles por ID de ventana sin screencasting PipeWire permanente.
-- **Solución**: Proveedor desacoplado que resuelve iconos reales XDG vía `Quickshell.iconPath(appId, true)` con fallback limpio de iniciales cuando no hay icono.
+- **Solución**: Servicio visual que resuelve iconos XDG vía `Quickshell.iconPath(appId, true)` con fallback localizado. Lo instancia `ConsoleOverlay.qml` y lo inyecta a través de `SlideManager` para no invertir dependencias desde `components/widgets/` hacia `services/`.
 
 ### `components/widgets/WindowCarousel.qml`, `MediaPlayerCard.qml` y `screens/slides/HomeScreen.qml`
 - **Problema**: Se requiere un prototipo inicial de `Inicio` separado del laboratorio `TestScreen.qml`.
 - **Solución**: `HomeScreen.qml` ensambla título `Inicio`, app activa + botón `Continuar`, `WindowCarousel` (con `WindowIconProvider` + `SlantedImage`, tarjetas sólidas opacas y `selectedWindowId` estable) y el contenedor reservado `MediaPlayerCard` a la derecha.
-- **Problema**: Quickshell necesita recibir eventos de gamepad del daemon Go `dconsole` y notificarle si el overlay está abierto para activar el fail-safe.
-- **Solución**: Cliente `Quickshell.Io.Socket` conectado a `$XDG_RUNTIME_DIR/dconsole.sock` con reconexión cada `2000 ms`, `SplitParser` NDJSON hacia `InputManager` y envío de `{ type: "overlay", active }`.
+
+### `components/chrome/ModalPanel.qml` y `components/primitives/text/StatusMessage.qml`
+- **Problema**: Los modales necesitan una superficie reutilizable y mensajes de error consistentes sin dibujar `StyledRect`/`StyledText` inline.
+- **Solución**: `ModalPanel` encapsula una tarjeta sólida con `StyleTokens`; `StatusMessage` usa el color semántico de error del tema.
+
+### `components/primitives/text/DisplayTitle.qml`
+- **Problema**: Las pantallas necesitan títulos prominentes sin construir `StyledText` inline.
+- **Solución**: Encapsula tipografía de encabezado y color semántico de superficie para ensamblaje desde screens.
 
 ---
 

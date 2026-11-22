@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.Widgets
 import "../../core/interaction"
+import "../../components/chrome"
 import "../../components/primitives/buttons"
 import "../../components/primitives/text"
 
@@ -20,7 +20,7 @@ Rectangle {
     property string layerName: "modal"
     property int targetWindowId: -1
 
-    // "main" | "monitors" | "workspaces" | "confirm-kill"
+    // "main" | "monitors" | "workspaces"
     property string viewMode: "main"
     property string statusMessage: ""
 
@@ -29,6 +29,10 @@ Rectangle {
 
     function tr(key, fallback) {
         return i18n ? i18n.t(key, fallback) : fallback
+    }
+
+    function errorText(code) {
+        return tr("windows.errors." + code, tr("windows.errors.unknown", "Window action failed"))
     }
 
     function _switchView(nextView) {
@@ -51,16 +55,14 @@ Rectangle {
 
     anchors.fill: parent
     visible: open
-    color: Qt.rgba(0.03, 0.04, 0.06, 0.72)
+    color: "transparent"
 
-    StyledRect {
+    ModalPanel {
+        id: dialogSurface
         anchors.centerIn: parent
-        width: 440
+        width: Math.max(0, Math.min(440, parent.width - Theme.spacingXL * 2))
         height: col.implicitHeight + Theme.spacingXL * 2
-        radius: Theme.cornerRadius
-        color: styleTokens ? styleTokens.surfaceColor("card") : Theme.surfaceContainerHighest
-        border.width: 1
-        border.color: styleTokens ? styleTokens.borderColor("card") : Theme.outlineVariant
+        styleTokens: modal.styleTokens
 
         Column {
             id: col
@@ -69,6 +71,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.margins: Theme.spacingXL
             spacing: Theme.spacingM
+            width: dialogSurface.width - Theme.spacingXL * 2
 
             SectionTitle {
                 styleTokens: modal.styleTokens
@@ -80,13 +83,11 @@ Rectangle {
                           : modal.tr("windows.closed_notice", "Window no longer exists")
             }
 
-            StyledText {
+            StatusMessage {
                 visible: modal.statusMessage !== ""
                 width: col.width
-                wrapMode: Text.Wrap
                 text: modal.statusMessage
-                font.pixelSize: Theme.fontSizeSmall
-                color: "#FCA5A5"
+                styleTokens: modal.styleTokens
             }
 
             // Vista principal
@@ -103,7 +104,7 @@ Rectangle {
                     navigationManager: modal.navigationManager
                     visible: parent.visible
                     defaultFocus: true
-                    width: col.width
+                    width: Math.max(0, dialogSurface.width - Theme.spacingXL * 2)
                     height: 48
                     ringRadius: Theme.cornerRadius
                     actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
@@ -125,7 +126,7 @@ Rectangle {
                     layerManager: modal.layerManager
                     navigationManager: modal.navigationManager
                     visible: parent.visible
-                    width: col.width
+                    width: Math.max(0, dialogSurface.width - Theme.spacingXL * 2)
                     height: 48
                     ringRadius: Theme.cornerRadius
                     actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
@@ -154,7 +155,7 @@ Rectangle {
                     onActivated: {
                         modal.windowManager?.toggleFullscreen(modal.targetWindowId, (ok, err) => {
                             if (ok) modal.layerManager?.pop()
-                            else modal.statusMessage = String(err)
+                            else modal.statusMessage = modal.errorText(String(err))
                         })
                     }
 
@@ -183,7 +184,7 @@ Rectangle {
                     onActivated: {
                         modal.windowManager?.closeWindow(modal.targetWindowId, (ok, err) => {
                             if (ok) modal.layerManager?.pop()
-                            else modal.statusMessage = String(err)
+                            else modal.statusMessage = modal.errorText(String(err))
                         })
                     }
 
@@ -196,35 +197,7 @@ Rectangle {
                     }
                 }
 
-                // Forzar cierre: visible pero deshabilitado si no hay PID seguro verificado
-                FocusZone {
-                    id: actForceKill
-                    zoneId: "win-act-forcekill"
-                    layerName: modal.layerName
-                    layerManager: modal.layerManager
-                    navigationManager: modal.navigationManager
-                    visible: parent.visible
-                    enabled: modal.windowManager ? modal.windowManager.canForceKill(modal.targetWindowId) : false
-                    width: col.width
-                    height: 48
-                    ringRadius: Theme.cornerRadius
-                    actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
-                    onActivated: modal._switchView("confirm-kill")
 
-                    ActionButton {
-                        anchors.fill: parent
-                        enabled: actForceKill.enabled
-                        focused: actForceKill.active
-                        styleTokens: modal.styleTokens
-                        motionTokens: modal.motionTokens
-                        label: {
-                            const base = modal.tr("windows.action_force_kill", "Force close")
-                            if (!actForceKill.enabled && modal.windowManager)
-                                return base + " (" + modal.windowManager.forceKillReason(modal.targetWindowId) + ")"
-                            return base
-                        }
-                    }
-                }
             }
 
             // Subvista: Mover a monitor
@@ -253,7 +226,7 @@ Rectangle {
                         onActivated: {
                             modal.windowManager?.moveWindowToMonitor(modal.targetWindowId, modelData.name, (ok, err) => {
                                 if (ok) modal.layerManager?.pop()
-                                else modal.statusMessage = String(err)
+                                else modal.statusMessage = modal.errorText(String(err))
                             })
                         }
 
@@ -294,7 +267,7 @@ Rectangle {
                         onActivated: {
                             modal.windowManager?.moveWindowToWorkspace(modal.targetWindowId, modelData.id, (ok, err) => {
                                 if (ok) modal.layerManager?.pop()
-                                else modal.statusMessage = String(err)
+                                else modal.statusMessage = modal.errorText(String(err))
                             })
                         }
 
@@ -303,7 +276,7 @@ Rectangle {
                             focused: wsZone.active
                             styleTokens: modal.styleTokens
                             motionTokens: modal.motionTokens
-                            label: "WS " + modelData.idx
+                            label: modal.tr("windows.workspace_prefix", "Workspace") + " " + modelData.idx
                                    + (modelData.name ? " · " + modelData.name : "")
                                    + (modelData.output ? " [" + modelData.output + "]" : "")
                                    + (wsZone.isCurrent ? " (" + modal.tr("windows.current", "current") + ")" : "")
@@ -312,49 +285,7 @@ Rectangle {
                 }
             }
 
-            // Subvista: Confirmación explícita de Forzar Cierre
-            Column {
-                width: col.width
-                spacing: Theme.spacingM
-                visible: modal.open && modal.targetWindow !== null && modal.viewMode === "confirm-kill"
 
-                StyledText {
-                    width: col.width
-                    wrapMode: Text.Wrap
-                    text: modal.tr("windows.kill_warning",
-                                   "Warning: terminating the process may affect multiple windows and lose unsaved work.")
-                          + " (PID " + (modal.targetWindow?.pid ?? -1) + ")"
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: "#FCA5A5"
-                }
-
-                FocusZone {
-                    id: confirmKillZone
-                    zoneId: "win-confirm-kill"
-                    layerName: modal.layerName
-                    layerManager: modal.layerManager
-                    navigationManager: modal.navigationManager
-                    visible: parent.visible
-                    defaultFocus: true
-                    width: col.width
-                    height: 48
-                    ringRadius: Theme.cornerRadius
-                    onActivated: {
-                        modal.windowManager?.forceKillWindow(modal.targetWindowId, (ok, err) => {
-                            if (ok) modal.layerManager?.pop()
-                            else modal.statusMessage = String(err)
-                        })
-                    }
-
-                    ActionButton {
-                        anchors.fill: parent
-                        focused: confirmKillZone.active
-                        styleTokens: modal.styleTokens
-                        motionTokens: modal.motionTokens
-                        label: modal.tr("windows.confirm_force_kill", "Confirm force close")
-                    }
-                }
-            }
         }
     }
 }

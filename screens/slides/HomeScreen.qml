@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.Widgets
 import "../../core/shell"
 import "../../core/interaction"
 import "../../components/primitives/buttons"
@@ -25,6 +24,10 @@ ScreenBase {
         return wins.find(w => w.isFocused) ?? (wins.length > 0 ? wins[0] : null)
     }
 
+    function errorText(code) {
+        return root.tr("windows.errors." + code, root.tr("windows.errors.unknown", "The window action could not be completed."))
+    }
+
     function _focusAndClose(winId) {
         if (winId < 0 || !root.windowManager)
             return
@@ -33,19 +36,21 @@ ScreenBase {
             if (ok)
                 root.closeOverlayRequested()
             else
-                root.ipcErrorNotice = String(err)
+                root.ipcErrorNotice = root.errorText(String(err))
         })
     }
 
-    Row {
+    Flow {
         id: mainGrid
         anchors.fill: parent
         spacing: Theme.spacingXL
+        property bool stacked: width < 880
 
         // Columna izquierda: Superior (Inicio + Continuar) + Inferior (Carrusel de ventanas)
         Column {
-            width: Math.max(420, mainGrid.width - mediaSlot.width - Theme.spacingXL)
-            height: mainGrid.height
+            width: mainGrid.stacked
+                   ? mainGrid.width
+                   : Math.max(0, mainGrid.width - mediaSlot.width - mainGrid.spacing)
             spacing: Theme.spacingL
 
             // Superior izquierda: Título grande + app/juego activo + botón Continuar
@@ -53,13 +58,9 @@ ScreenBase {
                 width: parent.width
                 spacing: Theme.spacingM
 
-                StyledText {
+                DisplayTitle {
+                    styleTokens: root.styleTokens
                     text: root.tr("nav.home", "Home")
-                    font.pixelSize: Theme.fontSizeXXLarge
-                    font.weight: Font.Bold
-                    color: root.styleTokens
-                           ? root.styleTokens.onSurfaceColor("card")
-                           : (Theme.surfaceText ?? "#F2F4F8")
                 }
 
                 SectionTitle {
@@ -119,6 +120,7 @@ ScreenBase {
                     id: windowCarousel
                     width: parent.width
                     windowManager: root.windowManager
+                    windowIconProvider: root.windowIconProvider
                     layerManager: root.layerManager
                     navigationManager: root.navigationManager
                     styleTokens: root.styleTokens
@@ -138,14 +140,14 @@ ScreenBase {
         // Derecha: Espacio reservado para MediaPlayerCard
         Item {
             id: mediaSlot
-            width: Math.min(340, Math.max(240, mainGrid.width * 0.28))
-            height: mainGrid.height
+            width: mainGrid.stacked ? mainGrid.width : Math.min(340, mainGrid.width * 0.28)
+            height: 240
 
             MediaPlayerCard {
                 anchors.top: parent.top
                 anchors.right: parent.right
                 width: parent.width
-                height: 240
+                height: parent.height
                 styleTokens: root.styleTokens
                 motionTokens: root.motionTokens
                 i18n: root.i18n

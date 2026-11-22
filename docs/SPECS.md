@@ -55,9 +55,9 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 ## 4. Contrato del Adaptador `WindowManager` (`services/WindowManager.qml`)
 
 - **Protocolo**: Niri IPC (`$NIRI_SOCKET`), compatible con `niri 26.04` mediante dos sockets separados (`eventSocket` con `"EventStream"` reactivo sin polling + `cmdSocket` serializado para `Outputs` y `Action`s). Reconexión automática cada `2000 ms` y estado `unavailable` cuando no hay socket.
-- **Modelo normalizado**: `windows` (`{ id, title, appId, appName, workspaceId, workspaceIndex, workspaceName, output, isFocused, isFloating, isFullscreen, pid }`), `workspaces` (`{ id, idx, name, output, isActive, isFocused }`), `outputs` (`{ name, make, model, logicalWidth, logicalHeight }`).
+- **Modelo normalizado**: `windows` (`{ id, title, appId, appName, workspaceId, workspaceIndex, workspaceName, output, isFocused, isFloating, isFullscreen }`), `workspaces` (`{ id, idx, name, output, isActive, isFocused }`), `outputs` (`{ name, make, model, logicalWidth, logicalHeight }`). No expone PID a la UI.
 - **Acciones por ID explícito**: `focusWindow(id)`, `moveWindowToMonitor(id, output)`, `moveWindowToWorkspace(id, wsId)`, `toggleFullscreen(id)`, `closeWindow(id)`.
-- **Terminación forzada (`forceKillWindow`)**: capacidad separada que exige `pid > 1`, verificación de propietario (`Uid` en `/proc/<pid>/status`) y exclusión de procesos protegidos (`niri`, `quickshell`, `dms`, `dconsole`, `systemd`, etc.). Si Niri IPC no expone `pid`, `canForceKill()` retorna `false` y la UI muestra la acción deshabilitada.
+- **Terminación de procesos**: no se ejecuta desde DuxConsole. El cierre de una ventana se solicita únicamente mediante Niri `CloseWindow`.
 
 ---
 
@@ -65,7 +65,7 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 
 - **Composición del Overlay y Política de Superficies Sólidas (`Bg.qml` + `StyleTokens.qml`)**:
   - `Bg.qml` es el **único** componente con transparencia global (`StyleTokens.scrimColor()`, configurable vía `theme.scrimOpacity`, default `0.58`) para mantener visible el juego/escritorio detrás.
-  - Todas las superficies de componentes (`SlantedSurface`, `ActionButton`, `FocusCard`, `TopBar`, `FooterBar`, `ActionHints`, `MediaPlayerCard`, modales) son **100% sólidas y opacas** (`alpha === 1.0`, `opacity === 1.0`), sin blur ni transparencias accidentales; los estados `disabled` usan `StyleTokens.disabledSurfaceColor()` y `disabledOnSurfaceColor()` en lugar de reducir `opacity`. Soporta modos `hybrid`, `dark` y `light`.
+  - Todas las superficies de componentes (`SlantedSurface`, `ActionButton`, `FocusCard`, `TopBar`, `FooterBar`, `ActionHints`, `MediaPlayerCard`, modales) son **100% sólidas y opacas** (`alpha === 1.0`, `opacity === 1.0`), sin blur ni transparencias accidentales; los estados `disabled` usan `StyleTokens.disabledSurfaceColor()` y `disabledOnSurfaceColor()` en lugar de reducir `opacity`. Soporta modos `hybrid`, `dark` y `light`. `Bg.qml` mantiene el scrim global configurable; los modales no añaden un segundo scrim.
 - **Chrome persistente (`TopBar.qml` + `FooterBar.qml`)**: Instanciado una sola vez en `ConsoleOverlay.qml` fuera del `Loader` de `SlideManager.qml`, por lo que permanece montado al cambiar entre slides. `SlideManager` se ancla entre `topBar.bottom` y `footerBar.top`.
   - `TopBar`: 3 cápsulas sólidas/opacas independientes sobre un `Item` transparente (sin barra continua compartida): **Brand** izquierda (`CircularProgressGlyph` Guide + `assets/dux-logo.svg` + `DUXSHELL`/`CONSOLE`), **Navigation** centrada (`LB`/`RB` fuera de la cápsula + píldora de acento para el slide activo de `ScreenRegistry`), **Status** derecha (batería mando `--` si desconectado + `UPower` + `SystemClock` + `CircularProgressGlyph` Start + perfil).
   - `FooterBar` + `ActionHints`: tarjetas individuales en `Flow` (`Qt.RightToLeft`) ancladas abajo a la derecha consumiendo `NavigationManager.activeHints`. Como `wlr-layer-shell` en Quickshell no expone blur por tarjeta individual, cada tarjeta usa una superficie sólida/opaca de alto contraste como fallback legible sin `MultiEffect` falso.

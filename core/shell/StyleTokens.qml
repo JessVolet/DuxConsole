@@ -47,12 +47,20 @@ Item {
     }
 
     function surfaceColor(role) {
-        const base = _isLightRole(role) ? "#F2F4F8" : "#14161D"
-        return Qt.alpha(base, surfaceOpacity)
+        // Política visual: superficies de componentes siempre sólidas y opacas (alfa 1.0)
+        return _isLightRole(role) ? Qt.rgba(0.95, 0.96, 0.97, 1.0) : Qt.rgba(0.08, 0.09, 0.11, 1.0)
+    }
+
+    function disabledSurfaceColor(role) {
+        return _isLightRole(role) ? Qt.rgba(0.85, 0.86, 0.90, 1.0) : Qt.rgba(0.11, 0.13, 0.17, 1.0)
     }
 
     function onSurfaceColor(role) {
         return _isLightRole(role) ? "#14161D" : "#F2F4F8"
+    }
+
+    function disabledOnSurfaceColor(role) {
+        return _isLightRole(role) ? "#6B7280" : "#64748B"
     }
 
     function borderColor(role) {

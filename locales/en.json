@@ -1,6 +1,7 @@
 {
   "nav": {
     "home": "Home",
+    "lab": "Lab",
     "sound": "Sound"
   },
   "demo": {
@@ -40,6 +41,16 @@
   },
   "topbar": {
     "profile_fallback": "Console"
+  },
+  "home": {
+    "continue": "Continue",
+    "no_active_app": "No active application",
+    "windows_section": "Active Windows"
+  },
+  "media": {
+    "title": "Media Player",
+    "idle_subtitle": "MPRIS reserved slot",
+    "idle_body": "No active media player"
   },
   "windows": {
     "unavailable": "Niri IPC unavailable",

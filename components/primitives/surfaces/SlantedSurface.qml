@@ -19,13 +19,16 @@ Item {
     readonly property int _animDuration: motionTokens ? motionTokens.durationFast : 120
     readonly property int _animEasing: motionTokens ? motionTokens.easingSnappy : Easing.OutCubic
 
+    // Superficies sólidas (alfa 1.0), sin transparencia ni opacity sobre contenedores
     readonly property color resolvedSurfaceColor: {
-        const base = styleTokens
+        if (disabled) {
+            return styleTokens
+                ? styleTokens.disabledSurfaceColor(role)
+                : "#1D202B"
+        }
+        return styleTokens
             ? styleTokens.surfaceColor(role)
             : Theme.surfaceContainerHigh
-        if (disabled)
-            return Qt.alpha(base, base.a * 0.55)
-        return base
     }
 
     readonly property color resolvedBorderColor: {
@@ -34,12 +37,6 @@ Item {
         if (focused || selected)
             return styleTokens ? styleTokens.accentColor : Theme.primary
         return styleTokens ? styleTokens.borderColor(role) : Theme.outlineVariant
-    }
-
-    opacity: disabled ? 0.6 : 1.0
-
-    Behavior on opacity {
-        NumberAnimation { duration: surface._animDuration; easing.type: surface._animEasing }
     }
 
     Rectangle {

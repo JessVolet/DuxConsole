@@ -42,11 +42,11 @@
 - [ ] `services/StartupCheck.qml`: validación de dependencias opcionales (`dconsole` daemon, InputPlumber, `gpu-screen-recorder`).
 
 ## FASE 5 — Widgets y Pantallas Reales (`components/widgets/` + `screens/`)
-- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`; [ ] `MediaPlayerCard.qml`, `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
+- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `MediaPlayerCard.qml` (slot reservado); [ ] `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
 - [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowActionsModal.qml`.
 - [ ] Ruedas Orbitales (`screens/overlays/`): `OrbitalMenu.qml` (`SystemWheel` con hold `I.Guide` y `QuickWheel` con acorde `I.Guide + I.ActionSlide.R`).
 - [ ] Slides (`screens/slides/`):
-  - [ ] `HomeScreen.qml` (ventanas activas, reproductor MPRIS, captura rápida, estado).
+  - [x] `HomeScreen.qml` (prototipo inicial: `Continuar`, `WindowCarousel` real y slot `MediaPlayerCard`).
   - [ ] `SoundScreen.qml` (dispositivos salida/entrada con LT/RT + mezclador por app).
   - [ ] `CaptureScreen.qml` (captura de pantalla, grabación, replay 30s).
   - [ ] `LauncherScreen.qml` (biblioteca Steam + ROMs + estado ProtonDB/SteamDB).

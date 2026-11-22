@@ -1,6 +1,7 @@
 {
   "nav": {
     "home": "Inicio",
+    "lab": "Laboratorio",
     "sound": "Sonido"
   },
   "demo": {
@@ -40,6 +41,16 @@
   },
   "topbar": {
     "profile_fallback": "Consola"
+  },
+  "home": {
+    "continue": "Continuar",
+    "no_active_app": "Sin aplicación activa",
+    "windows_section": "Ventanas abiertas"
+  },
+  "media": {
+    "title": "Reproductor",
+    "idle_subtitle": "Espacio reservado MPRIS",
+    "idle_body": "Sin reproducción activa"
   },
   "windows": {
     "unavailable": "Niri IPC no disponible",

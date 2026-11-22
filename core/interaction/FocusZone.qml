@@ -122,6 +122,14 @@ Item {
         }
     }
 
+    onEnabledChanged: {
+        if (enabled) {
+            const nav = navigationManager ?? layerManager?.navigationManager
+            if (nav)
+                nav.ensureFocus(layerName)
+        }
+    }
+
     onSubItemCountChanged: {
         if (subItemCount <= 0)
             currentSubIndex = 0

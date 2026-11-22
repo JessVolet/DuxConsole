@@ -8,6 +8,7 @@ Rectangle {
     id: modal
 
     property var layerManager: null
+    property var styleTokens: null
     property var i18n: null
     property string layerName: "modal"
     property string title: ""
@@ -28,7 +29,9 @@ Rectangle {
         width: 360
         height: col.implicitHeight + Theme.spacingXL * 2
         radius: Theme.cornerRadius
-        color: Theme.surfaceContainerHighest
+        color: modal.styleTokens ? modal.styleTokens.surfaceColor("card") : Theme.surfaceContainerHighest
+        border.width: 1
+        border.color: modal.styleTokens ? modal.styleTokens.borderColor("card") : Theme.outlineVariant
 
         Column {
             id: col

@@ -4,6 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Widgets
 import "../../core/interaction"
+import "../../services"
 import "../primitives/surfaces"
 
 Item {
@@ -34,7 +35,9 @@ Item {
     signal activateWindowRequested(int windowId)
     signal windowOptionsRequested(int windowId)
 
-    implicitHeight: Math.max(172, carousel.implicitHeight)
+    implicitHeight: Math.max(200, carousel.implicitHeight)
+
+    WindowIconProvider { id: iconProvider }
 
     function _syncSelectionFromList() {
         if (windows.length === 0) {
@@ -117,6 +120,11 @@ Item {
             currentIndex: zone.currentSubIndex
             motionTokens: wc.motionTokens
             focused: zone.active
+            cardWidth: 200
+            cardHeight: 136
+            selectedWidth: 380
+            selectedHeight: 184
+            spacing: 20
             model: wc.windows
             delegate: SlantedSurface {
                 id: winCard
@@ -124,61 +132,84 @@ Item {
                 property var itemData: null
 
                 readonly property var win: itemData && typeof itemData === "object" ? itemData : null
+                readonly property var iconInfo: iconProvider.resolve(win)
 
                 role: "card"
                 styleTokens: wc.styleTokens
                 motionTokens: wc.motionTokens
 
                 Column {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.fill: parent
                     anchors.margins: Theme.spacingM
-                    spacing: 4
+                    spacing: Theme.spacingS
 
+                    // Área superior: miniatura / icono real de aplicación / fallback
                     Row {
                         width: parent.width
-                        spacing: Theme.spacingS
+                        spacing: Theme.spacingM
 
-                        StyledText {
-                            text: winCard.win ? winCard.win.appName : ""
-                            font.pixelSize: Theme.fontSizeMedium
-                            font.weight: Font.Bold
-                            color: wc.styleTokens ? wc.styleTokens.onSurfaceColor("card") : (Theme.surfaceText ?? "#F2F4F8")
-                            elide: Text.ElideRight
+                        SlantedImage {
+                            width: winCard.selected ? 52 : 38
+                            height: winCard.selected ? 52 : 38
+                            styleTokens: wc.styleTokens
+                            motionTokens: wc.motionTokens
+                            source: winCard.iconInfo.source
+                            fillMode: Image.PreserveAspectFit
+                            showGradientOverlay: false
+                            fallbackText: winCard.iconInfo.fallbackLabel
+                            focused: winCard.focused && winCard.selected
                         }
 
-                        StyledText {
-                            visible: Boolean(winCard.win?.isFullscreen)
-                            text: "⛶"
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: wc.styleTokens ? wc.styleTokens.accentColor : Theme.primary
+                        Column {
+                            width: Math.max(60, parent.width - (winCard.selected ? 52 : 38) - Theme.spacingM)
+                            spacing: 2
+
+                            Row {
+                                width: parent.width
+                                spacing: Theme.spacingS
+
+                                StyledText {
+                                    text: winCard.win ? winCard.win.appName : ""
+                                    font.pixelSize: winCard.selected ? Theme.fontSizeLarge : Theme.fontSizeMedium
+                                    font.weight: Font.Bold
+                                    color: wc.styleTokens ? wc.styleTokens.onSurfaceColor("card") : (Theme.surfaceText ?? "#F2F4F8")
+                                    elide: Text.ElideRight
+                                }
+
+                                StyledText {
+                                    visible: Boolean(winCard.win?.isFullscreen)
+                                    text: "⛶"
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    color: wc.styleTokens ? wc.styleTokens.accentColor : Theme.primary
+                                }
+                            }
+
+                            StyledText {
+                                width: parent.width
+                                text: winCard.win
+                                      ? ("WS " + winCard.win.workspaceIndex
+                                         + (winCard.win.workspaceName ? " (" + winCard.win.workspaceName + ")" : "")
+                                         + (winCard.win.output ? " · " + winCard.win.output : ""))
+                                      : ""
+                                font.pixelSize: 11
+                                font.weight: Font.Medium
+                                color: wc.styleTokens ? wc.styleTokens.accentColor : Theme.primary
+                                elide: Text.ElideRight
+                            }
                         }
                     }
 
+                    // Título de ventana (más líneas visibles cuando está seleccionada)
                     StyledText {
                         width: parent.width
                         text: winCard.win ? winCard.win.title : ""
                         font.pixelSize: Theme.fontSizeSmall
                         color: wc.styleTokens
-                               ? Qt.alpha(wc.styleTokens.onSurfaceColor("card"), 0.78)
+                               ? wc.styleTokens.onSurfaceColor("card")
                                : (Theme.surfaceVariantText ?? "#9CA3AF")
                         elide: Text.ElideRight
-                        maximumLineCount: 2
+                        maximumLineCount: winCard.selected ? 2 : 1
                         wrapMode: Text.Wrap
-                    }
-
-                    StyledText {
-                        width: parent.width
-                        text: winCard.win
-                              ? ("WS " + winCard.win.workspaceIndex
-                                 + (winCard.win.workspaceName ? " (" + winCard.win.workspaceName + ")" : "")
-                                 + (winCard.win.output ? " · " + winCard.win.output : ""))
-                              : ""
-                        font.pixelSize: 11
-                        font.weight: Font.Medium
-                        color: wc.styleTokens ? wc.styleTokens.accentColor : Theme.primary
-                        elide: Text.ElideRight
                     }
                 }
             }

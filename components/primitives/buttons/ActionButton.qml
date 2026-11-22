@@ -32,9 +32,13 @@ SlantedSurface {
             text: button.label
             font.pixelSize: Theme.fontSizeMedium
             font.weight: Font.DemiBold
-            color: button.styleTokens
-                   ? button.styleTokens.onSurfaceColor(button.role)
-                   : (Theme.surfaceText ?? "#F2F4F8")
+            color: {
+                if (button.disabled)
+                    return button.styleTokens ? button.styleTokens.disabledOnSurfaceColor(button.role) : "#64748B"
+                return button.styleTokens
+                       ? button.styleTokens.onSurfaceColor(button.role)
+                       : (Theme.surfaceText ?? "#F2F4F8")
+            }
         }
     }
 }

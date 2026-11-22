@@ -112,20 +112,20 @@ ScreenBase {
             navUp: zoneButton
             subItemCount: 6
             width: parent.width
-            height: 120
+            height: carousel.implicitHeight
             ringRadius: Theme.cornerRadius
 
             onExpandRequested: root.layerManager?.push("modal")
 
             InfiniteCarousel {
+                id: carousel
                 anchors.fill: parent
                 currentIndex: zoneCarousel.currentSubIndex
                 motionTokens: root.motionTokens
                 model: 6
                 delegate: FocusCard {
-                    required property int index
+                    property int index: 0
                     styleTokens: root.styleTokens
-                    motionTokens: root.motionTokens
                     selected: zoneCarousel.currentSubIndex === index
                     focused: zoneCarousel.active
                     title: root.tr("demo.item_prefix", "Item") + " #" + (index + 1)

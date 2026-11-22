@@ -6,20 +6,12 @@ import "../surfaces"
 SlantedSurface {
     id: card
 
-    property var motionTokens: null
     property string title: ""
     property string subtitle: ""
 
     role: "card"
-    implicitWidth: selected ? 188 : 148
-    implicitHeight: 92
-
-    Behavior on implicitWidth {
-        NumberAnimation {
-            duration: card.motionTokens ? card.motionTokens.durationNormal : 220
-            easing.type: card.motionTokens ? card.motionTokens.easingSnappy : Easing.OutCubic
-        }
-    }
+    implicitWidth: 180
+    implicitHeight: 120
 
     Column {
         anchors.centerIn: parent

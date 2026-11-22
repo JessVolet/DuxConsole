@@ -87,8 +87,11 @@ ScreenBase {
                     focused: zoneTheme.active
                     iconsPadManager: root.iconsPadManager
                     action: "I.Accept"
-                    label: root.tr("demo.theme_label", "Theme mode")
-                           + " (" + (root.styleTokens?.themeMode ?? "hybrid") + ")"
+                    label: {
+                        const mode = root.styleTokens?.themeMode ?? "hybrid"
+                        return root.tr("demo.theme_label", "Theme mode")
+                               + " (" + root.tr("demo.theme_modes." + mode, mode) + ")"
+                    }
                 }
             }
         }

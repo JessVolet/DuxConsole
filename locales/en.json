@@ -9,6 +9,11 @@
     "button_label": "Switch glyph device",
     "button_clicked": "Active device",
     "theme_label": "Theme mode",
+    "theme_modes": {
+      "hybrid": "Hybrid",
+      "dark": "Dark",
+      "light": "Light"
+    },
     "carousel_title": "Quick Carousel (LT / RT)",
     "item_prefix": "Item",
     "modal_title": "Item Options",

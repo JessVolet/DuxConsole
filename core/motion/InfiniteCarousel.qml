@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 
 Item {
@@ -16,9 +17,11 @@ Item {
     property int visibleCount: 7
 
     readonly property int count: typeof model === "number" ? model : (model?.length ?? 0)
+    readonly property int effectiveItemCount: Math.min(Math.max(1, count), visibleCount)
+    readonly property int effectivePositions: Math.max(1, effectiveItemCount - 1)
     readonly property int animDuration: motionTokens ? motionTokens.durationNormal : 220
     readonly property int animEasing: motionTokens ? motionTokens.easingSnappy : Easing.OutCubic
-    readonly property real pathSpan: visibleCount * (cardWidth + spacing)
+    readonly property real pathSpan: effectivePositions * (cardWidth + spacing)
 
     implicitHeight: selectedHeight + 16
     clip: true
@@ -28,7 +31,7 @@ Item {
         anchors.fill: parent
         model: carousel.model
         currentIndex: carousel.currentIndex
-        pathItemCount: Math.min(Math.max(1, carousel.count), carousel.visibleCount)
+        pathItemCount: carousel.effectiveItemCount
         preferredHighlightBegin: 0.5
         preferredHighlightEnd: 0.5
         highlightRangeMode: PathView.StrictlyEnforceRange

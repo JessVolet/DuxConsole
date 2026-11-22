@@ -9,6 +9,11 @@
     "button_label": "Cambiar dispositivo de glifos",
     "button_clicked": "Dispositivo activo",
     "theme_label": "Modo de tema",
+    "theme_modes": {
+      "hybrid": "Híbrido",
+      "dark": "Oscuro",
+      "light": "Claro"
+    },
     "carousel_title": "Carrusel rápido (LT / RT)",
     "item_prefix": "Elemento",
     "modal_title": "Opciones del elemento",

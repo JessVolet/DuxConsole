@@ -4,38 +4,30 @@
 
 ```text
 DuxConsole/
-├── ConsoleDaemon.qml                 # Punto de entrada del plugin DMS e IpcHandler
-├── inputconfig.json                  # Mapa de teclado/gamepad y gestos (holds, chords, repeat)
-├── plugin.json                       # Metadatos del plugin DMS
+├── assets/                          # Recursos estáticos (SVGs de mando Xbox/PS, iconos)
+├── components/
+│   ├── chrome/                      # Marco persistente (Bg, FocusRing, BarraMenu, StatusBar, ActionHints)
+│   ├── primitives/                  # Átomos UI por familia de control
+│   │   ├── buttons/                 # ActionButton, FocusCard, PillButton, ToggleChip
+│   │   ├── sliders/                 # ConsoleSlider, VolumeSlider, ProgressBar
+│   │   ├── glyphs/                  # InputGlyph (<kbd> vs SVG), StatusBadge, AvatarBadge
+│   │   └── text/                    # TestText, SectionTitle, MetricLabel
+│   └── widgets/                     # Bloques compuestos (WindowCarousel, MediaPlayerCard, AudioMixerRow...)
 ├── core/
-│   ├── shell/                        # Infraestructura del overlay, pantallas y entrada
-│   │   ├── ConsoleOverlay.qml        # PanelWindow Wayland + orquestación global
-│   │   ├── SlideManager.qml          # Carga y transición entre pantallas registradas
-│   │   ├── ScreenRegistry.qml        # Catálogo de pantallas (rutas ../../screens/slides/...)
-│   │   ├── ScreenBase.qml            # Contenedor base para todas las pantallas
-│   │   └── InputManager.qml          # Normalización de entrada y carga de ../../inputconfig.json
-│   └── interaction/                  # Sistema de capas y navegación por foco
-│       ├── LayerManager.qml          # Pila de capas (dashboard -> wheel/modal) y memoria de foco
-│       └── FocusZone.qml             # Zona navegable (D-Pad, ciclo LT/RT, regla inert)
-├── components/                       # Componentes visuales reutilizables
-│   ├── chrome/                       # Elementos estructurales del overlay
-│   │   ├── Bg.qml                    # Fondo con gradientes adaptativos
-│   │   └── FocusRing.qml             # Anillo de foco global animado sobre FocusZone activa
-│   ├── primitives/                   # Primitivas atómicas de UI
-│   │   ├── buttons/                  # Botones reutilizables
-│   │   ├── glyphs/                   # Glifos adaptativos por dispositivo
-│   │   ├── sliders/                  # Controles deslizantes
-│   │   └── text/                     # Tipografía y etiquetas
-│   │       └── TestText.qml          # Componente de texto de prueba
-│   └── widgets/                      # Widgets compuestos de alto nivel
-├── screens/                          # Vistas del sistema
-│   ├── slides/                       # Pantallas principales del carrusel
-│   │   ├── TestScreen.qml
-│   │   └── TestScreen2.qml
-│   ├── overlays/                     # Overlays secundarios (ej. wheels / HUDs)
-│   └── modals/                       # Diálogos y modales bloqueantes
-└── docs/
-    └── ARCHITECTURE.md
+│   ├── shell/                       # ConsoleOverlay, InputManager, ScreenBase, ScreenRegistry, SlideManager
+│   ├── interaction/                 # FocusZone, LayerManager
+│   └── motion/                      # MotionTokens, CarouselView, MorphModal, SlideTransition
+├── screens/
+│   ├── slides/                      # Vistas principales (capa "dashboard")
+│   ├── overlays/                    # Ruedas orbitales (capa "wheel")
+│   └── modals/                      # Menús expandidos y diálogos (capa "modal")
+├── services/                        # DconsoleBridge (socket Go) y wrappers de qs.Services
+├── docs/
+│   └── ARCHITECTURE.md
+├── ConsoleDaemon.qml
+├── inputconfig.json                 # Config editable de teclas, mando, holds y combos
+├── uiconfig.json                    # Config editable de UI (animaciones on/off, velocidad, tema/escala)
+└── plugin.json
 ```
 
 ## Resumen de módulos y rutas
@@ -43,6 +35,9 @@ DuxConsole/
 | Módulo | Ruta | Responsabilidad |
 | :--- | :--- | :--- |
 | Daemon | `ConsoleDaemon.qml` | Registro del plugin DMS e `IpcHandler` (`duxConsole`) |
+| Config de entrada | `inputconfig.json` | Mapa de teclado/gamepad, repetición, holds y chords |
+| Config de UI | `uiconfig.json` | Animaciones on/off, velocidad y escala/tema |
+| Assets | `assets/` | Recursos estáticos (SVGs Xbox/PS, iconos) |
 | Overlay shell | `core/shell/ConsoleOverlay.qml` | `PanelWindow` Wayland, captura de teclas, `Bg` y `FocusRing` |
 | Registro de pantallas | `core/shell/ScreenRegistry.qml` | Catálogo de slides en `../../screens/slides/` |
 | Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager` y `layerManager` |
@@ -50,15 +45,17 @@ DuxConsole/
 | Entrada | `core/shell/InputManager.qml` | Traducción teclado/gamepad con `../../inputconfig.json` y gestos |
 | Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` y memoria de foco por capa |
 | Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT` y bloqueo `inert` |
-| Chrome | `components/chrome/` | `Bg.qml` y `FocusRing.qml` |
+| Motion | `core/motion/` | Tokens de animación y transiciones (`MotionTokens`, `CarouselView`, `MorphModal`, `SlideTransition`) |
+| Chrome | `components/chrome/` | Marco persistente (`Bg.qml`, `FocusRing.qml`, etc.) |
 | Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` y `text/` (`TestText.qml`) |
-| Widgets | `components/widgets/` | Widgets compuestos |
-| Slides | `screens/slides/` | `TestScreen.qml`, `TestScreen2.qml` |
-| Overlays / Modals | `screens/overlays/`, `screens/modals/` | Vistas apiladas sobre `dashboard` |
+| Widgets | `components/widgets/` | Bloques compuestos reutilizables |
+| Slides | `screens/slides/` | Vistas principales (`TestScreen.qml`, `TestScreen2.qml`) |
+| Overlays / Modals | `screens/overlays/`, `screens/modals/` | Ruedas orbitales (`"wheel"`) y modales (`"modal"`) |
+| Servicios | `services/` | `DconsoleBridge` (socket Go) y wrappers de `qs.Services` |
 
 ## Flujo de entrada y capas
 
-1. `ConsoleOverlay` (`core/shell/ConsoleOverlay.qml`) captura eventos de teclado (y en el futuro gamepad vía `dconsole`) y los delega a `InputManager` (`core/shell/InputManager.qml`).
+1. `ConsoleOverlay` (`core/shell/ConsoleOverlay.qml`) captura eventos de teclado (y gamepad vía `services/` / `dconsole`) y los delega a `InputManager` (`core/shell/InputManager.qml`).
 2. `InputManager` traduce códigos crudos usando `../../inputconfig.json` y emite la señal semántica `triggered(action, payload)`.
 3. `ConsoleOverlay` enruta las acciones:
    - `I.Refuse`: intenta cerrar la capa superior con `layerManager.pop()`; si ya está en `"dashboard"`, cierra el overlay.

@@ -1,0 +1,9 @@
+{
+  "animations": {
+    "enabled": true,
+    "speed": 1.0
+  },
+  "theme": {
+    "scale": 1.0
+  }
+}

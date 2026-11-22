@@ -22,7 +22,7 @@ SlantedSurface {
             text: card.title
             font.pixelSize: Theme.fontSizeMedium
             font.weight: Font.Bold
-            color: card.styleTokens ? card.styleTokens.onSurfaceColor("card") : Theme.onSurface
+            color: card.styleTokens ? card.styleTokens.onSurfaceColor("card") : (Theme.surfaceText ?? "#F2F4F8")
         }
 
         StyledText {
@@ -30,7 +30,7 @@ SlantedSurface {
             visible: card.subtitle !== ""
             text: card.subtitle
             font.pixelSize: Theme.fontSizeSmall
-            color: card.styleTokens ? card.styleTokens.accentColor : Theme.onSurfaceVariant
+            color: card.styleTokens ? card.styleTokens.accentColor : (Theme.surfaceVariantText ?? "#9CA3AF")
         }
     }
 }

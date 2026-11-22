@@ -108,5 +108,10 @@ PanelWindow {
             motionTokens: motionTokens
             styleTokens: styleTokens
         }
+
+        ErrorBanner {
+            sourcePath: slideManager.failedSource
+            errorMessage: slideManager.loadError
+        }
     }
 }

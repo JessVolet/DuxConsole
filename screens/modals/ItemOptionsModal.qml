@@ -42,7 +42,7 @@ Rectangle {
                 text: modal.title
                 font.pixelSize: Theme.fontSizeLarge
                 font.weight: Font.Bold
-                color: Theme.onSurface
+                color: Theme.surfaceText ?? "#F2F4F8"
             }
 
             Repeater {

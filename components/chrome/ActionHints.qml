@@ -32,7 +32,9 @@ Row {
                 text: hintsBar.i18n
                       ? hintsBar.i18n.t(modelData.labelKey, modelData.fallback ?? "")
                       : (modelData.fallback ?? "")
-                color: Theme.onSurfaceVariant
+                color: hintsBar.styleTokens
+                       ? hintsBar.styleTokens.onSurfaceColor("card")
+                       : (Theme.surfaceVariantText ?? "#9CA3AF")
                 font.pixelSize: Theme.fontSizeSmall
             }
         }

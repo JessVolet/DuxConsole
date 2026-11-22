@@ -36,7 +36,7 @@ SlantedSurface {
             font.weight: Font.DemiBold
             color: button.styleTokens
                    ? button.styleTokens.onSurfaceColor(button.role)
-                   : Theme.onSurface
+                   : (Theme.surfaceText ?? "#F2F4F8")
         }
     }
 }

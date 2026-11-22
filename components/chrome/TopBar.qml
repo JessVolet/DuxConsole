@@ -24,7 +24,6 @@ SlantedSurface {
         spacing: Theme.spacingM
 
         InputGlyph {
-            anchors.verticalCenter: parent.verticalCenter
             iconsPadManager: bar.iconsPadManager
             styleTokens: bar.styleTokens
             action: "I.ActionSlide.L"
@@ -37,7 +36,6 @@ SlantedSurface {
                 required property var modelData
                 readonly property bool isCurrent: index === bar.currentIndex
 
-                anchors.verticalCenter: parent.verticalCenter
                 implicitWidth: tabLabel.implicitWidth + Theme.spacingL * 2
                 implicitHeight: 32
                 radius: Theme.cornerRadius
@@ -55,13 +53,12 @@ SlantedSurface {
                     font.weight: isCurrent ? Font.Bold : Font.Medium
                     color: isCurrent
                            ? "#FFFFFF"
-                           : (bar.styleTokens ? bar.styleTokens.onSurfaceColor("chrome") : Theme.onSurface)
+                           : (bar.styleTokens ? bar.styleTokens.onSurfaceColor("chrome") : (Theme.surfaceText ?? "#F2F4F8"))
                 }
             }
         }
 
         InputGlyph {
-            anchors.verticalCenter: parent.verticalCenter
             iconsPadManager: bar.iconsPadManager
             styleTokens: bar.styleTokens
             action: "I.ActionSlide.R"
@@ -76,6 +73,6 @@ SlantedSurface {
         text: bar.statusText
         font.pixelSize: Theme.fontSizeSmall
         font.weight: Font.Medium
-        color: bar.styleTokens ? bar.styleTokens.onSurfaceColor("chrome") : Theme.onSurfaceVariant
+        color: bar.styleTokens ? bar.styleTokens.onSurfaceColor("chrome") : (Theme.surfaceVariantText ?? "#9CA3AF")
     }
 }

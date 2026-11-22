@@ -18,13 +18,13 @@ Column {
         font.weight: Font.Bold
         color: section.styleTokens
                ? section.styleTokens.onSurfaceColor(section.role)
-               : Theme.onSurface
+               : (Theme.surfaceText ?? "#F2F4F8")
     }
 
     StyledText {
         visible: section.subtitle !== ""
         text: section.subtitle
         font.pixelSize: Theme.fontSizeSmall
-        color: Theme.onSurfaceVariant
+        color: Theme.surfaceVariantText ?? "#9CA3AF"
     }
 }

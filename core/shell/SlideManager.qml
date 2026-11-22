@@ -14,6 +14,8 @@ Item {
     property int currentIndex: 0
 
     readonly property var currentScreenMeta: registry.screens[currentIndex] ?? null
+    property string loadError: ""
+    property string failedSource: ""
 
     function next() {
         if (!registry.screens.length) return
@@ -29,6 +31,20 @@ Item {
         id: slideLoader
         anchors.fill: parent
         source: manager.currentScreenMeta ? Qt.resolvedUrl(manager.currentScreenMeta.source) : ""
+
+        onStatusChanged: {
+            if (status === Loader.Ready) {
+                manager.loadError = ""
+                manager.failedSource = ""
+            } else if (status === Loader.Error) {
+                manager.failedSource = source.toString()
+                const probe = Qt.createComponent(source)
+                manager.loadError = probe.status === Component.Error
+                    ? probe.errorString()
+                    : "Error al cargar la pantalla (Loader.Error)"
+                probe.destroy()
+            }
+        }
 
         onLoaded: {
             if (!item) return

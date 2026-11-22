@@ -60,3 +60,5 @@
 - [ ] Mecanismo **Fail-Safe** sobre Unix Socket: liberación instantánea del mando al desconectarse Quickshell.
 - [x] `services/DconsoleBridge.qml`: cliente Unix Socket en QML conectado a `InputManager.handleRawPress/Release`.
 - [ ] Integraciones externas con caché en disco: Steam (`.vdf`/`.acf`), SteamDB/ProtonDB, RetroAchievements, Discord IPC y `gpu-screen-recorder`.
+
+The proposed visual prototype has a [separate roadmap](mockup/ROADMAP.md).

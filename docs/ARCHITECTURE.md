@@ -41,7 +41,7 @@ flowchart TD
 
 ### `uiconfig.json`
 - **Problema**: Ajustar idioma, animaciones, opacidad o modo visual sin recompilar ni editar QML.
-- **Solución**: Centraliza `language`, `animations` (`enabled`, `speed`, `fadeInMs`, `fadeOutMs`), `theme` (`mode`, `accentSource`, `customAccent`, `skewAngle`, `scrimOpacity`) e `icons` (`colorMode`, `style`, `customColor`, `showBackdrop`). Las superficies de componentes son sólidas; solo `Bg.qml` controla transparencia global.
+- **Solución**: Centraliza `language`, `animations` (`enabled`, `speed`, `fadeInMs`, `fadeOutMs`), `theme` (`mode`, `accentSource`, `customAccent`, `skewAngle`, `scrimOpacity`) e `icons` (`colorMode`, `style`, `customColor`, `showBackdrop`). Las tarjetas pueden usar `theme.cardOpacity`; `Bg.qml` controla la transparencia global.
 
 ### `locales/es.json` y `locales/en.json`
 - **Problema**: Textos literales en QML impiden cambiar de idioma en caliente.
@@ -187,3 +187,5 @@ flowchart TD
 ### `screens/slides/TestScreen.qml`, `TestScreen2.qml` y `screens/modals/ItemOptionsModal.qml`
 - **Problema**: Validar la arquitectura visual y los 3 niveles ControlFriendly sin hardcodear UI en pantallas.
 - **Solución**: `TestScreen.qml` ensambla `TopBar`, `SectionTitle`, `ActionButton`s, `SlantedImage`, `CarouselView`, `ActionHints` e `ItemOptionsModal` (capa `"modal"`). `TestScreen2.qml` valida el cambio de slide (`LB`/`RB`).
+
+See the [visual prototype architecture](mockup/ARCHITECTURE.md) for the proposed fixture mode and reusable UI boundaries.

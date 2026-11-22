@@ -41,7 +41,7 @@ DuxConsole/
 | Config de glifos | `iconsconfig.json` | Mapa data-driven de iconos/etiquetas por dispositivo (`keyboard`, `xbox`, `playstation`) |
 | Config de UI | `uiconfig.json` | Idioma (`language`), animaciones on/off, velocidad y escala/tema |
 | Locales | `locales/es.json`, `locales/en.json` | Diccionarios de traducción por sección |
-| Assets | `assets/` | Recursos estáticos (SVGs Xbox/PS en `assets/glyphs/<device>/<button>.svg`) |
+| Assets | `assets/` | Recursos estáticos (incluye `assets/InputIcons/` — Kenney Input Prompts CC0) |
 | Overlay shell | `core/shell/ConsoleOverlay.qml` | Composition Root: `PanelWindow`, captura de teclas, `Bg` y `FocusRing` |
 | Registro de pantallas | `core/shell/ScreenRegistry.qml` | Catálogo de slides en `../../screens/slides/` con `labelKey` para `I18n` |
 | Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager`, `layerManager`, `iconsPadManager` e `i18n` |

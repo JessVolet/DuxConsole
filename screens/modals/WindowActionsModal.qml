@@ -235,7 +235,7 @@ Rectangle {
                             focused: outZone.active
                             styleTokens: modal.styleTokens
                             motionTokens: modal.motionTokens
-                            label: modelData.name + (outZone.isCurrent ? " (" + modal.tr("windows.current", "current") + ")" : "")
+                            label: outZone.modelData.name + (outZone.isCurrent ? " (" + modal.tr("windows.current", "current") + ")" : "")
                         }
                     }
                 }
@@ -276,9 +276,9 @@ Rectangle {
                             focused: wsZone.active
                             styleTokens: modal.styleTokens
                             motionTokens: modal.motionTokens
-                            label: modal.tr("windows.workspace_prefix", "Workspace") + " " + modelData.idx
-                                   + (modelData.name ? " · " + modelData.name : "")
-                                   + (modelData.output ? " [" + modelData.output + "]" : "")
+                            label: modal.tr("windows.workspace_prefix", "Workspace") + " " + wsZone.modelData.idx
+                                   + (wsZone.modelData.name ? " · " + wsZone.modelData.name : "")
+                                   + (wsZone.modelData.output ? " [" + wsZone.modelData.output + "]" : "")
                                    + (wsZone.isCurrent ? " (" + modal.tr("windows.current", "current") + ")" : "")
                         }
                     }

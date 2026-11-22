@@ -13,17 +13,21 @@ Column {
     spacing: 2
 
     StyledText {
+        width: section.width
         text: section.title
         font.pixelSize: Theme.fontSizeMedium
         font.weight: Font.Bold
+        elide: Text.ElideRight
         color: section.styleTokens
                ? section.styleTokens.onSurfaceColor(section.role)
                : (Theme.surfaceText ?? "#F2F4F8")
     }
 
     StyledText {
+        width: section.width
         visible: section.subtitle !== ""
         text: section.subtitle
+        wrapMode: Text.Wrap
         font.pixelSize: Theme.fontSizeSmall
         color: Theme.surfaceVariantText ?? "#9CA3AF"
     }

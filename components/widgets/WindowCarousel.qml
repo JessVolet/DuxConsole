@@ -16,6 +16,7 @@ Item {
     property var styleTokens: null
     property var motionTokens: null
     property var i18n: null
+    property bool iconOnly: false
     property bool defaultFocus: false
     property string layerName: "dashboard"
     property string zoneId: "zone-windows"
@@ -39,7 +40,7 @@ Item {
     signal activateWindowRequested(int windowId)
     signal windowOptionsRequested(int windowId)
 
-    implicitHeight: Math.max(200, carousel.implicitHeight)
+    implicitHeight: iconOnly ? carousel.implicitHeight : Math.max(200, carousel.implicitHeight)
 
     function _syncSelectionFromList() {
         if (windows.length === 0) {
@@ -146,7 +147,27 @@ Item {
                 styleTokens: wc.styleTokens
                 motionTokens: wc.motionTokens
 
+                SlantedImage {
+                    visible: wc.iconOnly
+                    anchors.centerIn: parent
+                    width: Math.min(
+                        winCard.width * 0.72,
+                        (winCard.selected ? 112 : 56) * carousel.layoutScale
+                    )
+                    height: width
+                    styleTokens: wc.styleTokens
+                    motionTokens: wc.motionTokens
+                    source: winCard.iconInfo.source
+                    fillMode: Image.PreserveAspectFit
+                    showGradientOverlay: false
+                    fallbackText: winCard.win?.appName
+                                  ? winCard.win.appName.slice(0, 2).toUpperCase()
+                                  : ""
+                    focused: winCard.focused && winCard.selected
+                }
+
                 Column {
+                    visible: !wc.iconOnly
                     anchors.fill: parent
                     anchors.margins: Theme.spacingM * carousel.layoutScale
                     spacing: Theme.spacingS * carousel.layoutScale

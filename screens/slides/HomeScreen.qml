@@ -3,8 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import "../../core/shell"
-import "../../core/interaction"
-import "../../components/primitives/buttons"
 import "../../components/primitives/text"
 import "../../components/widgets"
 import "../modals"
@@ -16,19 +14,26 @@ ScreenBase {
 
     property int modalTargetWindowId: -1
     property string ipcErrorNotice: ""
-
-    readonly property var activeTargetWindow: {
-        if (windowCarousel.selectedWindow)
-            return windowCarousel.selectedWindow
-        const wins = root.windowManager ? root.windowManager.windows : []
-        return wins.find(w => w.isFocused) ?? (wins.length > 0 ? wins[0] : null)
-    }
+    readonly property bool compactLayout: width < 900 || height < 520
+    readonly property var selectedWindow: windowCarousel.selectedWindow
 
     function errorText(code) {
         return root.tr("windows.errors." + code, root.tr("windows.errors.unknown", "The window action could not be completed."))
     }
 
-    function _focusAndClose(winId) {
+    function selectedWindowDescription(win) {
+        if (!win)
+            return root.tr("windows.empty", "No open windows")
+
+        const details = []
+        if (win.workspaceIndex >= 0)
+            details.push(root.tr("windows.workspace_prefix", "Workspace") + " " + win.workspaceIndex)
+        if (win.output)
+            details.push(root.tr("windows.output_prefix", "Display") + " " + win.output)
+        return details.length > 0 ? details.join(" · ") : root.tr("home.no_active_app", "No active application")
+    }
+
+    function focusAndClose(winId) {
         if (winId < 0 || !root.windowManager)
             return
         root.ipcErrorNotice = ""
@@ -40,85 +45,74 @@ ScreenBase {
         })
     }
 
-    Flow {
-        id: mainGrid
+    Column {
+        id: pageLayout
         anchors.fill: parent
-        spacing: Theme.spacingXL
-        property bool stacked: width < 880
+        spacing: Theme.spacingL
 
-        // Columna izquierda: Superior (Inicio + Continuar) + Inferior (Carrusel de ventanas)
-        Column {
-            width: mainGrid.stacked
-                   ? mainGrid.width
-                   : Math.max(0, mainGrid.width - mediaSlot.width - mainGrid.spacing)
-            spacing: Theme.spacingL
+        Item {
+            id: selectedWindowArea
+            width: pageLayout.width
+            height: pageLayout.height * (root.compactLayout ? 0.38 : 0.48)
 
-            // Superior izquierda: Título grande + app/juego activo + botón Continuar
             Column {
-                width: parent.width
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.min(parent.width * (root.compactLayout ? 0.9 : 0.48), 760)
                 spacing: Theme.spacingM
 
                 DisplayTitle {
-                    styleTokens: root.styleTokens
-                    text: root.tr("nav.home", "Home")
+                    width: parent.width
+                    text: root.selectedWindow
+                          ? (root.selectedWindow.title || root.selectedWindow.appName || root.tr("windows.unknown_app", "Application"))
+                          : root.tr("windows.empty", "No open windows")
+                    elide: Text.ElideRight
+                    maximumLineCount: 2
+                    wrapMode: Text.Wrap
                 }
 
                 SectionTitle {
+                    width: parent.width
                     styleTokens: root.styleTokens
-                    title: root.activeTargetWindow
-                           ? root.activeTargetWindow.appName
-                           : root.tr("home.no_active_app", "No active application")
-                    subtitle: root.ipcErrorNotice !== ""
-                              ? root.ipcErrorNotice
-                              : (root.activeTargetWindow ? root.activeTargetWindow.title : "")
+                    title: root.selectedWindow && root.selectedWindow.appName
+                           ? root.selectedWindow.appName
+                           : root.tr("windows.unknown_app", "Application")
+                    subtitle: root.selectedWindowDescription(root.selectedWindow)
                 }
 
-                FocusZone {
-                    id: zoneContinue
-                    zoneId: "home-continue"
-                    layerName: "dashboard"
-                    layerManager: root.layerManager
-                    navigationManager: root.navigationManager
-                    defaultFocus: true
-                    enabled: root.activeTargetWindow !== null
-                    actionHints: root.activeTargetWindow
-                        ? [{ action: "I.Accept", labelKey: "home.continue", fallback: "Continue" }]
-                        : []
-                    width: btnContinue.width
-                    height: btnContinue.height
-                    ringRadius: Theme.cornerRadius
-
-                    onActivated: {
-                        if (root.activeTargetWindow)
-                            root._focusAndClose(root.activeTargetWindow.id)
-                    }
-
-                    ActionButton {
-                        id: btnContinue
-                        enabled: zoneContinue.enabled
-                        focused: zoneContinue.active
-                        styleTokens: root.styleTokens
-                        motionTokens: root.motionTokens
-                        iconsPadManager: root.iconsPadManager
-                        action: "I.Accept"
-                        label: root.tr("home.continue", "Continue")
-                    }
+                StatusMessage {
+                    visible: root.ipcErrorNotice !== ""
+                    width: parent.width
+                    text: root.ipcErrorNotice
+                    styleTokens: root.styleTokens
                 }
             }
+        }
 
-            // Zona central e inferior izquierda: Carrusel de ventanas reales
-            Column {
-                width: parent.width
-                spacing: Theme.spacingS
+        Flow {
+            id: bottomRegion
+            width: pageLayout.width
+            height: Math.max(0, pageLayout.height - selectedWindowArea.height - pageLayout.spacing)
+            spacing: Theme.spacingM
+            property bool stacked: root.compactLayout
 
-                SectionTitle {
-                    styleTokens: root.styleTokens
-                    title: root.tr("home.windows_section", "Active Windows")
-                }
+            Item {
+                id: carouselSlot
+                width: bottomRegion.stacked
+                       ? bottomRegion.width
+                       : Math.max(0, bottomRegion.width - mediaSlot.width - bottomRegion.spacing)
+                height: bottomRegion.stacked
+                        ? Math.min(windowCarousel.implicitHeight, bottomRegion.height * 0.56)
+                        : bottomRegion.height
 
                 WindowCarousel {
                     id: windowCarousel
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
                     width: parent.width
+                    height: Math.min(implicitHeight, parent.height)
+                    iconOnly: true
+                    defaultFocus: true
                     windowManager: root.windowManager
                     windowIconProvider: root.windowIconProvider
                     layerManager: root.layerManager
@@ -127,7 +121,7 @@ ScreenBase {
                     motionTokens: root.motionTokens
                     i18n: root.i18n
 
-                    onActivateWindowRequested: winId => root._focusAndClose(winId)
+                    onActivateWindowRequested: winId => root.focusAndClose(winId)
                     onWindowOptionsRequested: winId => {
                         root.ipcErrorNotice = ""
                         root.modalTargetWindowId = winId
@@ -135,22 +129,26 @@ ScreenBase {
                     }
                 }
             }
-        }
 
-        // Derecha: Espacio reservado para MediaPlayerCard
-        Item {
-            id: mediaSlot
-            width: mainGrid.stacked ? mainGrid.width : Math.min(340, mainGrid.width * 0.28)
-            height: 240
+            Item {
+                id: mediaSlot
+                width: bottomRegion.stacked
+                       ? bottomRegion.width
+                       : Math.min(340, bottomRegion.width * 0.30)
+                height: bottomRegion.stacked
+                        ? Math.max(0, bottomRegion.height - carouselSlot.height - bottomRegion.spacing)
+                        : bottomRegion.height
 
-            MediaPlayerCard {
-                anchors.top: parent.top
-                anchors.right: parent.right
-                width: parent.width
-                height: parent.height
-                styleTokens: root.styleTokens
-                motionTokens: root.motionTokens
-                i18n: root.i18n
+                MediaPlayerCard {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    width: parent.width
+                    height: bottomRegion.stacked ? parent.height : Math.min(240, parent.height)
+                    compact: bottomRegion.stacked
+                    styleTokens: root.styleTokens
+                    motionTokens: root.motionTokens
+                    i18n: root.i18n
+                }
             }
         }
     }

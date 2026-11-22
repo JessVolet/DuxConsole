@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.Widgets
 import "../../core/shell"
 import "../../core/interaction"
 import "../../components/primitives/buttons"

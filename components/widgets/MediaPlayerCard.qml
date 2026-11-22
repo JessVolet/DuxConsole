@@ -8,6 +8,7 @@ SlantedSurface {
     id: mediaCard
 
     property var i18n: null
+    property bool compact: false
 
     role: "card"
     implicitWidth: 320
@@ -15,16 +16,18 @@ SlantedSurface {
 
     Column {
         anchors.fill: parent
-        anchors.margins: Theme.spacingXL
-        spacing: Theme.spacingM
+        anchors.margins: mediaCard.compact ? Theme.spacingM : Theme.spacingXL
+        spacing: mediaCard.compact ? Theme.spacingS : Theme.spacingM
 
         SectionTitle {
+            width: parent.width
             styleTokens: mediaCard.styleTokens
             title: mediaCard.i18n ? mediaCard.i18n.t("media.title", "Media Player") : "Media Player"
             subtitle: mediaCard.i18n ? mediaCard.i18n.t("media.idle_subtitle", "MPRIS reserved slot") : "MPRIS reserved slot"
         }
 
         StyledText {
+            visible: !mediaCard.compact
             width: parent.width
             wrapMode: Text.Wrap
             text: mediaCard.i18n ? mediaCard.i18n.t("media.idle_body", "No active media player") : "No active media player"

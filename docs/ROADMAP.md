@@ -47,7 +47,7 @@
 - [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowActionsModal.qml`.
 - [ ] Ruedas Orbitales (`screens/overlays/`): `OrbitalMenu.qml` (`SystemWheel` con hold `I.Guide` y `QuickWheel` con acorde `I.Guide + I.ActionSlide.R`).
 - [ ] Slides (`screens/slides/`):
-  - [x] `HomeScreen.qml` (prototipo inicial: `Continuar`, `WindowCarousel` real y slot `MediaPlayerCard`).
+  - [x] `HomeScreen.qml` (título/descripción de ventana seleccionada, carrusel `iconOnly` centrado abajo y `MediaPlayerCard` abajo a la derecha).
   - [ ] `SoundScreen.qml` (dispositivos salida/entrada con LT/RT + mezclador por app).
   - [ ] `CaptureScreen.qml` (captura de pantalla, grabación, replay 30s).
   - [ ] `LauncherScreen.qml` (biblioteca Steam + ROMs + estado ProtonDB/SteamDB).

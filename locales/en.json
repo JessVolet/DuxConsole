@@ -57,6 +57,7 @@
     "empty": "No open windows",
     "unknown_app": "Application",
     "workspace_prefix": "Workspace",
+    "output_prefix": "Display",
     "hint_focus": "Focus window",
     "hint_options": "Window options",
     "actions_title": "Window Actions",

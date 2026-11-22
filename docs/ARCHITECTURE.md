@@ -122,7 +122,7 @@ flowchart TD
 
 ### `components/widgets/WindowCarousel.qml`, `MediaPlayerCard.qml` y `screens/slides/HomeScreen.qml`
 - **Problema**: Se requiere un prototipo inicial de `Inicio` separado del laboratorio `TestScreen.qml`.
-- **Solución**: `HomeScreen.qml` ensambla título `Inicio`, app activa + botón `Continuar`, `WindowCarousel` (con `WindowIconProvider` + `SlantedImage`, tarjetas sólidas opacas y `selectedWindowId` estable) y el contenedor reservado `MediaPlayerCard` a la derecha.
+- **Solución**: `HomeScreen.qml` presenta el título/descripción de la ventana seleccionada a media altura, un `WindowCarousel` centrado abajo en modo `iconOnly` y `MediaPlayerCard` abajo a la derecha. El carrusel mantiene modo rico para otras pantallas, `selectedWindowId` estable y micro-navegación LT/RT; la activación enfoca la ventana y `I.Options` abre acciones.
 
 ### `components/chrome/ModalPanel.qml` y `components/primitives/text/StatusMessage.qml`
 - **Problema**: Los modales necesitan una superficie reutilizable y mensajes de error consistentes sin dibujar `StyledRect`/`StyledText` inline.

@@ -57,6 +57,7 @@
     "empty": "No hay ventanas abiertas",
     "unknown_app": "Aplicación",
     "workspace_prefix": "Espacio",
+    "output_prefix": "Pantalla",
     "hint_focus": "Enfocar ventana",
     "hint_options": "Opciones de ventana",
     "actions_title": "Acciones de ventana",

@@ -32,16 +32,11 @@ Item {
         }
     }
 
-    readonly property bool iconTintEnabled: iconColorMode === "dms" || iconColorMode === "custom"
+    readonly property bool iconTintEnabled: iconColorMode !== "colored"
     readonly property color iconTintColor: {
-        switch (iconColorMode) {
-        case "custom":
+        if (iconColorMode === "custom")
             return iconCustomColor
-        case "dms":
-            return accentColor
-        default:
-            return Theme.onSurface
-        }
+        return "#14161D"
     }
 
     function _isLightRole(role) {

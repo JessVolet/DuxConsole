@@ -10,7 +10,6 @@ StyledRect {
     property var styleTokens: null
     property string action: ""
     property bool badge: false
-    property bool onLightSurface: false
 
     readonly property var resolved: {
         // Dependencia reactiva explícita de dispositivo, configs y estilo de iconos
@@ -48,11 +47,7 @@ StyledRect {
     readonly property color tintColor: {
         if (resolved.colorMode === "custom")
             return styleTokens?.iconCustomColor ?? "#FFFFFF"
-        if (resolved.colorMode === "dms")
-            return styleTokens ? styleTokens.accentColor : Theme.primary
-        if (showBadge)
-            return "#F2F4F8"
-        return onLightSurface ? "#14161D" : "#F2F4F8"
+        return "#14161D"
     }
 
     implicitWidth: useSvg
@@ -61,10 +56,10 @@ StyledRect {
     implicitHeight: useSvg ? (showBadge ? 28 : 22) : 24
     radius: useSvg ? (showBadge ? height / 2 : 0) : 6
     color: useSvg
-        ? (showBadge ? Qt.rgba(0.06, 0.07, 0.10, 0.76) : "transparent")
-        : Theme.surfaceContainerHighest
+        ? (showBadge ? "#FFFFFF" : "transparent")
+        : "#FFFFFF"
     border.width: useSvg ? (showBadge ? 1 : 0) : 1
-    border.color: useSvg ? Qt.rgba(1, 1, 1, 0.16) : Theme.outlineVariant
+    border.color: Qt.rgba(0, 0, 0, 0.14)
 
     Image {
         id: svgIcon
@@ -94,6 +89,6 @@ StyledRect {
         text: glyphRoot.resolved.label
         font.pixelSize: Theme.fontSizeSmall
         font.weight: Font.DemiBold
-        color: Theme.onSurface
+        color: "#14161D"
     }
 }

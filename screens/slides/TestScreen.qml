@@ -4,7 +4,6 @@ import QtQuick
 import qs.Common
 import "../../core/shell"
 import "../../core/interaction"
-import "../../components/chrome"
 import "../../components/primitives/buttons"
 import "../../components/primitives/surfaces"
 import "../../components/primitives/text"
@@ -45,27 +44,8 @@ ScreenBase {
 
     Column {
         id: layoutCol
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: bottomHints.top
-        anchors.bottomMargin: Theme.spacingM
+        anchors.fill: parent
         spacing: Theme.spacingL
-
-        // Chrome superior
-        TopBar {
-            width: layoutCol.width
-            styleTokens: root.styleTokens
-            motionTokens: root.motionTokens
-            i18n: root.i18n
-            iconsPadManager: root.iconsPadManager
-            screens: root.registry ? root.registry.screens : []
-            currentIndex: root.currentSlideIndex
-            statusText: (root.inputManager?.activeDevice ?? "keyboard")
-                        + " · "
-                        + root.tr("demo.theme_modes." + (root.styleTokens?.themeMode ?? "hybrid"),
-                                  root.styleTokens?.themeMode ?? "hybrid")
-        }
 
         // Área principal de contenido (controles a la izquierda + SlantedImage a la derecha)
         Row {
@@ -142,7 +122,6 @@ ScreenBase {
                     }
                 }
 
-                // Muestra de estado disabled (no participa en foco)
                 ActionButton {
                     enabled: false
                     styleTokens: root.styleTokens
@@ -216,16 +195,6 @@ ScreenBase {
                 }
             }
         }
-    }
-
-    ActionHints {
-        id: bottomHints
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        iconsPadManager: root.iconsPadManager
-        styleTokens: root.styleTokens
-        i18n: root.i18n
-        hints: root.navigationManager ? root.navigationManager.activeHints : []
     }
 
     ItemOptionsModal {

@@ -12,6 +12,7 @@ Item {
     property real skewAngle: -8
     property bool blurEnabled: true
     property real surfaceOpacity: 0.80
+    property real scrimOpacity: 0.58
     property real uiScale: 1.0
 
     property string iconColorMode: "dms"         // "dms" | "colored" | "custom"
@@ -58,6 +59,13 @@ Item {
         return _isLightRole(role) ? Qt.rgba(0, 0, 0, 0.14) : Qt.rgba(1, 1, 1, 0.14)
     }
 
+    function scrimColor(alphaMultiplier) {
+        const mult = alphaMultiplier ?? 1.0
+        const alpha = Math.max(0, Math.min(0.92, scrimOpacity * mult))
+        // Scrim global siempre oscuro incluso en theme.mode = "light"
+        return Qt.rgba(0.04, 0.05, 0.08, alpha)
+    }
+
     FileView {
         id: uiConfigFile
         path: Qt.resolvedUrl("../../uiconfig.json").toString().replace("file://", "")
@@ -80,6 +88,8 @@ Item {
                         tokens.blurEnabled = cfg.theme.blurEnabled
                     if (typeof cfg.theme.surfaceOpacity === "number")
                         tokens.surfaceOpacity = cfg.theme.surfaceOpacity
+                    if (typeof cfg.theme.scrimOpacity === "number")
+                        tokens.scrimOpacity = cfg.theme.scrimOpacity
                     if (typeof cfg.theme.scale === "number")
                         tokens.uiScale = cfg.theme.scale
                 }

@@ -121,16 +121,16 @@ flowchart TD
 - **Solución**: **Dibuja** dos gradientes (horizontal y vertical) usando `StyleTokens.scrimColor()`, dejando visible la derecha/arriba del escritorio con contraste controlado.
 
 ### `components/chrome/TopBar.qml`
-- **Problema**: Las pantallas necesitan una barra superior consistente con pestañas de navegación y estado del sistema.
-- **Solución**: Extiende `SlantedSurface` (`role: "chrome"`) y **dibuja** los glifos `LB`/`RB`, las pestañas desde `ScreenRegistry` + `I18n` y el texto de estado a la derecha.
+- **Problema**: Las pantallas necesitan una barra superior persistente con identidad, pestañas de navegación y estado del sistema sin reconstruirse en cada slide.
+- **Solución**: Montada una sola vez en `ConsoleOverlay.qml` (`role: "chrome"`). **Dibuja** 3 regiones: izquierda (`CircularProgressGlyph` Guide + `assets/dux-logo.svg` + `DuxShell`/`Console`), centro (`InputGlyph` LB/RB + pestañas desde `ScreenRegistry` + `I18n`), derecha (`CircularProgressGlyph` Start + batería mando + `UPower` batería equipo + `SystemClock` + perfil).
 
-### `components/chrome/FocusRing.qml`
-- **Problema**: Sin un indicador global unificado, cada botón tendría que dibujar su propio borde animado con saltos al cambiar de zona.
-- **Solución**: **Dibuja** un `Rectangle` transparente con borde `StyleTokens.accentColor` que persigue suavemente la geometría de `layerManager.activeZone` mediante `mapToItem()` y `MotionTokens`.
+### `components/chrome/FooterBar.qml` y `components/chrome/ActionHints.qml`
+- **Problema**: Agrupar todos los hints en una sola barra o dentro de cada slide provoca reconstrucciones y falta de contraste sobre fondos claros.
+- **Solución**: `FooterBar` se monta de forma persistente abajo a la derecha en `ConsoleOverlay.qml` y envuelve `ActionHints`, que **dibuja** cada hint como una tarjeta individual (`SlantedSurface` `role: "card"`) en `Flow` (`Qt.RightToLeft`) con superficie sólida/opaca de alto contraste como fallback cuando Wayland no ofrece blur por tarjeta.
 
-### `components/chrome/ActionHints.qml`
-- **Problema**: Las barras de ayuda inferiores suelen quedar ilegibles sobre fondos claros o mostrar botones que no aplican a la zona activa.
-- **Solución**: Extiende `SlantedSurface` (`role: "card"`) y **dibuja** una píldora inferior con cada `InputGlyph` + etiqueta traducida desde `NavigationManager.activeHints`.
+### `components/primitives/glyphs/CircularProgressGlyph.qml`
+- **Problema**: Los botones `Guide` y `Start` requieren un indicador circular de progreso reutilizable sin acoplarse a lógica de acciones.
+- **Solución**: **Dibuja** un anillo anti-aliased vía `Canvas` con estados `idle`, `charging` y `completed`, `progress` `0.0..1.0` y duraciones desde `MotionTokens`.
 
 ### `components/chrome/ErrorBanner.qml`
 - **Problema**: Si un slide falla al cargar en tiempo de ejecución, el overlay quedaría vacío sin explicar qué se rompió.

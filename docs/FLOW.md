@@ -27,16 +27,16 @@ sequenceDiagram
 ```
 
 ### Qué dibuja cada capa visual (de atrás hacia adelante)
-1. **`Bg.qml`**: Scrim oscuro en gradientes (mantiene visible el juego/escritorio en el lado derecho y superior).
-2. **`SlideManager.qml` → `TestScreen.qml`**:
-   - **`TopBar.qml`**: Barra superior inclinada (`role: "chrome"`) con glifos `LB`/`RB`, pestañas de `ScreenRegistry` y estado activo.
+1. **`Bg.qml`**: Scrim oscuro único en gradiente horizontal (mantiene visible el juego/escritorio en el lado derecho).
+2. **`TopBar.qml`** *(chrome persistente)*: Barra superior fija fuera de `SlideManager` (izquierda: `CircularProgressGlyph` Guide + logo + `DuxShell/Console`; centro: `ScreenRegistry` + `LB/RB`; derecha: `CircularProgressGlyph` Start + baterías + `SystemClock` + perfil).
+3. **`SlideManager.qml` → `TestScreen.qml`** *(anclado entre `topBar.bottom` y `footerBar.top`)*:
    - **`SectionTitle.qml` + `ActionButton.qml`**: Encabezados y botones inclinados con `InputGlyph`.
    - **`SlantedImage.qml`**: Vista previa con imagen recta recortada en paralelogramo redondeado y gradiente inferior.
    - **`CarouselView.qml` + `FocusCard.qml`**: Carrusel horizontal circular con tarjeta central expandida y vecinas compactas.
-   - **`ActionHints.qml`**: Píldora inferior inclinada (`role: "card"`) con los glifos y textos de `NavigationManager.activeHints`.
-3. **`ItemOptionsModal.qml`**: Solo visible cuando `layerManager.topLayer === "modal"`; dibuja backdrop y lista vertical de `ActionButton`s con `FocusZone`s en capa `"modal"`.
-4. **`FocusRing.qml`**: Anillo animado global con `StyleTokens.accentColor` sobre el rectángulo mapeado de `layerManager.activeZone`.
-5. **`ErrorBanner.qml`** (`z: 999`): Solo visible si `SlideManager.loadError !== ""`; muestra ruta y detalle del fallo con salida por `Esc`/`B`.
+4. **`FooterBar.qml` → `ActionHints.qml`** *(chrome persistente inferior derecho)*: Tarjetas individuales por hint (`Flow` `RightToLeft`) alimentadas por `NavigationManager.activeHints`.
+5. **`ItemOptionsModal.qml`**: Solo visible cuando `layerManager.topLayer === "modal"`; dibuja backdrop y lista vertical de `ActionButton`s con `FocusZone`s en capa `"modal"`.
+6. **`FocusRing.qml`**: Anillo animado global con `StyleTokens.accentColor` sobre el rectángulo mapeado de `layerManager.activeZone`.
+7. **`ErrorBanner.qml`** (`z: 999`): Solo visible si `SlideManager.loadError !== ""`; muestra ruta y detalle del fallo con salida por `Esc`/`B`.
 
 ---
 

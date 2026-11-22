@@ -27,13 +27,13 @@
 
 ## FASE 3 — Sistema de Diseño: Primitives y Chrome (`components/`)
 - [x] `components/chrome/Bg.qml` y `components/chrome/FocusRing.qml`.
-- [x] `components/primitives/glyphs/InputGlyph.qml` y `components/primitives/text/TestText.qml`.
+- [x] `components/primitives/glyphs/InputGlyph.qml`, `components/primitives/glyphs/CircularProgressGlyph.qml` y `components/primitives/text/TestText.qml`.
 - [x] `components/primitives/buttons/`: `ActionButton.qml`, `FocusCard.qml` (`PillButton.qml`, `ToggleChip.qml` pendientes).
 - [x] `components/widgets/CarouselView.qml` (escala al ancho disponible, muestra hasta seis y mantiene hasta dos en caché para fades de entrada/salida al rotar modelos mayores).
 - [ ] `components/primitives/sliders/`: `ConsoleSlider.qml`, `VolumeSlider.qml`, `ProgressBar.qml`.
 - [ ] `components/primitives/text/`: `MetricLabel.qml`; [x] `SectionTitle.qml`, `TestText.qml`.
 - [ ] `components/primitives/glyphs/`: `StatusBadge.qml`, `AvatarBadge.qml`.
-- [ ] `components/chrome/`: `BarraMenu.qml`, `StatusBar.qml`; [x] `TopBar.qml` (tabs dinámicas + estado), `ActionHints.qml` (barra inferior contextual dinámica).
+- [x] `components/chrome/`: `TopBar.qml` (identidad + tabs dinámicas + estado), `FooterBar.qml` + `ActionHints.qml` (tarjetas individuales abajo a la derecha), `ErrorBanner.qml`; [ ] `StatusBar.qml` dedicado si se desacopla.
 - [x] Refactorizar `screens/slides/TestScreen.qml` para consumir únicamente primitives, `ActionHints` y un modal reutilizable (0 UI inline).
 
 ## FASE 4 — Servicios del Sistema (`services/` — Integración DMS)

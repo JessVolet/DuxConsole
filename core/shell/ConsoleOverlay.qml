@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
+import qs.Common
 import "../../components/chrome"
 import "../../services"
 import "../interaction"
@@ -88,11 +89,34 @@ PanelWindow {
         Keys.onPressed: event => inputManager.processKeyEvent(event, true)
         Keys.onReleased: event => inputManager.processKeyEvent(event, false)
 
-        Bg {}
+        Bg {
+            styleTokens: styleTokens
+        }
+
+        // Chrome persistente del dashboard (no se destruye al cambiar de slide)
+        TopBar {
+            id: topBar
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: Theme.spacingXL
+            styleTokens: styleTokens
+            motionTokens: motionTokens
+            i18n: i18n
+            iconsPadManager: iconsPadManager
+            screens: screenRegistry.screens
+            currentIndex: slideManager.currentIndex
+            gamepadConnected: dconsoleBridge.connected && inputManager.activeDevice !== "keyboard"
+        }
 
         SlideManager {
             id: slideManager
-            anchors.fill: parent
+            anchors.top: topBar.bottom
+            anchors.topMargin: Theme.spacingM
+            anchors.bottom: footerBar.top
+            anchors.bottomMargin: Theme.spacingM
+            anchors.left: parent.left
+            anchors.right: parent.right
             registry: screenRegistry
             inputManager: inputManager
             layerManager: layerManager
@@ -101,6 +125,18 @@ PanelWindow {
             i18n: i18n
             styleTokens: styleTokens
             motionTokens: motionTokens
+        }
+
+        FooterBar {
+            id: footerBar
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.margins: Theme.spacingXL
+            iconsPadManager: iconsPadManager
+            styleTokens: styleTokens
+            motionTokens: motionTokens
+            i18n: i18n
+            hints: navigationManager.activeHints
         }
 
         FocusRing {

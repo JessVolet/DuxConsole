@@ -13,6 +13,7 @@
     "skewAngle": -8,
     "blurEnabled": true,
     "surfaceOpacity": 0.80,
+    "scrimOpacity": 0.58,
     "scale": 1.0
   },
   "icons": {

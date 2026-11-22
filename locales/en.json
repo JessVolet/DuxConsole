@@ -37,5 +37,8 @@
   "error": {
     "title": "DuxConsole — Load Error",
     "close_hint": "Esc / B to close overlay"
+  },
+  "topbar": {
+    "profile_fallback": "Console"
   }
 }

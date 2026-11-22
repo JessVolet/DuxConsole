@@ -36,6 +36,8 @@ Item {
     readonly property color iconTintColor: {
         if (iconColorMode === "custom")
             return iconCustomColor
+        if (iconColorMode === "dms")
+            return accentColor
         return "#14161D"
     }
 

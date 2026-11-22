@@ -47,6 +47,8 @@ StyledRect {
     readonly property color tintColor: {
         if (resolved.colorMode === "custom")
             return styleTokens?.iconCustomColor ?? "#FFFFFF"
+        if (resolved.colorMode === "dms")
+            return styleTokens ? styleTokens.accentColor : Theme.primary
         return "#14161D"
     }
 

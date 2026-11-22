@@ -53,5 +53,5 @@
 - [ ] Proyecto Go `dconsole` con subcomandos CLI (`daemon`, `profile`, `input release`, `status`, `sync`) y unidad `systemd --user` (`Restart=on-failure`).
 - [ ] Cliente D-Bus para `org.shadowblip.InputPlumber`: perfiles (`desktop`, `xbox`, `xbox360`, `ds4`, `generic`), detección de giroscopio (`null` si no existe) y captura global del botón `Guide`.
 - [ ] Mecanismo **Fail-Safe** sobre Unix Socket: liberación instantánea del mando al desconectarse Quickshell.
-- [ ] `services/DconsoleBridge.qml`: cliente Unix Socket en QML conectado a `InputManager.handleRawPress/Release/Analog`.
+- [x] `services/DconsoleBridge.qml`: cliente Unix Socket en QML conectado a `InputManager.handleRawPress/Release`.
 - [ ] Integraciones externas con caché en disco: Steam (`.vdf`/`.acf`), SteamDB/ProtonDB, RetroAchievements, Discord IPC y `gpu-screen-recorder`.

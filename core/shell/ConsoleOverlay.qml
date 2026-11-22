@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import "../../components/chrome"
+import "../../services"
 import "../interaction"
 
 PanelWindow {
@@ -39,6 +40,12 @@ PanelWindow {
     IconsPadManager {
         id: iconsPadManager
         inputManager: inputManager
+    }
+
+    DconsoleBridge {
+        id: dconsoleBridge
+        inputManager: inputManager
+        overlayActive: overlay.active
     }
 
     InputManager {

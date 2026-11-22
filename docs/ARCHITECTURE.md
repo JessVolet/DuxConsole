@@ -61,7 +61,7 @@ DuxConsole/
 
 ## Regla de dependencias
 
-- `core/` **no** importa `components/` ni `screens/`, con la única excepción del Composition Root en `core/shell/ConsoleOverlay.qml` (`import "../../components/chrome"` para montar `Bg` y `FocusRing`).
+- `core/` **no** importa `components/`, `screens/` ni `services/`, con la única excepción del Composition Root en `core/shell/ConsoleOverlay.qml` (`import "../../components/chrome"` para montar `Bg` y `FocusRing`, e `import "../../services"` para conectar `DconsoleBridge`).
 - Los componentes y pantallas no hardcodean teclas ni textos visibles: usan `InputGlyph` (`IconsPadManager.resolve(action)`) e `I18n.t(key, fallback)`.
 
 ## Cómo agregar un nuevo idioma

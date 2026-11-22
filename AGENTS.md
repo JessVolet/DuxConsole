@@ -30,7 +30,7 @@ components/primitives/ ──▶ core/motion/, qs.Common, qs.Widgets
 core/                  ──▶ (NUNCA importa components/, screens/ ni services/)
 ```
 
-- **Única excepción permitida**: `core/shell/ConsoleOverlay.qml` actúa como *Composition Root* y puede importar `../../components/chrome` para montar `Bg` y `FocusRing`.
+- **Única excepción permitida**: `core/shell/ConsoleOverlay.qml` actúa como *Composition Root* y puede importar `../../components/chrome` (para montar `Bg` y `FocusRing`) y `../../services` (para conectar `DconsoleBridge`).
 
 ---
 

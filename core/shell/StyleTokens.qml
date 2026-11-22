@@ -14,8 +14,10 @@ Item {
     property real surfaceOpacity: 0.80
     property real uiScale: 1.0
 
-    property string iconColorMode: "native"      // "native" | "primary" | "secondary" | "tertiary" | "custom"
+    property string iconColorMode: "dms"         // "dms" | "colored" | "custom"
+    property string iconStyle: "filled"          // "filled" | "outline"
     property color iconCustomColor: "#FFFFFF"
+    property bool iconShowBackdrop: true
 
     readonly property color accentColor: {
         switch (accentSource) {
@@ -30,17 +32,13 @@ Item {
         }
     }
 
-    readonly property bool iconTintEnabled: iconColorMode !== "native"
+    readonly property bool iconTintEnabled: iconColorMode === "dms" || iconColorMode === "custom"
     readonly property color iconTintColor: {
         switch (iconColorMode) {
-        case "primary":
-            return Theme.primary
-        case "secondary":
-            return Theme.secondary
-        case "tertiary":
-            return Theme.tertiary ?? Theme.primary
         case "custom":
             return iconCustomColor
+        case "dms":
+            return accentColor
         default:
             return Theme.onSurface
         }
@@ -91,8 +89,12 @@ Item {
                 if (cfg?.icons) {
                     if (typeof cfg.icons.colorMode === "string")
                         tokens.iconColorMode = cfg.icons.colorMode
+                    if (typeof cfg.icons.style === "string")
+                        tokens.iconStyle = cfg.icons.style
                     if (typeof cfg.icons.customColor === "string")
                         tokens.iconCustomColor = cfg.icons.customColor
+                    if (typeof cfg.icons.showBackdrop === "boolean")
+                        tokens.iconShowBackdrop = cfg.icons.showBackdrop
                 }
             } catch (e) {
                 console.warn("DuxConsole [StyleTokens]: Error en uiconfig.json ->", e)

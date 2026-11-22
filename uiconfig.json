@@ -16,7 +16,9 @@
     "scale": 1.0
   },
   "icons": {
-    "colorMode": "native",
-    "customColor": "#FFFFFF"
+    "colorMode": "dms",
+    "style": "filled",
+    "customColor": "#FFFFFF",
+    "showBackdrop": true
   }
 }

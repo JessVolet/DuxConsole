@@ -6,6 +6,7 @@ Item {
     visible: false
 
     property var inputManager: null
+    property var styleTokens: null
     property var iconsConfig: ({})
 
     FileView {
@@ -34,23 +35,57 @@ Item {
         return ""
     }
 
+    function _pickVariant(variantObj, style) {
+        if (!variantObj)
+            return ""
+        if (typeof variantObj === "string")
+            return variantObj
+        return variantObj[style] ?? variantObj.filled ?? variantObj.outline ?? ""
+    }
+
     function resolve(action) {
         const device = inputManager?.activeDevice ?? "keyboard"
         const inputCfg = inputManager?.config ?? ({})
         const inputSection = device === "keyboard" ? inputCfg.keyboard : inputCfg.gamepad
         const rawCode = _findRawCode(inputSection, action)
 
+        const colorMode = styleTokens?.iconColorMode ?? "dms"
+        const style = styleTokens?.iconStyle ?? "filled"
+        const showBackdrop = styleTokens ? styleTokens.iconShowBackdrop : true
+
         const deviceIcons = iconsConfig?.[device] ?? ({})
         const entry = rawCode ? deviceIcons[rawCode] : null
 
-        const resolvedSource = (entry && entry.source)
-            ? Qt.resolvedUrl("../../" + entry.source).toString()
+        let relPath = ""
+        let isMonochrome = true
+
+        if (entry) {
+            if (colorMode === "colored" && entry.colored) {
+                relPath = _pickVariant(entry.colored, style)
+                isMonochrome = false
+            }
+            if (!relPath && entry.mono) {
+                relPath = _pickVariant(entry.mono, style)
+                isMonochrome = true
+            }
+            if (!relPath && entry.source) {
+                relPath = entry.source
+                isMonochrome = true
+            }
+        }
+
+        const resolvedSource = relPath
+            ? Qt.resolvedUrl("../../" + relPath).toString()
             : ""
 
         return {
-            type: entry?.type ?? "key",
+            type: resolvedSource !== "" ? "svg" : "key",
             label: entry?.label ?? (rawCode || action),
-            source: resolvedSource
+            source: resolvedSource,
+            isMonochrome: isMonochrome,
+            colorMode: colorMode,
+            style: style,
+            showBackdrop: showBackdrop
         }
     }
 }

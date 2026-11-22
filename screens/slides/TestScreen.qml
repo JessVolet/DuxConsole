@@ -67,6 +67,7 @@ ScreenBase {
                     id: btnDevice
                     focused: zoneButton.active
                     iconsPadManager: root.iconsPadManager
+                    styleTokens: root.styleTokens
                     action: "I.Accept"
                     label: root.tr("demo.button_label", "Switch glyph device")
                            + " (" + (root.inputManager?.activeDevice ?? "keyboard") + ")"
@@ -93,6 +94,7 @@ ScreenBase {
                     id: btnTheme
                     focused: zoneTheme.active
                     iconsPadManager: root.iconsPadManager
+                    styleTokens: root.styleTokens
                     action: "I.Accept"
                     label: {
                         const mode = root.styleTokens?.themeMode ?? "hybrid"
@@ -144,6 +146,7 @@ ScreenBase {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         iconsPadManager: root.iconsPadManager
+        styleTokens: root.styleTokens
         i18n: root.i18n
         hints: root.navigationManager ? root.navigationManager.activeHints : []
     }

@@ -1,59 +1,611 @@
 {
   "keyboard": {
-    "Return": { "type": "key", "label": "Enter" },
-    "Escape": { "type": "key", "label": "Esc" },
-    "Tab": { "type": "key", "label": "Tab" },
-    "Space": { "type": "key", "label": "Space" },
-    "Up": { "type": "key", "label": "↑" },
-    "Down": { "type": "key", "label": "↓" },
-    "Left": { "type": "key", "label": "←" },
-    "Right": { "type": "key", "label": "→" },
-    "E": { "type": "key", "label": "E" },
-    "Q": { "type": "key", "label": "Q" },
-    "1": { "type": "key", "label": "1" },
-    "3": { "type": "key", "label": "3" },
-    "P": { "type": "key", "label": "P" },
-    "O": { "type": "key", "label": "O" },
-    "G": { "type": "key", "label": "G" },
-    "R": { "type": "key", "label": "R" },
-    "L": { "type": "key", "label": "L" }
+    "Return": {
+      "label": "Enter",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_enter.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_enter_outline.svg"
+      }
+    },
+    "Escape": {
+      "label": "Esc",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_escape.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_escape_outline.svg"
+      }
+    },
+    "Tab": {
+      "label": "Tab",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_tab.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_tab_outline.svg"
+      }
+    },
+    "Space": {
+      "label": "Space",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_space.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_space_outline.svg"
+      }
+    },
+    "Up": {
+      "label": "↑",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_up.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_up_outline.svg"
+      }
+    },
+    "Down": {
+      "label": "↓",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_down.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_down_outline.svg"
+      }
+    },
+    "Left": {
+      "label": "←",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_left.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_left_outline.svg"
+      }
+    },
+    "Right": {
+      "label": "→",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_right.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_arrow_right_outline.svg"
+      }
+    },
+    "E": {
+      "label": "E",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_e.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_e_outline.svg"
+      }
+    },
+    "Q": {
+      "label": "Q",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_q.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_q_outline.svg"
+      }
+    },
+    "1": {
+      "label": "1",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_1.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_1_outline.svg"
+      }
+    },
+    "3": {
+      "label": "3",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_3.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_3_outline.svg"
+      }
+    },
+    "P": {
+      "label": "P",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_p.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_p_outline.svg"
+      }
+    },
+    "O": {
+      "label": "O",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_o.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_o_outline.svg"
+      }
+    },
+    "G": {
+      "label": "G",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_g.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_g_outline.svg"
+      }
+    },
+    "R": {
+      "label": "R",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_r.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_r_outline.svg"
+      }
+    },
+    "L": {
+      "label": "L",
+      "mono": {
+        "filled": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_l.svg",
+        "outline": "assets/InputIcons/Keyboard & Mouse/Vector/keyboard_l_outline.svg"
+      }
+    }
   },
   "xbox": {
-    "BTN_SOUTH": { "type": "svg", "label": "A", "source": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_a.svg" },
-    "BTN_EAST": { "type": "svg", "label": "B", "source": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_b.svg" },
-    "BTN_NORTH": { "type": "svg", "label": "Y", "source": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_y.svg" },
-    "BTN_WEST": { "type": "svg", "label": "X", "source": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_x.svg" },
-    "BTN_TL": { "type": "svg", "label": "LB", "source": "assets/InputIcons/Xbox Series/Vector/xbox_lb.svg" },
-    "BTN_TR": { "type": "svg", "label": "RB", "source": "assets/InputIcons/Xbox Series/Vector/xbox_rb.svg" },
-    "ABS_Z": { "type": "svg", "label": "LT", "source": "assets/InputIcons/Xbox Series/Vector/xbox_lt.svg" },
-    "ABS_RZ": { "type": "svg", "label": "RT", "source": "assets/InputIcons/Xbox Series/Vector/xbox_rt.svg" },
-    "BTN_SELECT": { "type": "svg", "label": "View", "source": "assets/InputIcons/Xbox Series/Vector/xbox_button_view.svg" },
-    "BTN_START": { "type": "svg", "label": "Menu", "source": "assets/InputIcons/Xbox Series/Vector/xbox_button_menu.svg" },
-    "BTN_MODE": { "type": "svg", "label": "Guide", "source": "assets/InputIcons/Xbox Series/Vector/xbox_guide.svg" },
-    "BTN_THUMBL": { "type": "svg", "label": "LS", "source": "assets/InputIcons/Xbox Series/Vector/xbox_ls.svg" },
-    "BTN_THUMBR": { "type": "svg", "label": "RS", "source": "assets/InputIcons/Xbox Series/Vector/xbox_rs.svg" },
-    "BTN_DPAD_UP": { "type": "svg", "label": "D↑", "source": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_up.svg" },
-    "BTN_DPAD_DOWN": { "type": "svg", "label": "D↓", "source": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_down.svg" },
-    "BTN_DPAD_LEFT": { "type": "svg", "label": "D←", "source": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_left.svg" },
-    "BTN_DPAD_RIGHT": { "type": "svg", "label": "D→", "source": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_right.svg" }
+    "BTN_SOUTH": {
+      "label": "A",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_a.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_a_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_a.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_a_outline.svg"
+      }
+    },
+    "BTN_EAST": {
+      "label": "B",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_b.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_b_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_b.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_b_outline.svg"
+      }
+    },
+    "BTN_NORTH": {
+      "label": "Y",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_y.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_y_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_y.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_y_outline.svg"
+      }
+    },
+    "BTN_WEST": {
+      "label": "X",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_x.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_x_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_x.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_color_x_outline.svg"
+      }
+    },
+    "BTN_TL": {
+      "label": "LB",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_lb.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_lb_outline.svg"
+      }
+    },
+    "BTN_TR": {
+      "label": "RB",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_rb.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_rb_outline.svg"
+      }
+    },
+    "ABS_Z": {
+      "label": "LT",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_lt.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_lt_outline.svg"
+      }
+    },
+    "ABS_RZ": {
+      "label": "RT",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_rt.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_rt_outline.svg"
+      }
+    },
+    "BTN_SELECT": {
+      "label": "View",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_view.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_view_outline.svg"
+      }
+    },
+    "BTN_START": {
+      "label": "Menu",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_button_menu.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_button_menu_outline.svg"
+      }
+    },
+    "BTN_MODE": {
+      "label": "Guide",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_guide.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_guide_outline.svg"
+      }
+    },
+    "BTN_THUMBL": {
+      "label": "LS",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_ls.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_ls_outline.svg"
+      }
+    },
+    "BTN_THUMBR": {
+      "label": "RS",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_rs.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_rs_outline.svg"
+      }
+    },
+    "BTN_DPAD_UP": {
+      "label": "D↑",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_up.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_up_outline.svg"
+      }
+    },
+    "BTN_DPAD_DOWN": {
+      "label": "D↓",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_down.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_down_outline.svg"
+      }
+    },
+    "BTN_DPAD_LEFT": {
+      "label": "D←",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_left.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_left_outline.svg"
+      }
+    },
+    "BTN_DPAD_RIGHT": {
+      "label": "D→",
+      "mono": {
+        "filled": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_right.svg",
+        "outline": "assets/InputIcons/Xbox Series/Vector/xbox_dpad_right_outline.svg"
+      }
+    }
   },
   "playstation": {
-    "BTN_SOUTH": { "type": "svg", "label": "✕", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_cross.svg" },
-    "BTN_EAST": { "type": "svg", "label": "○", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_circle.svg" },
-    "BTN_NORTH": { "type": "svg", "label": "△", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_triangle.svg" },
-    "BTN_WEST": { "type": "svg", "label": "□", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_square.svg" },
-    "BTN_TL": { "type": "svg", "label": "L1", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_l1.svg" },
-    "BTN_TR": { "type": "svg", "label": "R1", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_r1.svg" },
-    "ABS_Z": { "type": "svg", "label": "L2", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_l2.svg" },
-    "ABS_RZ": { "type": "svg", "label": "R2", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_r2.svg" },
-    "BTN_SELECT": { "type": "svg", "label": "Create", "source": "assets/InputIcons/PlayStation Series/Vector/playstation5_button_create.svg" },
-    "BTN_START": { "type": "svg", "label": "Options", "source": "assets/InputIcons/PlayStation Series/Vector/playstation5_button_options.svg" },
-    "BTN_MODE": { "type": "svg", "label": "PS", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_button_analog.svg" },
-    "BTN_THUMBL": { "type": "svg", "label": "L3", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_button_l3.svg" },
-    "BTN_THUMBR": { "type": "svg", "label": "R3", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_button_r3.svg" },
-    "BTN_DPAD_UP": { "type": "svg", "label": "D↑", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_up.svg" },
-    "BTN_DPAD_DOWN": { "type": "svg", "label": "D↓", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_down.svg" },
-    "BTN_DPAD_LEFT": { "type": "svg", "label": "D←", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_left.svg" },
-    "BTN_DPAD_RIGHT": { "type": "svg", "label": "D→", "source": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_right.svg" }
+    "BTN_SOUTH": {
+      "label": "✕",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_cross.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_cross_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_cross.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_cross_outline.svg"
+      }
+    },
+    "BTN_EAST": {
+      "label": "○",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_circle.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_circle_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_circle.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_circle_outline.svg"
+      }
+    },
+    "BTN_NORTH": {
+      "label": "△",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_triangle.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_triangle_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_triangle.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_triangle_outline.svg"
+      }
+    },
+    "BTN_WEST": {
+      "label": "□",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_square.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_square_outline.svg"
+      },
+      "colored": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_square.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_color_square_outline.svg"
+      }
+    },
+    "BTN_TL": {
+      "label": "L1",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_l1.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_l1_outline.svg"
+      }
+    },
+    "BTN_TR": {
+      "label": "R1",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_r1.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_r1_outline.svg"
+      }
+    },
+    "ABS_Z": {
+      "label": "L2",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_l2.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_l2_outline.svg"
+      }
+    },
+    "ABS_RZ": {
+      "label": "R2",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_r2.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_trigger_r2_outline.svg"
+      }
+    },
+    "BTN_SELECT": {
+      "label": "Create",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation5_button_create.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation5_button_create_outline.svg"
+      }
+    },
+    "BTN_START": {
+      "label": "Options",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation5_button_options.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation5_button_options_outline.svg"
+      }
+    },
+    "BTN_MODE": {
+      "label": "PS",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_analog.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_analog_outline.svg"
+      }
+    },
+    "BTN_THUMBL": {
+      "label": "L3",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_l3.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_l3_outline.svg"
+      }
+    },
+    "BTN_THUMBR": {
+      "label": "R3",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_button_r3.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_button_r3_outline.svg"
+      }
+    },
+    "BTN_DPAD_UP": {
+      "label": "D↑",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_up.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_up_outline.svg"
+      }
+    },
+    "BTN_DPAD_DOWN": {
+      "label": "D↓",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_down.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_down_outline.svg"
+      }
+    },
+    "BTN_DPAD_LEFT": {
+      "label": "D←",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_left.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_left_outline.svg"
+      }
+    },
+    "BTN_DPAD_RIGHT": {
+      "label": "D→",
+      "mono": {
+        "filled": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_right.svg",
+        "outline": "assets/InputIcons/PlayStation Series/Vector/playstation_dpad_right_outline.svg"
+      }
+    }
+  },
+  "switch": {
+    "BTN_SOUTH": {
+      "label": "B",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_b.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_b_outline.svg"
+      }
+    },
+    "BTN_EAST": {
+      "label": "A",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_a.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_a_outline.svg"
+      }
+    },
+    "BTN_NORTH": {
+      "label": "X",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_x.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_x_outline.svg"
+      }
+    },
+    "BTN_WEST": {
+      "label": "Y",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_y.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_y_outline.svg"
+      }
+    },
+    "BTN_TL": {
+      "label": "L",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_l.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_l_outline.svg"
+      }
+    },
+    "BTN_TR": {
+      "label": "R",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_r.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_r_outline.svg"
+      }
+    },
+    "ABS_Z": {
+      "label": "ZL",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_zl.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_zl_outline.svg"
+      }
+    },
+    "ABS_RZ": {
+      "label": "ZR",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_zr.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_zr_outline.svg"
+      }
+    },
+    "BTN_SELECT": {
+      "label": "-",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_minus.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_minus_outline.svg"
+      }
+    },
+    "BTN_START": {
+      "label": "+",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_plus.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_plus_outline.svg"
+      }
+    },
+    "BTN_MODE": {
+      "label": "Home",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_button_home.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_button_home_outline.svg"
+      }
+    },
+    "BTN_DPAD_UP": {
+      "label": "D↑",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_up.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_up_outline.svg"
+      }
+    },
+    "BTN_DPAD_DOWN": {
+      "label": "D↓",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_down.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_down_outline.svg"
+      }
+    },
+    "BTN_DPAD_LEFT": {
+      "label": "D←",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_left.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_left_outline.svg"
+      }
+    },
+    "BTN_DPAD_RIGHT": {
+      "label": "D→",
+      "mono": {
+        "filled": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_right.svg",
+        "outline": "assets/InputIcons/Nintendo Switch/Vector/switch_dpad_right_outline.svg"
+      }
+    }
+  },
+  "steamdeck": {
+    "BTN_SOUTH": {
+      "label": "A",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_a.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_a_outline.svg"
+      }
+    },
+    "BTN_EAST": {
+      "label": "B",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_b.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_b_outline.svg"
+      }
+    },
+    "BTN_NORTH": {
+      "label": "Y",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_y.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_y_outline.svg"
+      }
+    },
+    "BTN_WEST": {
+      "label": "X",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_x.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_x_outline.svg"
+      }
+    },
+    "BTN_TL": {
+      "label": "L1",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_l1.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_l1_outline.svg"
+      }
+    },
+    "BTN_TR": {
+      "label": "R1",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_r1.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_r1_outline.svg"
+      }
+    },
+    "ABS_Z": {
+      "label": "L2",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_l2.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_l2_outline.svg"
+      }
+    },
+    "ABS_RZ": {
+      "label": "R2",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_r2.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_r2_outline.svg"
+      }
+    },
+    "BTN_SELECT": {
+      "label": "View",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_view.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_view_outline.svg"
+      }
+    },
+    "BTN_START": {
+      "label": "Menu",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_options.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_options_outline.svg"
+      }
+    },
+    "BTN_MODE": {
+      "label": "STEAM",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_guide.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_button_guide_outline.svg"
+      }
+    },
+    "BTN_DPAD_UP": {
+      "label": "D↑",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_up.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_up_outline.svg"
+      }
+    },
+    "BTN_DPAD_DOWN": {
+      "label": "D↓",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_down.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_down_outline.svg"
+      }
+    },
+    "BTN_DPAD_LEFT": {
+      "label": "D←",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_left.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_left_outline.svg"
+      }
+    },
+    "BTN_DPAD_RIGHT": {
+      "label": "D→",
+      "mono": {
+        "filled": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_right.svg",
+        "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_right_outline.svg"
+      }
+    }
   }
 }

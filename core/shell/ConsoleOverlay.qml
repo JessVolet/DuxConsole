@@ -51,6 +51,7 @@ PanelWindow {
     IconsPadManager {
         id: iconsPadManager
         inputManager: inputManager
+        styleTokens: styleTokens
     }
 
     DconsoleBridge {

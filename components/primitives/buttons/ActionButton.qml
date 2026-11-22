@@ -10,6 +10,7 @@ StyledRect {
     property bool focused: false
     property string action: ""
     property var iconsPadManager: null
+    property var styleTokens: null
 
     implicitWidth: Math.max(220, contentRow.implicitWidth + Theme.spacingXL * 2)
     implicitHeight: 56
@@ -25,6 +26,7 @@ StyledRect {
             anchors.verticalCenter: parent.verticalCenter
             visible: button.action !== ""
             iconsPadManager: button.iconsPadManager
+            styleTokens: button.styleTokens
             action: button.action
         }
 

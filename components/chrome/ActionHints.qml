@@ -7,6 +7,7 @@ Row {
     id: hintsBar
 
     property var iconsPadManager: null
+    property var styleTokens: null
     property var i18n: null
     // Lista de { action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }
     property var hints: []
@@ -22,6 +23,7 @@ Row {
             InputGlyph {
                 anchors.verticalCenter: parent.verticalCenter
                 iconsPadManager: hintsBar.iconsPadManager
+                styleTokens: hintsBar.styleTokens
                 action: modelData.action ?? ""
             }
 

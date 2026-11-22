@@ -39,8 +39,8 @@ DuxConsole/
 | :--- | :--- | :--- |
 | Daemon | `ConsoleDaemon.qml` | Registro del plugin DMS e `IpcHandler` (`duxConsole`) |
 | Config de entrada | `inputconfig.json` | Mapa de teclado/gamepad, repetición, holds y chords |
-| Config de glifos | `iconsconfig.json` | Mapa data-driven de iconos/etiquetas por dispositivo (`keyboard`, `xbox`, `playstation`) |
-| Config de UI | `uiconfig.json` | Idioma (`language`), animaciones on/off, velocidad y escala/tema |
+| Config de glifos | `iconsconfig.json` | Mapa data-driven (`mono`/`colored`, `filled`/`outline`) para `keyboard`, `xbox`, `playstation`, `switch`, `steamdeck` |
+| Config de UI | `uiconfig.json` | Idioma (`language`), animaciones, tema y glifos (`icons.colorMode`, `icons.style`, `icons.showBackdrop`) |
 | Locales | `locales/es.json`, `locales/en.json` | Diccionarios de traducción por sección |
 | Assets | `assets/` | Recursos estáticos (incluye `assets/InputIcons/` — Kenney Input Prompts CC0) |
 | Overlay shell | `core/shell/ConsoleOverlay.qml` | Composition Root: `PanelWindow`, captura de teclas, `Bg` y `FocusRing` |
@@ -48,7 +48,7 @@ DuxConsole/
 | Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager`, `layerManager`, `iconsPadManager` e `i18n` |
 | Base de pantalla | `core/shell/ScreenBase.qml` | Contenedor base con acceso a servicios inyectados |
 | Entrada | `core/shell/InputManager.qml` | Traducción teclado/gamepad con `../../inputconfig.json` y gestos |
-| Glifos | `core/shell/IconsPadManager.qml` | Cruce data-driven entre `inputManager.config` e `iconsconfig.json` vía `resolve(action)` |
+| Glifos | `core/shell/IconsPadManager.qml` | Cruce data-driven entre `inputManager.config`, `iconsconfig.json` y `StyleTokens` (`dms`/`colored`/`custom`, `filled`/`outline`) |
 | Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
 | Tokens de estilo | `core/shell/StyleTokens.qml` | Colores, `accentColor`, `skewAngle`, roles `"chrome"`/`"card"` y tintado de iconos desde `uiconfig.json` |
 | Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |

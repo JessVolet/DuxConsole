@@ -2,6 +2,7 @@ import QtQuick
 import qs.Common
 import "../../core/shell"
 import "../../core/interaction"
+import "../../core/motion"
 import "../../components/chrome"
 import "../../components/primitives/buttons"
 import "../../components/primitives/text"
@@ -14,12 +15,20 @@ ScreenBase {
 
     property string lastModalSelection: ""
     readonly property var _devices: ["keyboard", "xbox", "playstation"]
+    readonly property var _themeModes: ["hybrid", "dark", "light"]
 
     function cycleDevice() {
         if (!root.inputManager)
             return
         const idx = _devices.indexOf(root.inputManager.activeDevice)
         root.inputManager.activeDevice = _devices[(idx + 1) % _devices.length]
+    }
+
+    function cycleThemeMode() {
+        if (!root.styleTokens)
+            return
+        const idx = _themeModes.indexOf(root.styleTokens.themeMode)
+        root.styleTokens.themeMode = _themeModes[(idx + 1) % _themeModes.length]
     }
 
     Column {
@@ -32,30 +41,59 @@ ScreenBase {
             label: root.tr("demo.title", "DuxConsole — ControlFriendly Demo")
         }
 
-        // Zona 1: Botón simple (I.Accept) -> rota dispositivo de glifos
-        FocusZone {
-            id: zoneButton
-            zoneId: "zone-button"
-            layerName: "dashboard"
-            layerManager: root.layerManager
-            navDown: zoneCarousel
-            width: btnDevice.width
-            height: btnDevice.height
-            ringRadius: Theme.cornerRadius
+        Row {
+            spacing: Theme.spacingM
 
-            onActivated: root.cycleDevice()
+            // Zona 1: Botón para rotar dispositivo de glifos
+            FocusZone {
+                id: zoneButton
+                zoneId: "zone-button"
+                layerName: "dashboard"
+                layerManager: root.layerManager
+                navRight: zoneTheme
+                navDown: zoneCarousel
+                width: btnDevice.width
+                height: btnDevice.height
+                ringRadius: Theme.cornerRadius
 
-            ActionButton {
-                id: btnDevice
-                focused: zoneButton.active
-                iconsPadManager: root.iconsPadManager
-                action: "I.Accept"
-                label: root.tr("demo.button_label", "Switch glyph device")
-                       + " (" + (root.inputManager?.activeDevice ?? "keyboard") + ")"
+                onActivated: root.cycleDevice()
+
+                ActionButton {
+                    id: btnDevice
+                    focused: zoneButton.active
+                    iconsPadManager: root.iconsPadManager
+                    action: "I.Accept"
+                    label: root.tr("demo.button_label", "Switch glyph device")
+                           + " (" + (root.inputManager?.activeDevice ?? "keyboard") + ")"
+                }
+            }
+
+            // Zona 2: Botón para rotar theme.mode (hybrid -> dark -> light)
+            FocusZone {
+                id: zoneTheme
+                zoneId: "zone-theme"
+                layerName: "dashboard"
+                layerManager: root.layerManager
+                navLeft: zoneButton
+                navDown: zoneCarousel
+                width: btnTheme.width
+                height: btnTheme.height
+                ringRadius: Theme.cornerRadius
+
+                onActivated: root.cycleThemeMode()
+
+                ActionButton {
+                    id: btnTheme
+                    focused: zoneTheme.active
+                    iconsPadManager: root.iconsPadManager
+                    action: "I.Accept"
+                    label: root.tr("demo.theme_label", "Theme mode")
+                           + " (" + (root.styleTokens?.themeMode ?? "hybrid") + ")"
+                }
             }
         }
 
-        // Zona 2: Carrusel de 4 ítems (LT/RT) + expansión a modal (I.Select)
+        // Zona 3: Carrusel infinito con FocusCard inclinadas (LT/RT) + modal (I.Select)
         ActionHints {
             iconsPadManager: root.iconsPadManager
             i18n: root.i18n
@@ -72,27 +110,26 @@ ScreenBase {
             layerName: "dashboard"
             layerManager: root.layerManager
             navUp: zoneButton
-            subItemCount: 4
-            width: carouselRow.implicitWidth + Theme.spacingM * 2
-            height: 112
+            subItemCount: 6
+            width: parent.width
+            height: 120
             ringRadius: Theme.cornerRadius
 
             onExpandRequested: root.layerManager?.push("modal")
 
-            Row {
-                id: carouselRow
-                anchors.centerIn: parent
-                spacing: Theme.spacingM
-
-                Repeater {
-                    model: 4
-                    delegate: FocusCard {
-                        required property int index
-                        selected: zoneCarousel.currentSubIndex === index
-                        focused: zoneCarousel.active
-                        title: root.tr("demo.item_prefix", "Item") + " #" + (index + 1)
-                        subtitle: selected ? root.lastModalSelection : ""
-                    }
+            InfiniteCarousel {
+                anchors.fill: parent
+                currentIndex: zoneCarousel.currentSubIndex
+                motionTokens: root.motionTokens
+                model: 6
+                delegate: FocusCard {
+                    required property int index
+                    styleTokens: root.styleTokens
+                    motionTokens: root.motionTokens
+                    selected: zoneCarousel.currentSubIndex === index
+                    focused: zoneCarousel.active
+                    title: root.tr("demo.item_prefix", "Item") + " #" + (index + 1)
+                    subtitle: selected ? root.lastModalSelection : ""
                 }
             }
         }

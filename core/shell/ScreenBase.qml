@@ -10,6 +10,8 @@ Item {
     property var layerManager: null
     property var iconsPadManager: null
     property var i18n: null
+    property var styleTokens: null
+    property var motionTokens: null
     default property alias content: body.data
 
     anchors.fill: parent

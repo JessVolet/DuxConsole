@@ -11,12 +11,13 @@ DuxConsole/
 │   │   ├── buttons/                 # ActionButton, FocusCard, PillButton, ToggleChip
 │   │   ├── sliders/                 # ConsoleSlider, VolumeSlider, ProgressBar
 │   │   ├── glyphs/                  # InputGlyph (<kbd> vs SVG), StatusBadge, AvatarBadge
+│   │   ├── surfaces/                # SlantedSurface, SlantedImage
 │   │   └── text/                    # TestText, SectionTitle, MetricLabel
 │   └── widgets/                     # Bloques compuestos (WindowCarousel, MediaPlayerCard, AudioMixerRow...)
 ├── core/
-│   ├── shell/                       # ConsoleOverlay, InputManager, IconsPadManager, I18n, ScreenBase, ScreenRegistry, SlideManager
+│   ├── shell/                       # ConsoleOverlay, InputManager, IconsPadManager, I18n, StyleTokens, ScreenBase, ScreenRegistry, SlideManager
 │   ├── interaction/                 # FocusZone, LayerManager
-│   └── motion/                      # MotionTokens, CarouselView, MorphModal, SlideTransition
+│   └── motion/                      # MotionTokens, InfiniteCarousel, MorphModal, SlideTransition
 ├── locales/                         # Traducciones JSON (es.json, en.json, ...)
 ├── screens/
 │   ├── slides/                      # Vistas principales (capa "dashboard")
@@ -49,11 +50,12 @@ DuxConsole/
 | Entrada | `core/shell/InputManager.qml` | Traducción teclado/gamepad con `../../inputconfig.json` y gestos |
 | Glifos | `core/shell/IconsPadManager.qml` | Cruce data-driven entre `inputManager.config` e `iconsconfig.json` vía `resolve(action)` |
 | Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
+| Tokens de estilo | `core/shell/StyleTokens.qml` | Colores, `accentColor`, `skewAngle`, roles `"chrome"`/`"card"` y tintado de iconos desde `uiconfig.json` |
 | Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |
 | Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, expansión (`I.Select`) y bloqueo `inert` |
-| Motion | `core/motion/` | Tokens de animación y transiciones |
-| Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml` |
-| Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` (`InputGlyph.qml`) y `text/` (`TestText.qml`) |
+| Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas y curvas) e `InfiniteCarousel.qml` |
+| Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml`, `ActionHints.qml` |
+| Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` (`InputGlyph.qml`), `surfaces/` (`SlantedSurface.qml`, `SlantedImage.qml`) y `text/` (`TestText.qml`) |
 | Widgets | `components/widgets/` | Bloques compuestos reutilizables |
 | Slides | `screens/slides/` | `TestScreen.qml`, `TestScreen2.qml` |
 | Overlays / Modals | `screens/overlays/`, `screens/modals/` | Ruedas orbitales (`"wheel"`) y modales (`"modal"`) |

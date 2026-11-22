@@ -4,6 +4,7 @@ import Quickshell.Wayland
 import "../../components/chrome"
 import "../../services"
 import "../interaction"
+import "../motion"
 
 PanelWindow {
     id: overlay
@@ -36,6 +37,8 @@ PanelWindow {
     ScreenRegistry { id: screenRegistry }
     LayerManager { id: layerManager }
     I18n { id: i18n }
+    StyleTokens { id: styleTokens }
+    MotionTokens { id: motionTokens }
 
     IconsPadManager {
         id: iconsPadManager
@@ -84,12 +87,16 @@ PanelWindow {
             layerManager: layerManager
             iconsPadManager: iconsPadManager
             i18n: i18n
+            styleTokens: styleTokens
+            motionTokens: motionTokens
         }
 
         FocusRing {
             id: focusRing
             targetZone: layerManager.activeZone
             coordinateSpace: overlayContent
+            motionTokens: motionTokens
+            styleTokens: styleTokens
         }
     }
 }

@@ -6,10 +6,15 @@ Rectangle {
 
     property var targetZone: null
     property Item coordinateSpace: parent
+    property var motionTokens: null
+    property var styleTokens: null
+
+    readonly property int animDuration: motionTokens ? motionTokens.durationFast : 120
+    readonly property int animEasing: motionTokens ? motionTokens.easingSnappy : Easing.OutCubic
 
     color: "transparent"
     border.width: 2
-    border.color: Theme.primary
+    border.color: styleTokens ? styleTokens.accentColor : Theme.primary
     radius: targetZone?.ringRadius ?? Theme.cornerRadius
 
     opacity: (targetZone && targetZone.visible && !targetZone.inert && width > 0 && height > 0) ? 1.0 : 0.0
@@ -46,10 +51,10 @@ Rectangle {
         function onVisibleChanged() { ring.syncGeometry() }
     }
 
-    Behavior on x { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
-    Behavior on y { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
-    Behavior on width { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
-    Behavior on height { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
-    Behavior on radius { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
-    Behavior on opacity { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
+    Behavior on x { NumberAnimation { duration: ring.animDuration; easing.type: ring.animEasing } }
+    Behavior on y { NumberAnimation { duration: ring.animDuration; easing.type: ring.animEasing } }
+    Behavior on width { NumberAnimation { duration: ring.animDuration; easing.type: ring.animEasing } }
+    Behavior on height { NumberAnimation { duration: ring.animDuration; easing.type: ring.animEasing } }
+    Behavior on radius { NumberAnimation { duration: ring.animDuration; easing.type: ring.animEasing } }
+    Behavior on opacity { NumberAnimation { duration: ring.animDuration; easing.type: ring.animEasing } }
 }

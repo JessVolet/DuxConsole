@@ -1,21 +1,25 @@
 import QtQuick
 import qs.Common
 import qs.Widgets
+import "../surfaces"
 
-StyledRect {
+SlantedSurface {
     id: card
 
+    property var motionTokens: null
     property string title: ""
     property string subtitle: ""
-    property bool selected: false
-    property bool focused: false
 
-    implicitWidth: 148
-    implicitHeight: 88
-    radius: Theme.cornerRadius
-    color: selected ? Theme.primaryContainer : (focused ? Theme.surfaceContainerHighest : Theme.surfaceContainerHigh)
-    border.width: selected ? 2 : 0
-    border.color: Theme.primary
+    role: "card"
+    implicitWidth: selected ? 188 : 148
+    implicitHeight: 92
+
+    Behavior on implicitWidth {
+        NumberAnimation {
+            duration: card.motionTokens ? card.motionTokens.durationNormal : 220
+            easing.type: card.motionTokens ? card.motionTokens.easingSnappy : Easing.OutCubic
+        }
+    }
 
     Column {
         anchors.centerIn: parent
@@ -26,7 +30,7 @@ StyledRect {
             text: card.title
             font.pixelSize: Theme.fontSizeMedium
             font.weight: Font.Bold
-            color: card.selected ? Theme.onPrimaryContainer : Theme.onSurface
+            color: card.styleTokens ? card.styleTokens.onSurfaceColor("card") : Theme.onSurface
         }
 
         StyledText {
@@ -34,7 +38,7 @@ StyledRect {
             visible: card.subtitle !== ""
             text: card.subtitle
             font.pixelSize: Theme.fontSizeSmall
-            color: Theme.onSurfaceVariant
+            color: card.styleTokens ? card.styleTokens.accentColor : Theme.onSurfaceVariant
         }
     }
 }

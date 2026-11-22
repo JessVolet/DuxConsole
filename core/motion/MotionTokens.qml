@@ -1,0 +1,45 @@
+import QtQuick
+import Quickshell.Io
+
+Item {
+    id: motion
+    visible: false
+
+    property bool animationsEnabled: true
+    property real speedScale: 1.0
+
+    function scaled(baseMs) {
+        if (!animationsEnabled)
+            return 0
+        return Math.max(0, Math.round(baseMs / Math.max(0.1, speedScale)))
+    }
+
+    readonly property int durationFast: scaled(120)
+    readonly property int durationNormal: scaled(220)
+    readonly property int durationMorph: scaled(280)
+
+    readonly property int easingSnappy: Easing.OutCubic
+    readonly property int easingSmooth: Easing.InOutCubic
+    readonly property int easingSpring: Easing.OutBack
+
+    FileView {
+        id: uiConfigFile
+        path: Qt.resolvedUrl("../../uiconfig.json").toString().replace("file://", "")
+        blockLoading: true
+        watchChanges: true
+        onFileChanged: reload()
+        onLoaded: {
+            try {
+                const cfg = JSON.parse(text())
+                if (cfg?.animations) {
+                    if (typeof cfg.animations.enabled === "boolean")
+                        motion.animationsEnabled = cfg.animations.enabled
+                    if (typeof cfg.animations.speed === "number")
+                        motion.speedScale = cfg.animations.speed
+                }
+            } catch (e) {
+                console.warn("DuxConsole [MotionTokens]: Error en uiconfig.json ->", e)
+            }
+        }
+    }
+}

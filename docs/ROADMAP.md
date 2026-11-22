@@ -17,9 +17,11 @@
 - [ ] Soporte opcional `lockDevice` en `core/shell/InputManager.qml` para depuración de glifos con teclado sin sobreescribir `activeDevice`.
 
 ## FASE 2 — Motor de Movimiento Configurable (`core/motion/`)
-- [ ] `core/motion/MotionTokens.qml` (singleton / manager conectado a `uiconfig.json`: `animationsEnabled`, `speedScale`, presets Instantáneo / Rápido / Normal / Cinemático, curvas estándar).
-- [ ] Conectar `components/chrome/FocusRing.qml` a `MotionTokens` (eliminar duraciones hardcodeadas).
-- [ ] `core/motion/CarouselView.qml` (contenedor deslizante horizontal reutilizable controlado por `FocusZone.currentSubIndex`).
+- [x] `core/motion/MotionTokens.qml` (singleton / manager conectado a `uiconfig.json`: `animationsEnabled`, `speedScale`, curvas estándar).
+- [x] `core/shell/StyleTokens.qml` (recarga en vivo vía `uiconfig.json`: `accentColor`, `skewAngle`, `surfaceColor`, `iconTintEnabled`).
+- [x] Conectar `components/chrome/FocusRing.qml` a `MotionTokens` y `StyleTokens.accentColor` (eliminar duraciones hardcodeadas).
+- [x] `core/motion/InfiniteCarousel.qml` (carrusel horizontal infinito controlado por `FocusZone.currentSubIndex`).
+- [x] `components/primitives/surfaces/`: `SlantedSurface.qml` y `SlantedImage.qml` (`FocusCard.qml` basada en `SlantedSurface`).
 - [ ] `core/motion/MorphModal.qml` (wrapper animado que expande/contrae desde el rectángulo de la `FocusZone` origen vía `mapToItem()`).
 - [ ] `core/motion/SlideTransition.qml` (transición direccional izquierda/derecha en `SlideManager.qml`).
 

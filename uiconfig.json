@@ -5,6 +5,16 @@
     "speed": 1.0
   },
   "theme": {
+    "mode": "hybrid",
+    "accentSource": "primary",
+    "customAccent": "#A855F7",
+    "skewAngle": -8,
+    "blurEnabled": true,
+    "surfaceOpacity": 0.80,
     "scale": 1.0
+  },
+  "icons": {
+    "colorMode": "native",
+    "customColor": "#FFFFFF"
   }
 }

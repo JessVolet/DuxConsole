@@ -8,6 +8,7 @@
     "subtitle": "Last action",
     "button_label": "Switch glyph device",
     "button_clicked": "Active device",
+    "theme_label": "Theme mode",
     "carousel_title": "Quick Carousel (LT / RT)",
     "item_prefix": "Item",
     "modal_title": "Item Options",

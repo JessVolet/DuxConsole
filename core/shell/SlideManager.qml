@@ -8,6 +8,8 @@ Item {
     property var layerManager: null
     property var iconsPadManager: null
     property var i18n: null
+    property var styleTokens: null
+    property var motionTokens: null
     property int currentIndex: 0
 
     readonly property var currentScreenMeta: registry.screens[currentIndex] ?? null
@@ -37,6 +39,10 @@ Item {
                 item.iconsPadManager = manager.iconsPadManager
             if ("i18n" in item)
                 item.i18n = manager.i18n
+            if ("styleTokens" in item)
+                item.styleTokens = manager.styleTokens
+            if ("motionTokens" in item)
+                item.motionTokens = manager.motionTokens
         }
     }
 }

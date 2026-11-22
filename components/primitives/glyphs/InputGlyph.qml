@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import qs.Common
 import qs.Widgets
 
@@ -6,6 +7,7 @@ StyledRect {
     id: glyphRoot
 
     property var iconsPadManager: null
+    property var styleTokens: null
     property string action: ""
 
     readonly property var resolved: {
@@ -25,6 +27,8 @@ StyledRect {
         && resolved.source !== ""
         && svgIcon.status !== Image.Error
 
+    readonly property bool tintActive: useSvg && Boolean(styleTokens?.iconTintEnabled)
+
     implicitWidth: useSvg ? 24 : Math.max(26, keyLabel.implicitWidth + Theme.spacingS * 2)
     implicitHeight: 24
     radius: useSvg ? 0 : 6
@@ -39,10 +43,18 @@ StyledRect {
         height: 22
         sourceSize.width: 22
         sourceSize.height: 22
-        visible: glyphRoot.useSvg
+        visible: glyphRoot.useSvg && !glyphRoot.tintActive
         source: glyphRoot.resolved.type === "svg" ? glyphRoot.resolved.source : ""
         fillMode: Image.PreserveAspectFit
         smooth: true
+    }
+
+    MultiEffect {
+        anchors.fill: svgIcon
+        source: svgIcon
+        visible: glyphRoot.tintActive
+        colorization: 1.0
+        colorizationColor: glyphRoot.styleTokens ? glyphRoot.styleTokens.iconTintColor : Theme.onSurface
     }
 
     StyledText {

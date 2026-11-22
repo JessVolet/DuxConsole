@@ -68,7 +68,7 @@ ScreenBase {
 
                     InputGlyph {
                         anchors.verticalCenter: parent.verticalCenter
-                        iconsManager: root.iconsManager
+                        iconsPadManager: root.iconsPadManager
                         action: "I.Accept"
                     }
 
@@ -101,17 +101,17 @@ ScreenBase {
                 }
 
                 InputGlyph {
-                    iconsManager: root.iconsManager
+                    iconsPadManager: root.iconsPadManager
                     action: "I.ActionOption.L"
                 }
 
                 InputGlyph {
-                    iconsManager: root.iconsManager
+                    iconsPadManager: root.iconsPadManager
                     action: "I.ActionOption.R"
                 }
 
                 InputGlyph {
-                    iconsManager: root.iconsManager
+                    iconsPadManager: root.iconsPadManager
                     action: "I.Select"
                 }
 
@@ -190,19 +190,19 @@ ScreenBase {
 
         Row {
             spacing: Theme.spacingS
-            InputGlyph { iconsManager: root.iconsManager; action: "I.Dpad.Up" }
+            InputGlyph { iconsPadManager: root.iconsPadManager; action: "I.Dpad.Up" }
             StyledText { anchors.verticalCenter: parent.verticalCenter; text: root.tr("hints.navigate", "Navigate"); color: Theme.onSurfaceVariant; font.pixelSize: Theme.fontSizeSmall }
         }
 
         Row {
             spacing: Theme.spacingS
-            InputGlyph { iconsManager: root.iconsManager; action: "I.Accept" }
+            InputGlyph { iconsPadManager: root.iconsPadManager; action: "I.Accept" }
             StyledText { anchors.verticalCenter: parent.verticalCenter; text: root.tr("hints.accept", "Accept"); color: Theme.onSurfaceVariant; font.pixelSize: Theme.fontSizeSmall }
         }
 
         Row {
             spacing: Theme.spacingS
-            InputGlyph { iconsManager: root.iconsManager; action: "I.Refuse" }
+            InputGlyph { iconsPadManager: root.iconsPadManager; action: "I.Refuse" }
             StyledText { anchors.verticalCenter: parent.verticalCenter; text: root.tr("hints.back", "Back / Close"); color: Theme.onSurfaceVariant; font.pixelSize: Theme.fontSizeSmall }
         }
     }

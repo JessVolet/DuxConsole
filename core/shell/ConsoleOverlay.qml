@@ -36,8 +36,8 @@ PanelWindow {
     LayerManager { id: layerManager }
     I18n { id: i18n }
 
-    IconsManager {
-        id: iconsManager
+    IconsPadManager {
+        id: iconsPadManager
         inputManager: inputManager
     }
 
@@ -75,7 +75,7 @@ PanelWindow {
             registry: screenRegistry
             inputManager: inputManager
             layerManager: layerManager
-            iconsManager: iconsManager
+            iconsPadManager: iconsPadManager
             i18n: i18n
         }
 

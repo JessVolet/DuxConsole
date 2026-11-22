@@ -5,17 +5,19 @@ import qs.Widgets
 StyledRect {
     id: glyphRoot
 
-    property var iconsManager: null
+    property var iconsPadManager: null
     property string action: ""
 
     readonly property var resolved: {
-        // Dependencia reactiva explícita de dispositivo y config para actualización en vivo
-        const _dev = iconsManager?.inputManager?.activeDevice ?? ""
-        const _cfg = iconsManager?.inputManager?.config ?? null
+        // Dependencia reactiva explícita de dispositivo, inputconfig e iconsconfig
+        const _dev = iconsPadManager?.inputManager?.activeDevice ?? ""
+        const _inCfg = iconsPadManager?.inputManager?.config ?? null
+        const _icCfg = iconsPadManager?.iconsConfig ?? null
         void(_dev)
-        void(_cfg)
-        return (iconsManager && action)
-            ? iconsManager.resolve(action)
+        void(_inCfg)
+        void(_icCfg)
+        return (iconsPadManager && action)
+            ? iconsPadManager.resolve(action)
             : ({ type: "key", label: action, source: "" })
     }
 

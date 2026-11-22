@@ -14,7 +14,7 @@ DuxConsole/
 │   │   └── text/                    # TestText, SectionTitle, MetricLabel
 │   └── widgets/                     # Bloques compuestos (WindowCarousel, MediaPlayerCard, AudioMixerRow...)
 ├── core/
-│   ├── shell/                       # ConsoleOverlay, InputManager, IconsManager, I18n, ScreenBase, ScreenRegistry, SlideManager
+│   ├── shell/                       # ConsoleOverlay, InputManager, IconsPadManager, I18n, ScreenBase, ScreenRegistry, SlideManager
 │   ├── interaction/                 # FocusZone, LayerManager
 │   └── motion/                      # MotionTokens, CarouselView, MorphModal, SlideTransition
 ├── locales/                         # Traducciones JSON (es.json, en.json, ...)
@@ -27,6 +27,7 @@ DuxConsole/
 │   └── ARCHITECTURE.md
 ├── ConsoleDaemon.qml
 ├── inputconfig.json                 # Config editable de teclas, mando, holds y combos
+├── iconsconfig.json                 # Config editable de glifos por dispositivo (keyboard, xbox, playstation)
 ├── uiconfig.json                    # Config editable de UI (idioma, animaciones on/off, velocidad, tema/escala)
 └── plugin.json
 ```
@@ -37,15 +38,16 @@ DuxConsole/
 | :--- | :--- | :--- |
 | Daemon | `ConsoleDaemon.qml` | Registro del plugin DMS e `IpcHandler` (`duxConsole`) |
 | Config de entrada | `inputconfig.json` | Mapa de teclado/gamepad, repetición, holds y chords |
+| Config de glifos | `iconsconfig.json` | Mapa data-driven de iconos/etiquetas por dispositivo (`keyboard`, `xbox`, `playstation`) |
 | Config de UI | `uiconfig.json` | Idioma (`language`), animaciones on/off, velocidad y escala/tema |
 | Locales | `locales/es.json`, `locales/en.json` | Diccionarios de traducción por sección |
 | Assets | `assets/` | Recursos estáticos (SVGs Xbox/PS en `assets/glyphs/<device>/<button>.svg`) |
 | Overlay shell | `core/shell/ConsoleOverlay.qml` | Composition Root: `PanelWindow`, captura de teclas, `Bg` y `FocusRing` |
 | Registro de pantallas | `core/shell/ScreenRegistry.qml` | Catálogo de slides en `../../screens/slides/` con `labelKey` para `I18n` |
-| Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager`, `layerManager`, `iconsManager` e `i18n` |
+| Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager`, `layerManager`, `iconsPadManager` e `i18n` |
 | Base de pantalla | `core/shell/ScreenBase.qml` | Contenedor base con acceso a servicios inyectados |
 | Entrada | `core/shell/InputManager.qml` | Traducción teclado/gamepad con `../../inputconfig.json` y gestos |
-| Glifos | `core/shell/IconsManager.qml` | Resolución inversa de `action` a tecla legible o SVG Xbox/PS |
+| Glifos | `core/shell/IconsPadManager.qml` | Cruce data-driven entre `inputManager.config` e `iconsconfig.json` vía `resolve(action)` |
 | Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
 | Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |
 | Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, expansión (`I.Select`) y bloqueo `inert` |
@@ -60,7 +62,7 @@ DuxConsole/
 ## Regla de dependencias
 
 - `core/` **no** importa `components/` ni `screens/`, con la única excepción del Composition Root en `core/shell/ConsoleOverlay.qml` (`import "../../components/chrome"` para montar `Bg` y `FocusRing`).
-- Los componentes y pantallas no hardcodean teclas ni textos visibles: usan `InputGlyph` (`IconsManager.resolve(action)`) e `I18n.t(key, fallback)`.
+- Los componentes y pantallas no hardcodean teclas ni textos visibles: usan `InputGlyph` (`IconsPadManager.resolve(action)`) e `I18n.t(key, fallback)`.
 
 ## Cómo agregar un nuevo idioma
 

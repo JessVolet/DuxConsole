@@ -28,21 +28,22 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 | Archivo | Consumidor | Responsabilidad |
 | :--- | :--- | :--- |
 | `inputconfig.json` | `core/shell/InputManager.qml` | Mapeo `keyboard` y `gamepad` a acciones semánticas (`I.*`), `gestures` (`repeatInitialMs`, `repeatIntervalMs`, `repeatable`, `holds`, `chords`). |
-| `iconsconfig.json` | `core/shell/IconsPadManager.qml` | Mapeo por dispositivo (`keyboard`, `xbox`, `playstation`) de códigos crudos a `{ type, label, source }` apuntando a `assets/InputIcons/`. |
-| `uiconfig.json` | `core/shell/I18n.qml` / `core/motion/MotionTokens.qml` | Idioma (`language`), animaciones (`animations.enabled`, `animations.speed`, `animations.fadeInMs`, `animations.fadeOutMs`) y escala (`theme.scale`). |
+| `iconsconfig.json` | `core/shell/IconsPadManager.qml` | Mapeo por dispositivo (`keyboard`, `xbox`, `playstation`, `switch`, `steamdeck`) con variantes `mono` (`filled`/`outline`) y `colored` (`filled`/`outline`) apuntando a `assets/InputIcons/`. |
+| `uiconfig.json` | `core/shell/I18n.qml` / `StyleTokens.qml` / `MotionTokens.qml` | Idioma (`language`), animaciones (`animations.enabled`, `animations.speed`, `animations.fadeInMs`, `animations.fadeOutMs`), tema (`theme.*`) y glifos (`icons.colorMode`: `"dms"` \| `"colored"` \| `"custom"`, con migración `"native"` → `"colored"`; `icons.style`: `"filled"` \| `"outline"`; `icons.customColor`; `icons.showBackdrop`: `bool`). |
 | `locales/<lang>.json` | `core/shell/I18n.qml` | Diccionarios por idioma (`es.json`, `en.json`, ...) resueltos mediante `t(key, fallback)`. |
 
 ---
 
-## 3. Contrato de Capas y Navegación (`LayerManager` + `FocusZone`)
+## 3. Contrato de Capas y Navegación (`LayerManager` + `NavigationManager` + `FocusZone`)
 
 - **Pila de capas**: `dashboard` → `wheel` → `modal` (`LayerManager.topLayer` / `activeLayer`).
-- **Memoria de foco**: al empujar (`push(layer)`) una capa nueva, `LayerManager` guarda la `FocusZone` activa de la capa anterior en `focusMemory` y la restaura automáticamente al hacer `pop()`.
+- **Autoridad única de selección (`NavigationManager`)**: `NavigationManager` centraliza el registro de zonas, `ensureFocus(layerName)`, la navegación espacial (`move(direction)`) y `activeHints`. `LayerManager` mantiene la pila y `focusMemory` sin seleccionar zonas por su cuenta.
+- **Memoria de foco y prioridad**: al empujar (`push(layer)`) una capa nueva, `LayerManager` guarda la `FocusZone` activa en `focusMemory`. Al restaurar o entrar a una capa, `NavigationManager.ensureFocus()` prioriza: 1) foco recordado válido en `focusMemory`, 2) zona con `defaultFocus: true`, 3) fallback espacial arriba-izquierda.
 - **Regla `inert`**: toda `FocusZone` cuyo `layerName !== layerManager.topLayer` queda bloqueada (`inert: true`), ignorando D-Pad, `LT`/`RT`, activación y expansión.
 - **Enrutamiento global en `ConsoleOverlay.qml`**:
   - `I.Refuse` ejecuta `layerManager.pop()`; solo cierra el overlay si `topLayer` ya es `"dashboard"`.
   - `I.ActionSlide.L` y `I.ActionSlide.R` quedan bloqueados cuando `topLayer !== "dashboard"`.
-  - `I.Select` se despacha desde `LayerManager.handleAction()` hacia `FocusZone.requestExpand()` (`expandRequested`).
+  - `I.Select` se despacha desde `NavigationManager.handleAction()` hacia `FocusZone.requestExpand()` solo si `expandable === true`.
 
 ---
 

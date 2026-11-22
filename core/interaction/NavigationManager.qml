@@ -60,8 +60,10 @@ QtObject {
         next.splice(idx, 1)
         zones = next
 
-        if (layerManager && layerManager.activeZone === zone)
+        if (layerManager && layerManager.activeZone === zone) {
+            layerManager.setActiveZone(null)
             ensureFocus(layerManager.topLayer)
+        }
     }
 
     function ensureFocus(layerName) {
@@ -69,10 +71,23 @@ QtObject {
             return false
 
         const targetLayer = layerName || layerManager.topLayer
-        const current = layerManager.activeZone
-        if (current && current.layerName === targetLayer && _isFocusable(current))
-            return true
+        if (!layerManager.isLayerActive(targetLayer))
+            return false
 
+        // 1. Restaurar foco recordado válido de la capa antes que defaultFocus
+        const rememberedRef = layerManager.rememberedZoneRef(targetLayer)
+        if (rememberedRef) {
+            const rememberedZone = typeof rememberedRef === "string"
+                ? _findZoneById(rememberedRef, targetLayer)
+                : rememberedRef
+            if (rememberedZone && rememberedZone.layerName === targetLayer && _isFocusable(rememberedZone)) {
+                if (layerManager.activeZone === rememberedZone)
+                    return true
+                return layerManager.setActiveZone(rememberedZone)
+            }
+        }
+
+        // 2. Buscar defaultFocus o fallback arriba-izquierda entre zonas de la capa
         let defaultCandidate = null
         let topLeftCandidate = null
         let bestTopLeftScore = Infinity
@@ -94,7 +109,14 @@ QtObject {
         }
 
         const chosen = defaultCandidate ?? topLeftCandidate
-        return chosen ? layerManager.focusZone(chosen) : false
+        if (!chosen) {
+            layerManager.setActiveZone(null)
+            return false
+        }
+
+        if (layerManager.activeZone === chosen)
+            return true
+        return layerManager.setActiveZone(chosen)
     }
 
     function move(direction) {

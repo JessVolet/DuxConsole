@@ -49,7 +49,8 @@ Item {
         const inputSection = device === "keyboard" ? inputCfg.keyboard : inputCfg.gamepad
         const rawCode = _findRawCode(inputSection, action)
 
-        const colorMode = styleTokens?.iconColorMode ?? "dms"
+        const rawColorMode = styleTokens?.iconColorMode ?? "dms"
+        const colorMode = rawColorMode === "native" ? "colored" : rawColorMode
         const style = styleTokens?.iconStyle ?? "filled"
         const showBackdrop = styleTokens ? styleTokens.iconShowBackdrop : true
 

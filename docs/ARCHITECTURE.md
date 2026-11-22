@@ -51,8 +51,8 @@ DuxConsole/
 | Glifos | `core/shell/IconsPadManager.qml` | Cruce data-driven entre `inputManager.config`, `iconsconfig.json` y `StyleTokens` (`dms`/`colored`/`custom`, `filled`/`outline`) |
 | Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
 | Tokens de estilo | `core/shell/StyleTokens.qml` | Colores, `accentColor`, `skewAngle`, roles `"chrome"`/`"card"` y tintado de iconos desde `uiconfig.json` |
-| Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |
-| Navegación espacial | `core/interaction/NavigationManager.qml` | Foco automático (`defaultFocus`/arriba-izq), cono direccional, validación de capacidades y `activeHints` |
+| Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y estado de `focusMemory` por capa |
+| Navegación espacial | `core/interaction/NavigationManager.qml` | Autoridad única para registro de zonas, `ensureFocus`, cono direccional, capacidades y `activeHints` |
 | Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, `defaultFocus`, `expandable` (`I.Select`), `actionHints` y bloqueo `inert` |
 | Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas, curvas y fades configurables) |
 | Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml`, `ActionHints.qml` |

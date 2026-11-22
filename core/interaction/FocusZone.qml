@@ -98,8 +98,6 @@ Item {
     }
 
     function _syncRegistration() {
-        if (layerManager)
-            layerManager.registerZone(zone)
         const nav = navigationManager ?? layerManager?.navigationManager
         if (nav)
             nav.registerZone(zone)
@@ -126,8 +124,6 @@ Item {
     Component.onCompleted: _syncRegistration()
 
     Component.onDestruction: {
-        if (layerManager)
-            layerManager.unregisterZone(zone)
         const nav = navigationManager ?? layerManager?.navigationManager
         if (nav)
             nav.unregisterZone(zone)

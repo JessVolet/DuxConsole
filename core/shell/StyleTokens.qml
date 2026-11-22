@@ -87,8 +87,12 @@ Item {
                         tokens.uiScale = cfg.theme.scale
                 }
                 if (cfg?.icons) {
-                    if (typeof cfg.icons.colorMode === "string")
-                        tokens.iconColorMode = cfg.icons.colorMode
+                    if (typeof cfg.icons.colorMode === "string") {
+                        // Migración explícita: el valor previo "native" equivale a "colored"
+                        tokens.iconColorMode = cfg.icons.colorMode === "native"
+                            ? "colored"
+                            : cfg.icons.colorMode
+                    }
                     if (typeof cfg.icons.style === "string")
                         tokens.iconStyle = cfg.icons.style
                     if (typeof cfg.icons.customColor === "string")

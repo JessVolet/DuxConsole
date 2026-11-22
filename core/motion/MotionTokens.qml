@@ -7,6 +7,8 @@ Item {
 
     property bool animationsEnabled: true
     property real speedScale: 1.0
+    property int fadeInMs: 180
+    property int fadeOutMs: 140
 
     function scaled(baseMs) {
         if (!animationsEnabled)
@@ -17,10 +19,14 @@ Item {
     readonly property int durationFast: scaled(120)
     readonly property int durationNormal: scaled(220)
     readonly property int durationMorph: scaled(280)
+    readonly property int fadeInDuration: scaled(fadeInMs)
+    readonly property int fadeOutDuration: scaled(fadeOutMs)
 
     readonly property int easingSnappy: Easing.OutCubic
     readonly property int easingSmooth: Easing.InOutCubic
     readonly property int easingSpring: Easing.OutBack
+    readonly property int fadeInEasing: Easing.OutCubic
+    readonly property int fadeOutEasing: Easing.InCubic
 
     FileView {
         id: uiConfigFile
@@ -36,6 +42,10 @@ Item {
                         motion.animationsEnabled = cfg.animations.enabled
                     if (typeof cfg.animations.speed === "number")
                         motion.speedScale = cfg.animations.speed
+                    if (typeof cfg.animations.fadeInMs === "number")
+                        motion.fadeInMs = cfg.animations.fadeInMs
+                    if (typeof cfg.animations.fadeOutMs === "number")
+                        motion.fadeOutMs = cfg.animations.fadeOutMs
                 }
             } catch (e) {
                 console.warn("DuxConsole [MotionTokens]: Error en uiconfig.json ->", e)

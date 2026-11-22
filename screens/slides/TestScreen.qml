@@ -127,15 +127,11 @@ ScreenBase {
                 anchors.fill: parent
                 currentIndex: zoneCarousel.currentSubIndex
                 motionTokens: root.motionTokens
+                focused: zoneCarousel.active
                 model: 6
                 delegate: FocusCard {
-                    required property int index
-                    width: selected ? carousel.selectedWidth : carousel.cardWidth
-                    height: selected ? carousel.selectedHeight : carousel.cardHeight
+                    property int index: 0
                     styleTokens: root.styleTokens
-                    motionTokens: root.motionTokens
-                    selected: index === carousel.selectedIndex
-                    focused: zoneCarousel.active
                     title: root.tr("demo.item_prefix", "Item") + " #" + (index + 1)
                     subtitle: selected ? root.lastModalSelection : ""
                 }

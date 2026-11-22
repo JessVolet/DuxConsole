@@ -17,7 +17,7 @@
 - [ ] Soporte opcional `lockDevice` en `core/shell/InputManager.qml` para depuración de glifos con teclado sin sobreescribir `activeDevice`.
 
 ## FASE 2 — Motor de Movimiento Configurable (`core/motion/`)
-- [x] `core/motion/MotionTokens.qml` (singleton / manager conectado a `uiconfig.json`: `animationsEnabled`, `speedScale`, curvas estándar).
+- [x] `core/motion/MotionTokens.qml` (singleton / manager conectado a `uiconfig.json`: `animationsEnabled`, `speedScale`, curvas estándar y duraciones configurables de fade in/out).
 - [x] `core/shell/StyleTokens.qml` (recarga en vivo vía `uiconfig.json`: `accentColor`, `skewAngle`, `surfaceColor`, `iconTintEnabled`).
 - [x] Conectar `components/chrome/FocusRing.qml` a `MotionTokens` y `StyleTokens.accentColor` (eliminar duraciones hardcodeadas).
 - [x] `components/primitives/surfaces/`: `SlantedSurface.qml` y `SlantedImage.qml` (`FocusCard.qml` basada en `SlantedSurface`).
@@ -28,7 +28,7 @@
 - [x] `components/chrome/Bg.qml` y `components/chrome/FocusRing.qml`.
 - [x] `components/primitives/glyphs/InputGlyph.qml` y `components/primitives/text/TestText.qml`.
 - [x] `components/primitives/buttons/`: `ActionButton.qml`, `FocusCard.qml` (`PillButton.qml`, `ToggleChip.qml` pendientes).
-- [x] `components/widgets/CarouselView.qml` (muestra solo los elementos disponibles hasta seis; con más, conserva una ventana circular de seis delegados).
+- [x] `components/widgets/CarouselView.qml` (escala al ancho disponible, muestra hasta seis y mantiene hasta dos en caché para fades de entrada/salida al rotar modelos mayores).
 - [ ] `components/primitives/sliders/`: `ConsoleSlider.qml`, `VolumeSlider.qml`, `ProgressBar.qml`.
 - [ ] `components/primitives/text/`: `SectionTitle.qml`, `MetricLabel.qml`.
 - [ ] `components/primitives/glyphs/`: `StatusBadge.qml`, `AvatarBadge.qml`.

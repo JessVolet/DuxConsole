@@ -53,10 +53,10 @@ DuxConsole/
 | Tokens de estilo | `core/shell/StyleTokens.qml` | Colores, `accentColor`, `skewAngle`, roles `"chrome"`/`"card"` y tintado de iconos desde `uiconfig.json` |
 | Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |
 | Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, ajuste de índice cuando cambia el total, expansión (`I.Select`) y bloqueo `inert` |
-| Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas y curvas) |
+| Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas, curvas y fades configurables) |
 | Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml`, `ActionHints.qml` |
 | Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` (`InputGlyph.qml`), `surfaces/` (`SlantedSurface.qml`, `SlantedImage.qml`) y `text/` (`TestText.qml`) |
-| Widgets | `components/widgets/` | Bloques compuestos reutilizables, incluido `CarouselView.qml` (limita delegados visibles y rota el modelo con `PathView`) |
+| Widgets | `components/widgets/` | Bloques compuestos reutilizables, incluido `CarouselView.qml` (hasta seis visibles y dos en transición, escalado al ancho y rotación circular con fades) |
 | Slides | `screens/slides/` | `TestScreen.qml`, `TestScreen2.qml` |
 | Overlays / Modals | `screens/overlays/`, `screens/modals/` | Ruedas orbitales (`"wheel"`) y modales (`"modal"`) |
 | Servicios | `services/` | `DconsoleBridge` (socket Go) y wrappers de `qs.Services` |

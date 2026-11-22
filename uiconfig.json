@@ -2,7 +2,9 @@
   "language": "es",
   "animations": {
     "enabled": true,
-    "speed": 1.0
+    "speed": 1.0,
+    "fadeInMs": 180,
+    "fadeOutMs": 140
   },
   "theme": {
     "mode": "hybrid",

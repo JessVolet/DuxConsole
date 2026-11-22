@@ -29,7 +29,7 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 | :--- | :--- | :--- |
 | `inputconfig.json` | `core/shell/InputManager.qml` | Mapeo `keyboard` y `gamepad` a acciones semánticas (`I.*`), `gestures` (`repeatInitialMs`, `repeatIntervalMs`, `repeatable`, `holds`, `chords`). |
 | `iconsconfig.json` | `core/shell/IconsPadManager.qml` | Mapeo por dispositivo (`keyboard`, `xbox`, `playstation`) de códigos crudos a `{ type, label, source }` apuntando a `assets/InputIcons/`. |
-| `uiconfig.json` | `core/shell/I18n.qml` / `core/motion/MotionTokens.qml` | Idioma (`language`), animaciones (`animations.enabled`, `animations.speed`) y escala (`theme.scale`). |
+| `uiconfig.json` | `core/shell/I18n.qml` / `core/motion/MotionTokens.qml` | Idioma (`language`), animaciones (`animations.enabled`, `animations.speed`, `animations.fadeInMs`, `animations.fadeOutMs`) y escala (`theme.scale`). |
 | `locales/<lang>.json` | `core/shell/I18n.qml` | Diccionarios por idioma (`es.json`, `en.json`, ...) resueltos mediante `t(key, fallback)`. |
 
 ---

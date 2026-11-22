@@ -1,5 +1,4 @@
 import QtQuick
-import qs.Common
 
 Item {
     id: footer
@@ -10,12 +9,13 @@ Item {
     property var i18n: null
     property var hints: []
 
-    implicitWidth: Math.min(hintsList.implicitWidth, parent ? parent.width - Theme.spacingXL * 2 : hintsList.implicitWidth)
+    implicitWidth: hintsList.implicitWidth
     implicitHeight: hintsList.implicitHeight
 
     ActionHints {
         id: hintsList
-        width: footer.width
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
         iconsPadManager: footer.iconsPadManager
         styleTokens: footer.styleTokens
         motionTokens: footer.motionTokens

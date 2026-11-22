@@ -4,7 +4,7 @@ import qs.Widgets
 import "../primitives/glyphs"
 import "../primitives/surfaces"
 
-Flow {
+Row {
     id: hintsBar
 
     property var iconsPadManager: null
@@ -28,7 +28,6 @@ Flow {
             styleTokens: hintsBar.styleTokens
             motionTokens: hintsBar.motionTokens
             radius: Theme.cornerRadius
-            // Fallback sólido/opaco de alto contraste cuando no hay blur real por tarjeta en Wayland
             opacity: 1.0
             implicitWidth: hintRow.implicitWidth + Theme.spacingM * 2
             implicitHeight: 38

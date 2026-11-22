@@ -121,8 +121,8 @@ flowchart TD
 - **Solución**: **Dibuja** dos gradientes (horizontal y vertical) usando `StyleTokens.scrimColor()`, dejando visible la derecha/arriba del escritorio con contraste controlado.
 
 ### `components/chrome/TopBar.qml`
-- **Problema**: Las pantallas necesitan una barra superior persistente con identidad, pestañas de navegación y estado del sistema sin reconstruirse en cada slide.
-- **Solución**: Montada una sola vez en `ConsoleOverlay.qml` (`role: "chrome"`). **Dibuja** 3 regiones: izquierda (`CircularProgressGlyph` Guide + `assets/dux-logo.svg` + `DuxShell`/`Console`), centro (`InputGlyph` LB/RB + pestañas desde `ScreenRegistry` + `I18n`), derecha (`CircularProgressGlyph` Start + batería mando + `UPower` batería equipo + `SystemClock` + perfil).
+- **Problema**: Una barra continua horizontal tapa innecesariamente la parte superior y no coincide con la estética modular de cápsulas separadas.
+- **Solución**: `Item` contenedor transparente (sin fondo común) montado una sola vez en `ConsoleOverlay.qml` que **dibuja** tres cápsulas sólidas y opacas físicamente separadas (`radius: height / 2`): **Brand** izquierda (círculo oscuro + `CircularProgressGlyph` Guide + `assets/dux-logo.svg` + `DUXSHELL`/`CONSOLE`), **Navigation** centrada (`InputGlyph` LB/RB fuera de la cápsula + píldora de acento interior sobre `ScreenRegistry` + `I18n`), y **Status** derecha (batería mando + `UPower` + `SystemClock` + `CircularProgressGlyph` Start + perfil).
 
 ### `components/chrome/FooterBar.qml` y `components/chrome/ActionHints.qml`
 - **Problema**: Agrupar todos los hints en una sola barra o dentro de cada slide provoca reconstrucciones y falta de contraste sobre fondos claros.

@@ -17,7 +17,7 @@ Rectangle {
     border.color: styleTokens ? styleTokens.accentColor : Theme.primary
     radius: targetZone?.ringRadius ?? Theme.cornerRadius
 
-    opacity: (targetZone && targetZone.visible && !targetZone.inert && width > 0 && height > 0) ? 1.0 : 0.0
+    opacity: (targetZone && targetZone.showFocusRing && targetZone.visible && !targetZone.inert && width > 0 && height > 0) ? 1.0 : 0.0
     visible: opacity > 0.01
 
     function syncGeometry() {

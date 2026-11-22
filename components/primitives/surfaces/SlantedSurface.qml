@@ -11,8 +11,13 @@ Item {
     property bool focused: false
     property bool selected: false
     property bool disabled: !enabled
+    property bool borderOnly: false
+    property int focusedBorderWidth: 3
+    property int selectedBorderWidth: 2
     property real radius: Theme.cornerRadius
-    property int borderWidth: (focused || selected) && !disabled ? 2 : 1
+    property int borderWidth: !disabled && focused
+        ? focusedBorderWidth
+        : (!disabled && selected ? selectedBorderWidth : 1)
     default property alias content: contentContainer.data
 
     readonly property real _shearX: Math.tan(skewAngle * Math.PI / 180)
@@ -21,6 +26,8 @@ Item {
 
     // Superficies sólidas (alfa 1.0), sin transparencia ni opacity sobre contenedores
     readonly property color resolvedSurfaceColor: {
+        if (borderOnly)
+            return "transparent"
         if (disabled) {
             return styleTokens
                 ? styleTokens.disabledSurfaceColor(role)

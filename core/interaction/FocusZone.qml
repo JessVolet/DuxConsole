@@ -9,6 +9,7 @@ Item {
     property var navigationManager: null
     property bool defaultFocus: false
     property bool expandable: false
+    property bool showFocusRing: true
     property var actionHints: []
 
     // Regla inert: bloqueada cuando su capa no está activa en la pila

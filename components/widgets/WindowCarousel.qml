@@ -73,6 +73,7 @@ Item {
         layerManager: wc.layerManager
         navigationManager: wc.navigationManager
         defaultFocus: wc.defaultFocus
+        showFocusRing: false
         subItemCount: wc.windows.length
         ringRadius: Theme.cornerRadius
         actionHints: wc.hasWindows ? [
@@ -160,10 +161,9 @@ Item {
                     source: winCard.iconInfo.source
                     fillMode: Image.PreserveAspectFit
                     showGradientOverlay: false
-                    fallbackText: winCard.win?.appName
-                                  ? winCard.win.appName.slice(0, 2).toUpperCase()
-                                  : ""
-                    focused: winCard.focused && winCard.selected
+                    fallbackText: (winCard.win?.appName || winCard.win?.title || wc.tr("windows.unknown_app", "Application"))
+                                  .slice(0, 2).toUpperCase()
+                    focused: false
                 }
 
                 Column {
@@ -186,7 +186,7 @@ Item {
                             fillMode: Image.PreserveAspectFit
                             showGradientOverlay: false
                             fallbackText: winCard.iconInfo.fallbackLabel || wc.tr("windows.unknown_app", "Application")
-                            focused: winCard.focused && winCard.selected
+                            focused: false
                         }
 
                         Column {

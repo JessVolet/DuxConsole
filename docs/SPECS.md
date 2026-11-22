@@ -43,6 +43,7 @@ Todos los archivos JSON se cargan con `Quickshell.Io.FileView` (`watchChanges: t
 - **Pila de capas**: `dashboard` → `wheel` → `modal` (`LayerManager.topLayer` / `activeLayer`).
 - **Autoridad única (`NavigationManager`)**: centraliza registro de zonas, `ensureFocus(layerName)`, `move(direction)`, validación de capacidades y `activeHints`. `FocusZone` encapsula capacidades (`defaultFocus`, `expandable`, `subItemCount`, `actionHints`) y `LayerManager` administra la pila y `focusMemory`.
 - **Memoria de foco y prioridad**: al empujar (`push(layer)`) una capa nueva, `LayerManager` guarda la `FocusZone` activa en `focusMemory`. Al restaurar o entrar a una capa, `NavigationManager.ensureFocus()` prioriza: 1) foco recordado válido en `focusMemory`, 2) zona con `defaultFocus: true`, 3) fallback espacial arriba-izquierda.
+- **Indicador de foco**: `FocusZone.showFocusRing` permite que widgets con componentes enfocables propios oculten el anillo de zona y trasladen el estado visual al borde del elemento seleccionado.
 - **Regla `inert`**: toda `FocusZone` cuyo `layerName !== layerManager.topLayer` queda bloqueada (`inert: true`), ignorando D-Pad, `LT`/`RT`, activación y expansión.
 - **Enrutamiento global en `ConsoleOverlay.qml`**:
   - `I.Refuse` ejecuta `layerManager.pop()`; solo cierra el overlay si `topLayer` ya es `"dashboard"`.

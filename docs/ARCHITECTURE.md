@@ -98,7 +98,7 @@ flowchart TD
 
 ### `core/interaction/FocusZone.qml`
 - **Problema**: Las secciones interactivas necesitan declarar sus capacidades y bloquearse automáticamente cuando están debajo de un modal.
-- **Solución**: `Item` que envuelve una región navegable, calcula `inert` (`!layerManager.isLayerActive(layerName)`), guarda `currentSubIndex` para `LT`/`RT`, declara `defaultFocus`, `expandable`, `actionHints` y emite `activated`, `secondaryTriggered`, `expandRequested` y `subItemCycled`.
+- **Solución**: `Item` que envuelve una región navegable, calcula `inert` (`!layerManager.isLayerActive(layerName)`), guarda `currentSubIndex` para `LT`/`RT`, declara `defaultFocus`, `expandable`, `showFocusRing`, `actionHints` y emite `activated`, `secondaryTriggered`, `expandRequested` y `subItemCycled`.
 
 ---
 
@@ -122,7 +122,11 @@ flowchart TD
 
 ### `components/widgets/WindowCarousel.qml`, `MediaPlayerCard.qml` y `screens/slides/HomeScreen.qml`
 - **Problema**: Se requiere un prototipo inicial de `Inicio` separado del laboratorio `TestScreen.qml`.
-- **Solución**: `HomeScreen.qml` presenta el título/descripción de la ventana seleccionada a media altura, un `WindowCarousel` centrado abajo en modo `iconOnly` y `MediaPlayerCard` abajo a la derecha. El carrusel mantiene modo rico para otras pantallas, `selectedWindowId` estable y micro-navegación LT/RT; la activación enfoca la ventana y `I.Options` abre acciones.
+- **Solución**: `HomeScreen.qml` presenta tarjetas independientes para título, descripción y monitor de la ventana seleccionada, un `WindowCarousel` centrado abajo en modo `iconOnly` y `MediaPlayerCard` abajo a la derecha. El carrusel mantiene modo rico para otras pantallas, `selectedWindowId` estable y micro-navegación LT/RT; la tarjeta seleccionada recibe borde de foco más ancho sin dibujar un `FocusRing` sobre toda la zona.
+
+### `components/widgets/WindowInfoCard.qml` y `WindowInfoCards.qml`
+- **Problema**: La ventana seleccionada necesita separar título, descripción de aplicación/workspace y monitor para facilitar su lectura rápida.
+- **Solución**: `WindowInfoCards` compone tres `WindowInfoCard` reutilizables con contenido localizado y distribución responsiva.
 
 ### `components/chrome/ModalPanel.qml` y `components/primitives/text/StatusMessage.qml`
 - **Problema**: Los modales necesitan una superficie reutilizable y mensajes de error consistentes sin dibujar `StyledRect`/`StyledText` inline.
@@ -158,7 +162,7 @@ flowchart TD
 
 ### `components/primitives/surfaces/SlantedSurface.qml`
 - **Problema**: Inclinar todo un `Item` deforma textos, iconos y cálculo de foco/hit-testing.
-- **Solución**: **Dibuja** un `Rectangle` de fondo (`bgShape`) con `Matrix4x4` shear (`skewAngle`), borde por estado (`normal`, `focused`, `selected`, `disabled`) y mantiene `contentContainer` 100% recto.
+- **Solución**: **Dibuja** un `Rectangle` de fondo (`bgShape`) con `Matrix4x4` shear (`skewAngle`), borde por estado (`normal`, `focused`, `selected`, `disabled`) y mantiene `contentContainer` 100% recto; admite modo `borderOnly` para delinear imágenes sin taparlas.
 
 ### `components/primitives/surfaces/SlantedImage.qml`
 - **Problema**: `clip: true` en QtQuick no recorta esquinas redondeadas ni paralelogramos sin deformar la imagen.

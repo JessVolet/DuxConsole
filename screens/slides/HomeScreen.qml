@@ -53,7 +53,7 @@ ScreenBase {
         Item {
             id: selectedWindowArea
             width: pageLayout.width
-            height: pageLayout.height * (root.compactLayout ? 0.38 : 0.48)
+            height: pageLayout.height * (root.compactLayout ? 0.60 : 0.52)
 
             Column {
                 anchors.left: parent.left
@@ -61,23 +61,15 @@ ScreenBase {
                 width: Math.min(parent.width * (root.compactLayout ? 0.9 : 0.48), 760)
                 spacing: Theme.spacingM
 
-                DisplayTitle {
+                WindowInfoCards {
+                    id: windowInfoCards
                     width: parent.width
-                    text: root.selectedWindow
-                          ? (root.selectedWindow.title || root.selectedWindow.appName || root.tr("windows.unknown_app", "Application"))
-                          : root.tr("windows.empty", "No open windows")
-                    elide: Text.ElideRight
-                    maximumLineCount: 2
-                    wrapMode: Text.Wrap
-                }
-
-                SectionTitle {
-                    width: parent.width
+                    height: Math.min(implicitHeight, selectedWindowArea.height)
+                    windowData: root.selectedWindow
+                    i18n: root.i18n
+                    compact: root.compactLayout
                     styleTokens: root.styleTokens
-                    title: root.selectedWindow && root.selectedWindow.appName
-                           ? root.selectedWindow.appName
-                           : root.tr("windows.unknown_app", "Application")
-                    subtitle: root.selectedWindowDescription(root.selectedWindow)
+                    motionTokens: root.motionTokens
                 }
 
                 StatusMessage {

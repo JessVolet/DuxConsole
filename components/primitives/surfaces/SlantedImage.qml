@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Effects
 import qs.Common
@@ -88,6 +90,7 @@ Item {
         role: "card"
         skewAngle: slantedImg.skewAngle
         radius: slantedImg.radius
+        borderOnly: true
         focused: slantedImg.focused
         selected: slantedImg.selected
         disabled: slantedImg.disabled

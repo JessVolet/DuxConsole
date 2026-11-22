@@ -148,7 +148,7 @@ Item {
                 Binding {
                     target: itemLoader.item
                     property: "focused"
-                    value: carousel.focused
+                    value: carousel.focused && slot.selected
                     when: itemLoader.item !== null && ("focused" in itemLoader.item)
                 }
                 Binding {

@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import qs.Common
+import qs.Common as DmsCommon
 import "../../components/chrome"
 import "../../services"
 import "../interaction"
@@ -99,7 +99,7 @@ PanelWindow {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.margins: Theme.spacingXL
+            anchors.margins: DmsCommon.Theme.spacingXL
             styleTokens: styleTokens
             motionTokens: motionTokens
             i18n: i18n
@@ -112,9 +112,9 @@ PanelWindow {
         SlideManager {
             id: slideManager
             anchors.top: topBar.bottom
-            anchors.topMargin: Theme.spacingM
+            anchors.topMargin: DmsCommon.Theme.spacingM
             anchors.bottom: footerBar.top
-            anchors.bottomMargin: Theme.spacingM
+            anchors.bottomMargin: DmsCommon.Theme.spacingM
             anchors.left: parent.left
             anchors.right: parent.right
             registry: screenRegistry
@@ -131,7 +131,7 @@ PanelWindow {
             id: footerBar
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            anchors.margins: Theme.spacingXL
+            anchors.margins: DmsCommon.Theme.spacingXL
             iconsPadManager: iconsPadManager
             styleTokens: styleTokens
             motionTokens: motionTokens

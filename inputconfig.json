@@ -1,0 +1,61 @@
+{
+  "keyboard": {
+    "Return": "I.Accept",
+    "Escape": "I.Refuse",
+    "Tab": "I.Options",
+    "Space": "I.Action",
+    "Up": "I.Dpad.Up",
+    "Down": "I.Dpad.Down",
+    "Left": "I.Dpad.Left",
+    "Right": "I.Dpad.Right",
+    "E": "I.ActionSlide.R",
+    "Q": "I.ActionSlide.L",
+    "3": "I.ActionOption.R",
+    "1": "I.ActionOption.L",
+    "P": "I.Start",
+    "O": "I.Select",
+    "G": "I.Guide",
+    "R": "I.PressStick.R",
+    "L": "I.PressStick.L"
+  },
+  "gamepad": {
+    "BTN_SOUTH": "I.Accept",
+    "BTN_EAST": "I.Refuse",
+    "BTN_NORTH": "I.Options",
+    "BTN_WEST": "I.Action",
+    "BTN_DPAD_UP": "I.Dpad.Up",
+    "BTN_DPAD_DOWN": "I.Dpad.Down",
+    "BTN_DPAD_LEFT": "I.Dpad.Left",
+    "BTN_DPAD_RIGHT": "I.Dpad.Right",
+    "BTN_TR": "I.ActionSlide.R",
+    "BTN_TL": "I.ActionSlide.L",
+    "ABS_RZ": "I.ActionOption.R",
+    "ABS_Z": "I.ActionOption.L",
+    "BTN_SELECT": "I.Select",
+    "BTN_START": "I.Start",
+    "BTN_MODE": "I.Guide",
+    "BTN_THUMBR": "I.PressStick.R",
+    "BTN_THUMBL": "I.PressStick.L"
+  },
+  "gestures": {
+    "repeatInitialMs": 330,
+    "repeatIntervalMs": 110,
+    "repeatable": [
+      "I.Dpad.Up",
+      "I.Dpad.Down",
+      "I.Dpad.Left",
+      "I.Dpad.Right",
+      "I.ActionSlide.R",
+      "I.ActionSlide.L",
+      "I.ActionOption.R",
+      "I.ActionOption.L"
+    ],
+    "holds": {
+      "I.Guide": { "ms": 300, "emit": "I.SystemWheel" }
+    },
+    "chords": {
+      "I.Guide+I.ActionSlide.R": "I.QuickWheel",
+      "I.Guide+I.ActionSlide.L": "I.SystemWheel"
+    }
+  }
+}

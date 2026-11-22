@@ -1,0 +1,11 @@
+{
+  "id": "duxConsole",
+  "name": "DuxShell Console",
+  "description": "Overlay gaming modular para DMS",
+  "version": "0.1.0",
+  "author": "vsynlo",
+  "icon": "sports_esports",
+  "type": "daemon",
+  "component": "./ConsoleDaemon.qml",
+  "requires_dms": ">=2.0.0"
+}

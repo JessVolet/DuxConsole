@@ -14,6 +14,10 @@ Item {
 
     anchors.fill: parent
 
+    function tr(key, fallback) {
+        return i18n ? i18n.t(key, fallback) : (fallback ?? key)
+    }
+
     Item {
         id: body
         anchors.fill: parent

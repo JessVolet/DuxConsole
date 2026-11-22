@@ -13,7 +13,7 @@
 - [x] `core/interaction/FocusZone.qml` (D-Pad macro, LT/RT micro, `activated`, `secondaryTriggered`, `expandRequested`).
 - [x] `core/shell/IconsPadManager.qml` + `iconsconfig.json` (34 SVGs Xbox/PS de Kenney + fallback teclado).
 - [x] `core/shell/I18n.qml` + `locales/es.json` y `locales/en.json` + `"language"` en `uiconfig.json`.
-- [ ] Pulir `core/shell/ScreenBase.qml`: fijar `anchors.fill: parent` y centralizar helper `tr(key, fallback)` para eliminar duplicación en slides.
+- [x] Pulir `core/shell/ScreenBase.qml`: fijar `anchors.fill: parent` y centralizar helper `tr(key, fallback)` para eliminar duplicación en slides.
 - [ ] Soporte opcional `lockDevice` en `core/shell/InputManager.qml` para depuración de glifos con teclado sin sobreescribir `activeDevice`.
 
 ## FASE 2 — Motor de Movimiento Configurable (`core/motion/`)
@@ -26,12 +26,12 @@
 ## FASE 3 — Sistema de Diseño: Primitives y Chrome (`components/`)
 - [x] `components/chrome/Bg.qml` y `components/chrome/FocusRing.qml`.
 - [x] `components/primitives/glyphs/InputGlyph.qml` y `components/primitives/text/TestText.qml`.
-- [ ] `components/primitives/buttons/`: `ActionButton.qml`, `FocusCard.qml`, `PillButton.qml`, `ToggleChip.qml`.
+- [x] `components/primitives/buttons/`: `ActionButton.qml`, `FocusCard.qml` (`PillButton.qml`, `ToggleChip.qml` pendientes).
 - [ ] `components/primitives/sliders/`: `ConsoleSlider.qml`, `VolumeSlider.qml`, `ProgressBar.qml`.
 - [ ] `components/primitives/text/`: `SectionTitle.qml`, `MetricLabel.qml`.
 - [ ] `components/primitives/glyphs/`: `StatusBadge.qml`, `AvatarBadge.qml`.
-- [ ] `components/chrome/`: `BarraMenu.qml` (tabs dinámicas desde `ScreenRegistry` + `I18n`), `StatusBar.qml` (reloj, batería, red), `ActionHints.qml` (barra inferior contextual dinámica según la `FocusZone` activa).
-- [ ] Refactorizar `screens/slides/TestScreen.qml` para consumir únicamente primitives, `ActionHints` y un modal reutilizable (0 UI inline).
+- [ ] `components/chrome/`: `BarraMenu.qml` (tabs dinámicas desde `ScreenRegistry` + `I18n`), `StatusBar.qml` (reloj, batería, red); [x] `ActionHints.qml` (barra inferior contextual dinámica).
+- [x] Refactorizar `screens/slides/TestScreen.qml` para consumir únicamente primitives, `ActionHints` y un modal reutilizable (0 UI inline).
 
 ## FASE 4 — Servicios del Sistema (`services/` — Integración DMS)
 - [ ] `services/SystemServices.qml`: wrapper limpio sobre `qs.Services` (`AudioService`, `BrightnessService`, `BluetoothService`, `NightModeService`, `PowerProfileWatcher`, `MprisController`, `NiriService`/`HyprlandService`).
@@ -39,7 +39,7 @@
 
 ## FASE 5 — Widgets y Pantallas Reales (`components/widgets/` + `screens/`)
 - [ ] Widgets (`components/widgets/`): `WindowCarousel.qml`, `MediaPlayerCard.qml`, `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
-- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ItemOptionsModal.qml`, `ConfirmDialog.qml`.
+- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`.
 - [ ] Ruedas Orbitales (`screens/overlays/`): `OrbitalMenu.qml` (`SystemWheel` con hold `I.Guide` y `QuickWheel` con acorde `I.Guide + I.ActionSlide.R`).
 - [ ] Slides (`screens/slides/`):
   - [ ] `HomeScreen.qml` (ventanas activas, reproductor MPRIS, captura rápida, estado).

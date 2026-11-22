@@ -35,8 +35,10 @@ StyledRect {
     Image {
         id: svgIcon
         anchors.centerIn: parent
-        width: 20
-        height: 20
+        width: 22
+        height: 22
+        sourceSize.width: 22
+        sourceSize.height: 22
         visible: glyphRoot.useSvg
         source: glyphRoot.resolved.type === "svg" ? glyphRoot.resolved.source : ""
         fillMode: Image.PreserveAspectFit

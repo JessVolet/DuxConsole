@@ -6,8 +6,8 @@
   "demo": {
     "title": "DuxConsole — Demo ControlFriendly",
     "subtitle": "Última acción",
-    "button_label": "Acción principal",
-    "button_clicked": "Botón activado",
+    "button_label": "Cambiar dispositivo de glifos",
+    "button_clicked": "Dispositivo activo",
     "carousel_title": "Carrusel rápido (LT / RT)",
     "item_prefix": "Elemento",
     "modal_title": "Opciones del elemento",

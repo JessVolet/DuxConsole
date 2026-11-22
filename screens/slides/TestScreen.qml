@@ -11,7 +11,14 @@ ScreenBase {
     screenId: "test1"
     title: root.i18n ? root.i18n.t("nav.home", "Home") : "Home"
 
-    property int buttonClicks: 0
+    readonly property var _devices: ["keyboard", "xbox", "playstation"]
+
+    function cycleDevice() {
+        if (!root.inputManager)
+            return
+        const idx = _devices.indexOf(root.inputManager.activeDevice)
+        root.inputManager.activeDevice = _devices[(idx + 1) % _devices.length]
+    }
     property string lastModalSelection: ""
     readonly property bool modalOpen: root.layerManager?.topLayer === "modal"
 
@@ -51,11 +58,13 @@ ScreenBase {
             layerName: "dashboard"
             layerManager: root.layerManager
             navDown: zoneCarousel
-            width: 340
+            width: Math.max(360, buttonRow.implicitWidth + Theme.spacingXL * 2)
             height: 64
             ringRadius: Theme.cornerRadius
 
-            onActivated: root.buttonClicks += 1
+            onActivated: {
+                root.cycleDevice()
+            }
 
             StyledRect {
                 anchors.fill: parent
@@ -63,6 +72,7 @@ ScreenBase {
                 color: zoneButton.active ? Theme.surfaceContainerHighest : Theme.surfaceContainerHigh
 
                 Row {
+                    id: buttonRow
                     anchors.centerIn: parent
                     spacing: Theme.spacingM
 
@@ -74,9 +84,7 @@ ScreenBase {
 
                     StyledText {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: root.buttonClicks > 0
-                              ? root.tr("demo.button_clicked", "Button activated") + " (" + root.buttonClicks + ")"
-                              : root.tr("demo.button_label", "Primary Action")
+                        text: root.tr("demo.button_label", "Switch glyph device") + " (" + (root.inputManager?.activeDevice ?? "keyboard") + ")"
                         font.pixelSize: Theme.fontSizeLarge
                         font.weight: Font.DemiBold
                         color: Theme.onSurface

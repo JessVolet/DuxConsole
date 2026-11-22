@@ -6,8 +6,8 @@
   "demo": {
     "title": "DuxConsole — ControlFriendly Demo",
     "subtitle": "Last action",
-    "button_label": "Primary Action",
-    "button_clicked": "Button activated",
+    "button_label": "Switch glyph device",
+    "button_clicked": "Active device",
     "carousel_title": "Quick Carousel (LT / RT)",
     "item_prefix": "Item",
     "modal_title": "Item Options",

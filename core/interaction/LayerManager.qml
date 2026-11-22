@@ -6,6 +6,7 @@ QtObject {
     property string baseLayer: "dashboard"
     property var stack: [baseLayer]
     readonly property string activeLayer: stack.length > 0 ? stack[stack.length - 1] : baseLayer
+    readonly property string topLayer: activeLayer
 
     // Memoria de foco por capa: { [layerName]: zoneId | FocusZone }
     property var focusMemory: ({})
@@ -115,6 +116,8 @@ QtObject {
             return activeZone.activate()
         case "I.Action":
             return activeZone.triggerSecondary()
+        case "I.Select":
+            return activeZone.requestExpand()
         default:
             return false
         }

@@ -28,6 +28,7 @@ Item {
 
     signal activated(int subIndex)
     signal secondaryTriggered(int subIndex)
+    signal expandRequested(int subIndex)
     signal subItemCycled(int newIndex, int delta)
     signal dpadUnhandled(string direction)
 
@@ -67,6 +68,13 @@ Item {
         if (inert)
             return false
         secondaryTriggered(currentSubIndex)
+        return true
+    }
+
+    function requestExpand() {
+        if (inert)
+            return false
+        expandRequested(currentSubIndex)
         return true
     }
 

@@ -34,6 +34,12 @@ PanelWindow {
 
     ScreenRegistry { id: screenRegistry }
     LayerManager { id: layerManager }
+    I18n { id: i18n }
+
+    IconsManager {
+        id: iconsManager
+        inputManager: inputManager
+    }
 
     InputManager {
         id: inputManager
@@ -41,9 +47,11 @@ PanelWindow {
             if (action === "I.Refuse") {
                 if (!layerManager.pop())
                     overlay.closeRequested()
-            } else if (action === "I.ActionSlide.R" && layerManager.isLayerActive("dashboard")) {
+            } else if ((action === "I.ActionSlide.R" || action === "I.ActionSlide.L") && layerManager.topLayer !== "dashboard") {
+                return
+            } else if (action === "I.ActionSlide.R") {
                 slideManager.next()
-            } else if (action === "I.ActionSlide.L" && layerManager.isLayerActive("dashboard")) {
+            } else if (action === "I.ActionSlide.L") {
                 slideManager.prev()
             } else {
                 layerManager.handleAction(action, payload)
@@ -67,6 +75,8 @@ PanelWindow {
             registry: screenRegistry
             inputManager: inputManager
             layerManager: layerManager
+            iconsManager: iconsManager
+            i18n: i18n
         }
 
         FocusRing {

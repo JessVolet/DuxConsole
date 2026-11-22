@@ -6,6 +6,8 @@ Item {
     required property var registry
     required property var inputManager
     property var layerManager: null
+    property var iconsManager: null
+    property var i18n: null
     property int currentIndex: 0
 
     readonly property var currentScreenMeta: registry.screens[currentIndex] ?? null
@@ -31,6 +33,10 @@ Item {
                 item.inputManager = manager.inputManager
             if ("layerManager" in item)
                 item.layerManager = manager.layerManager
+            if ("iconsManager" in item)
+                item.iconsManager = manager.iconsManager
+            if ("i18n" in item)
+                item.i18n = manager.i18n
         }
     }
 }

@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "sound": "Sonido"
+  },
+  "demo": {
+    "title": "DuxConsole — Demo ControlFriendly",
+    "subtitle": "Última acción",
+    "button_label": "Acción principal",
+    "button_clicked": "Botón activado",
+    "carousel_title": "Carrusel rápido (LT / RT)",
+    "item_prefix": "Elemento",
+    "modal_title": "Opciones del elemento",
+    "modal_option_1": "Ejecutar",
+    "modal_option_2": "Fijar",
+    "modal_option_3": "Detalles",
+    "modal_selected": "Seleccionado"
+  },
+  "hints": {
+    "accept": "Aceptar",
+    "back": "Volver / Cerrar",
+    "expand": "Expandir",
+    "cycle": "Cambiar ítem",
+    "navigate": "Navegar"
+  }
+}

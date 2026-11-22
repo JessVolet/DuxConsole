@@ -1,14 +1,14 @@
 import QtQuick
 import "../../core/shell"
-import "../../core/interaction"
 import "../../components/primitives/text"
 
 ScreenBase {
+    id: root
     screenId: "test2"
-    title: "Prueba2"
+    title: root.i18n ? root.i18n.t("nav.sound", "Sound") : "Sound"
 
     TestText {
-        anchors.centerIn: parent
-        label: "Texto2:D"
+        anchors.centerIn: root
+        label: root.title
     }
 }

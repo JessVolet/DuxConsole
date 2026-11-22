@@ -14,9 +14,10 @@ DuxConsole/
 │   │   └── text/                    # TestText, SectionTitle, MetricLabel
 │   └── widgets/                     # Bloques compuestos (WindowCarousel, MediaPlayerCard, AudioMixerRow...)
 ├── core/
-│   ├── shell/                       # ConsoleOverlay, InputManager, ScreenBase, ScreenRegistry, SlideManager
+│   ├── shell/                       # ConsoleOverlay, InputManager, IconsManager, I18n, ScreenBase, ScreenRegistry, SlideManager
 │   ├── interaction/                 # FocusZone, LayerManager
 │   └── motion/                      # MotionTokens, CarouselView, MorphModal, SlideTransition
+├── locales/                         # Traducciones JSON (es.json, en.json, ...)
 ├── screens/
 │   ├── slides/                      # Vistas principales (capa "dashboard")
 │   ├── overlays/                    # Ruedas orbitales (capa "wheel")
@@ -26,7 +27,7 @@ DuxConsole/
 │   └── ARCHITECTURE.md
 ├── ConsoleDaemon.qml
 ├── inputconfig.json                 # Config editable de teclas, mando, holds y combos
-├── uiconfig.json                    # Config editable de UI (animaciones on/off, velocidad, tema/escala)
+├── uiconfig.json                    # Config editable de UI (idioma, animaciones on/off, velocidad, tema/escala)
 └── plugin.json
 ```
 
@@ -36,31 +37,44 @@ DuxConsole/
 | :--- | :--- | :--- |
 | Daemon | `ConsoleDaemon.qml` | Registro del plugin DMS e `IpcHandler` (`duxConsole`) |
 | Config de entrada | `inputconfig.json` | Mapa de teclado/gamepad, repetición, holds y chords |
-| Config de UI | `uiconfig.json` | Animaciones on/off, velocidad y escala/tema |
-| Assets | `assets/` | Recursos estáticos (SVGs Xbox/PS, iconos) |
-| Overlay shell | `core/shell/ConsoleOverlay.qml` | `PanelWindow` Wayland, captura de teclas, `Bg` y `FocusRing` |
-| Registro de pantallas | `core/shell/ScreenRegistry.qml` | Catálogo de slides en `../../screens/slides/` |
-| Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager` y `layerManager` |
-| Base de pantalla | `core/shell/ScreenBase.qml` | Contenedor base con márgenes `Theme.spacingXL` |
+| Config de UI | `uiconfig.json` | Idioma (`language`), animaciones on/off, velocidad y escala/tema |
+| Locales | `locales/es.json`, `locales/en.json` | Diccionarios de traducción por sección |
+| Assets | `assets/` | Recursos estáticos (SVGs Xbox/PS en `assets/glyphs/<device>/<button>.svg`) |
+| Overlay shell | `core/shell/ConsoleOverlay.qml` | Composition Root: `PanelWindow`, captura de teclas, `Bg` y `FocusRing` |
+| Registro de pantallas | `core/shell/ScreenRegistry.qml` | Catálogo de slides en `../../screens/slides/` con `labelKey` para `I18n` |
+| Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager`, `layerManager`, `iconsManager` e `i18n` |
+| Base de pantalla | `core/shell/ScreenBase.qml` | Contenedor base con acceso a servicios inyectados |
 | Entrada | `core/shell/InputManager.qml` | Traducción teclado/gamepad con `../../inputconfig.json` y gestos |
-| Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` y memoria de foco por capa |
-| Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT` y bloqueo `inert` |
-| Motion | `core/motion/` | Tokens de animación y transiciones (`MotionTokens`, `CarouselView`, `MorphModal`, `SlideTransition`) |
-| Chrome | `components/chrome/` | Marco persistente (`Bg.qml`, `FocusRing.qml`, etc.) |
-| Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` y `text/` (`TestText.qml`) |
+| Glifos | `core/shell/IconsManager.qml` | Resolución inversa de `action` a tecla legible o SVG Xbox/PS |
+| Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
+| Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y memoria de foco por capa |
+| Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, expansión (`I.Select`) y bloqueo `inert` |
+| Motion | `core/motion/` | Tokens de animación y transiciones |
+| Chrome | `components/chrome/` | `Bg.qml`, `FocusRing.qml` |
+| Primitivas | `components/primitives/` | `buttons/`, `sliders/`, `glyphs/` (`InputGlyph.qml`) y `text/` (`TestText.qml`) |
 | Widgets | `components/widgets/` | Bloques compuestos reutilizables |
-| Slides | `screens/slides/` | Vistas principales (`TestScreen.qml`, `TestScreen2.qml`) |
+| Slides | `screens/slides/` | `TestScreen.qml`, `TestScreen2.qml` |
 | Overlays / Modals | `screens/overlays/`, `screens/modals/` | Ruedas orbitales (`"wheel"`) y modales (`"modal"`) |
 | Servicios | `services/` | `DconsoleBridge` (socket Go) y wrappers de `qs.Services` |
+
+## Regla de dependencias
+
+- `core/` **no** importa `components/` ni `screens/`, con la única excepción del Composition Root en `core/shell/ConsoleOverlay.qml` (`import "../../components/chrome"` para montar `Bg` y `FocusRing`).
+- Los componentes y pantallas no hardcodean teclas ni textos visibles: usan `InputGlyph` (`IconsManager.resolve(action)`) e `I18n.t(key, fallback)`.
+
+## Cómo agregar un nuevo idioma
+
+1. Crea `locales/<code>.json` (por ejemplo `locales/fr.json`) replicando las claves de `locales/es.json` o `locales/en.json`.
+2. Cambia `"language": "<code>"` en `uiconfig.json` (o usa `"auto"` si `effectiveLanguage` contempla ese código). `I18n.qml` recarga el archivo automáticamente gracias a `watchChanges: true`.
 
 ## Flujo de entrada y capas
 
 1. `ConsoleOverlay` (`core/shell/ConsoleOverlay.qml`) captura eventos de teclado (y gamepad vía `services/` / `dconsole`) y los delega a `InputManager` (`core/shell/InputManager.qml`).
-2. `InputManager` traduce códigos crudos usando `../../inputconfig.json` y emite la señal semántica `triggered(action, payload)`.
+2. `InputManager` traduce códigos crudos usando `../../inputconfig.json` y emite `triggered(action, payload)`.
 3. `ConsoleOverlay` enruta las acciones:
-   - `I.Refuse`: intenta cerrar la capa superior con `layerManager.pop()`; si ya está en `"dashboard"`, cierra el overlay.
-   - `I.ActionSlide.L` / `I.ActionSlide.R`: cambian de pantalla en `SlideManager` solo cuando la capa `"dashboard"` está activa.
-   - D-Pad, `I.ActionOption.L/R`, `I.Accept`, `I.Action`: se delegan a `LayerManager.handleAction(...)`.
+   - `I.Refuse`: intenta cerrar la capa superior con `layerManager.pop()`; si `topLayer` ya es `"dashboard"`, cierra el overlay.
+   - `I.ActionSlide.L` / `I.ActionSlide.R`: cambian de pantalla en `SlideManager` solo cuando `layerManager.topLayer === "dashboard"`.
+   - D-Pad, `I.ActionOption.L/R`, `I.Accept`, `I.Action`, `I.Select`: se delegan a `LayerManager.handleAction(...)`.
 4. `LayerManager` (`core/interaction/LayerManager.qml`) mantiene la pila de capas (`dashboard` -> `wheel` / `modal`) y recuerda la última `FocusZone` activa de cada capa.
-5. `FocusZone` (`core/interaction/FocusZone.qml`) aplica la regla `inert` cuando su `layerName` no coincide con `layerManager.activeLayer`, bloqueando navegación, activación y ciclo rápido `LT`/`RT`.
+5. `FocusZone` (`core/interaction/FocusZone.qml`) aplica la regla `inert` cuando su `layerName` no coincide con `layerManager.topLayer`, bloqueando navegación, activación, expansión y ciclo rápido `LT`/`RT`.
 6. `FocusRing` (`components/chrome/FocusRing.qml`) sigue suavemente la geometría de `layerManager.activeZone` en el espacio de coordenadas del overlay.

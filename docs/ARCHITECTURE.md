@@ -1,85 +1,165 @@
-# DuxConsole Architecture
+# DuxConsole — Arquitectura por Archivo (Problema → Solución)
 
-## Estructura modular
+Este documento detalla qué problema resuelve cada archivo de `DuxConsole/`, cómo lo soluciona, qué dibuja (si es visual) y cómo se mantienen desacopladas las dependencias.
 
-```text
-DuxConsole/
-├── assets/                          # Recursos estáticos (SVGs de mando Xbox/PS, iconos)
-├── components/
-│   ├── chrome/                      # Marco persistente (Bg, FocusRing, BarraMenu, StatusBar, ActionHints)
-│   ├── primitives/                  # Átomos UI por familia de control
-│   │   ├── buttons/                 # ActionButton, FocusCard, PillButton, ToggleChip
-│   │   ├── sliders/                 # ConsoleSlider, VolumeSlider, ProgressBar
-│   │   ├── glyphs/                  # InputGlyph (<kbd> vs SVG), StatusBadge, AvatarBadge
-│   │   ├── surfaces/                # SlantedSurface, SlantedImage
-│   │   └── text/                    # TestText, SectionTitle, MetricLabel
-│   └── widgets/                     # Bloques compuestos (CarouselView, WindowCarousel, MediaPlayerCard, AudioMixerRow...)
-├── core/
-│   ├── shell/                       # ConsoleOverlay, InputManager, IconsPadManager, I18n, StyleTokens, ScreenBase, ScreenRegistry, SlideManager
-│   ├── interaction/                 # FocusZone, LayerManager, NavigationManager
-│   └── motion/                      # MotionTokens, MorphModal, SlideTransition
-├── locales/                         # Traducciones JSON (es.json, en.json, ...)
-├── screens/
-│   ├── slides/                      # Vistas principales (capa "dashboard")
-│   ├── overlays/                    # Ruedas orbitales (capa "wheel")
-│   └── modals/                      # Menús expandidos y diálogos (capa "modal")
-├── services/                        # DconsoleBridge (socket Go) y wrappers de qs.Services
-├── docs/
-│   └── ARCHITECTURE.md
-├── ConsoleDaemon.qml
-├── inputconfig.json                 # Config editable de teclas, mando, holds y combos
-├── iconsconfig.json                 # Config editable de glifos por dispositivo (keyboard, xbox, playstation)
-├── uiconfig.json                    # Config editable de UI (idioma, animaciones on/off, velocidad, tema/escala)
-└── plugin.json
+---
+
+## 1. Dirección de Dependencias
+
+```mermaid
+flowchart TD
+    S["screens/ (slides, modals, overlays)"] --> C["components/ (chrome, widgets, primitives)"]
+    S --> CS["core/shell/ + core/interaction/ + core/motion/"]
+    S --> SV["services/"]
+    CW["components/widgets/"] --> CP["components/primitives/"]
+    CW --> CI["core/interaction/ + core/motion/"]
+    CP --> CM["core/motion/ + qs.Common + qs.Widgets"]
+    CO["core/shell/ConsoleOverlay.qml (Composition Root)"] -. "Excepción única" .-> CC["components/chrome/ + services/"]
 ```
 
-## Resumen de módulos y rutas
+- **Regla estricta**: `core/` nunca importa `components/`, `screens/` ni `services/`, con la única excepción del *Composition Root* en `core/shell/ConsoleOverlay.qml`.
 
-| Módulo | Ruta | Responsabilidad |
-| :--- | :--- | :--- |
-| Daemon | `ConsoleDaemon.qml` | Registro del plugin DMS e `IpcHandler` (`duxConsole`) |
-| Config de entrada | `inputconfig.json` | Mapa de teclado/gamepad, repetición, holds y chords |
-| Config de glifos | `iconsconfig.json` | Mapa data-driven (`mono`/`colored`, `filled`/`outline`) para `keyboard`, `xbox`, `playstation`, `switch`, `steamdeck` |
-| Config de UI | `uiconfig.json` | Idioma (`language`), animaciones, tema y glifos (`icons.colorMode`, `icons.style`, `icons.showBackdrop`) |
-| Locales | `locales/es.json`, `locales/en.json` | Diccionarios de traducción por sección |
-| Assets | `assets/` | Recursos estáticos (incluye `assets/InputIcons/` — Kenney Input Prompts CC0) |
-| Overlay shell | `core/shell/ConsoleOverlay.qml` | Composition Root: `PanelWindow`, captura de teclas, `Bg` y `FocusRing` |
-| Registro de pantallas | `core/shell/ScreenRegistry.qml` | Catálogo de slides en `../../screens/slides/` con `labelKey` para `I18n` |
-| Gestor de slides | `core/shell/SlideManager.qml` | `Loader` dinámico de slides e inyección de `inputManager`, `layerManager`, `iconsPadManager` e `i18n` |
-| Base de pantalla | `core/shell/ScreenBase.qml` | Contenedor base con acceso a servicios inyectados |
-| Entrada | `core/shell/InputManager.qml` | Traducción teclado/gamepad con `../../inputconfig.json` y gestos |
-| Glifos | `core/shell/IconsPadManager.qml` | Cruce data-driven entre `inputManager.config`, `iconsconfig.json` y `StyleTokens` (`dms`/`colored`/`custom`, `filled`/`outline`) |
-| Internacionalización | `core/shell/I18n.qml` | Carga reactiva de `uiconfig.json` y `locales/<lang>.json` con `t(key, fallback)` |
-| Tokens de estilo | `core/shell/StyleTokens.qml` | Colores, `accentColor`, `skewAngle`, roles `"chrome"`/`"card"` y tintado de iconos desde `uiconfig.json` |
-| Capas | `core/interaction/LayerManager.qml` | Pila `dashboard` → `wheel`/`modal` (`topLayer`) y estado de `focusMemory` por capa |
-| Navegación espacial | `core/interaction/NavigationManager.qml` | Autoridad única para registro de zonas, `ensureFocus`, cono direccional, capacidades y `activeHints` |
-| Foco | `core/interaction/FocusZone.qml` | Navegación D-Pad, ciclo `LT`/`RT`, `defaultFocus`, `expandable` (`I.Select`), `actionHints` y bloqueo `inert` |
-| Motion | `core/motion/` | `MotionTokens.qml` (duraciones escaladas, curvas y fades configurables) |
-| Chrome | `components/chrome/` | `Bg.qml` (scrim configurable), `TopBar.qml` (tabs + estado), `FocusRing.qml`, `ActionHints.qml` |
-| Primitivas | `components/primitives/` | `buttons/` (`ActionButton.qml`, `FocusCard.qml`), `sliders/`, `glyphs/` (`InputGlyph.qml`), `surfaces/` (`SlantedSurface.qml`, `SlantedImage.qml`) y `text/` (`SectionTitle.qml`, `TestText.qml`) |
-| Widgets | `components/widgets/` | Bloques compuestos reutilizables, incluido `CarouselView.qml` (hasta seis visibles y dos en transición, escalado al ancho y rotación circular con fades) |
-| Slides | `screens/slides/` | `TestScreen.qml`, `TestScreen2.qml` |
-| Overlays / Modals | `screens/overlays/`, `screens/modals/` | Ruedas orbitales (`"wheel"`) y modales (`"modal"`) |
-| Servicios | `services/` | `DconsoleBridge` (socket Go) y wrappers de `qs.Services` |
+---
 
-## Regla de dependencias
+## 2. Raíz del Plugin y Configuración Data-Driven
 
-- `core/` **no** importa `components/`, `screens/` ni `services/`, con la única excepción del Composition Root en `core/shell/ConsoleOverlay.qml` (`import "../../components/chrome"` para montar `Bg` y `FocusRing`, e `import "../../services"` para conectar `DconsoleBridge`).
-- Los componentes y pantallas no hardcodean teclas ni textos visibles: usan `InputGlyph` (`IconsPadManager.resolve(action)`) e `I18n.t(key, fallback)`.
+### `plugin.json`
+- **Problema**: DMS necesita descubrir el tipo de plugin, su punto de entrada y versión mínima compatible sin ejecutar QML.
+- **Solución**: Declara `id: "duxConsole"`, `type: "daemon"` y `component: "./ConsoleDaemon.qml"`.
 
-## Cómo agregar un nuevo idioma
+### `ConsoleDaemon.qml`
+- **Problema**: El overlay debe permanecer disponible en segundo plano y abrirse/cerrarse mediante atajos de teclado o comandos externos.
+- **Solución**: Instancia `PluginComponent`, expone un `IpcHandler` (`target: "duxConsole"`) con `toggle()`, `open()`, `close()`, y monta `ConsoleOverlay` enlazado a `overlayOpen`. No dibuja UI propia.
 
-1. Crea `locales/<code>.json` (por ejemplo `locales/fr.json`) replicando las claves de `locales/es.json` o `locales/en.json`.
-2. Cambia `"language": "<code>"` en `uiconfig.json` (o usa `"auto"` si `effectiveLanguage` contempla ese código). `I18n.qml` recarga el archivo automáticamente gracias a `watchChanges: true`.
+### `inputconfig.json`
+- **Problema**: Hardcodear teclas o códigos de mando (`BTN_SOUTH`, `Return`) rompe la portabilidad entre teclado, Xbox, PlayStation y distintos usuarios.
+- **Solución**: Mapea códigos crudos de `keyboard` y `gamepad` a acciones semánticas (`I.*`) y define `gestures` (`repeatInitialMs`, `repeatIntervalMs`, `repeatable`, `holds`, `chords`).
 
-## Flujo de entrada y capas
+### `iconsconfig.json`
+- **Problema**: Cada mando tiene iconos y variantes distintas (`filled`/`outline`, `mono`/`colored`) y las rutas no deben vivir dentro del código QML.
+- **Solución**: Mapea códigos crudos por dispositivo (`keyboard`, `xbox`, `playstation`, `switch`, `steamdeck`) hacia sus SVGs en `assets/InputIcons/` con variantes `mono` y `colored` opcional.
 
-1. `ConsoleOverlay` (`core/shell/ConsoleOverlay.qml`) captura eventos de teclado (y gamepad vía `services/` / `dconsole`) y los delega a `InputManager` (`core/shell/InputManager.qml`).
-2. `InputManager` traduce códigos crudos usando `../../inputconfig.json` y emite `triggered(action, payload)`.
-3. `ConsoleOverlay` enruta las acciones:
-   - `I.Refuse`: intenta cerrar la capa superior con `layerManager.pop()`; si `topLayer` ya es `"dashboard"`, cierra el overlay.
-   - `I.ActionSlide.L` / `I.ActionSlide.R`: cambian de pantalla en `SlideManager` solo cuando `layerManager.topLayer === "dashboard"`.
-   - D-Pad, `I.ActionOption.L/R`, `I.Accept`, `I.Action`, `I.Select`: se delegan a `NavigationManager.handleAction(...)`.
-4. `LayerManager` (`core/interaction/LayerManager.qml`) mantiene la pila de capas (`dashboard` -> `wheel` / `modal`) y recuerda la última `FocusZone` activa de cada capa.
-5. `FocusZone` (`core/interaction/FocusZone.qml`) aplica la regla `inert` cuando su `layerName` no coincide con `layerManager.topLayer`, bloqueando navegación, activación, expansión y ciclo rápido `LT`/`RT`.
-6. `FocusRing` (`components/chrome/FocusRing.qml`) sigue suavemente la geometría de `layerManager.activeZone` en el espacio de coordenadas del overlay.
+### `uiconfig.json`
+- **Problema**: Ajustar idioma, animaciones, opacidad o modo visual sin recompilar ni editar QML.
+- **Solución**: Centraliza `language`, `animations` (`enabled`, `speed`, `fadeInMs`, `fadeOutMs`), `theme` (`mode`, `accentSource`, `customAccent`, `skewAngle`, `surfaceOpacity`, `scrimOpacity`) e `icons` (`colorMode`, `style`, `customColor`, `showBackdrop`).
+
+### `locales/es.json` y `locales/en.json`
+- **Problema**: Textos literales en QML impiden cambiar de idioma en caliente.
+- **Solución**: Diccionarios JSON organizados por sección (`nav.*`, `demo.*`, `hints.*`, `error.*`). Para agregar un idioma basta crear `locales/<code>.json` y ajustar `"language"` en `uiconfig.json`.
+
+---
+
+## 3. `core/shell/` — Infraestructura del Overlay
+
+### `core/shell/ConsoleOverlay.qml`
+- **Problema**: Se necesita una ventana Wayland fullscreen que capture teclado de forma exclusiva al abrirse, coordine entrada, capas, foco, estilos y reporte errores si una pantalla falla.
+- **Solución**: Actúa como *Composition Root* (`PanelWindow` en `WlrLayer.Overlay`). Instancia `ScreenRegistry`, `LayerManager`, `NavigationManager`, `I18n`, `StyleTokens`, `MotionTokens`, `IconsPadManager`, `DconsoleBridge` e `InputManager`. En `onActiveChanged` asegura foco al abrir (`ensureFocus`) y limpia estado al cerrar (`resetState`, `reset`).
+- **Qué dibuja**: Monta `Bg`, el contenido de `SlideManager`, `FocusRing` y `ErrorBanner`.
+
+### `core/shell/InputManager.qml`
+- **Problema**: Los eventos llegan desde fuentes distintas (teclado Qt hoy, socket `dconsole` mañana) y requieren repetición controlada, holds (`I.Guide`) y acordes (`I.Guide + ...`).
+- **Solución**: Carga `../../inputconfig.json` con `FileView` (`watchChanges: true`), normaliza pulsaciones/liberaciones en `handleRawPress`/`handleRawRelease`, actualiza `activeDevice` y emite la señal única `triggered(action, payload)`.
+
+### `core/shell/IconsPadManager.qml`
+- **Problema**: La UI pide glifos por acción semántica (`"I.Accept"`), no por tecla o botón físico, y debe adaptarse al dispositivo activo y modo de color.
+- **Solución**: Lee `../../iconsconfig.json` con `FileView`, cruza `inputManager.config` con `StyleTokens` (`dms`/`colored`/`custom`, `filled`/`outline`, migración `"native"` → `"colored"`) y expone `resolve(action)`.
+
+### `core/shell/I18n.qml`
+- **Problema**: Las pantallas necesitan textos traducidos con recarga en caliente al editar `uiconfig.json` o `locales/*.json`.
+- **Solución**: Lee `language` de `uiconfig.json` (soporta `"auto"`), carga `locales/<lang>.json` con `FileView` (`watchChanges: true`) y expone `t(key, fallback)`.
+
+### `core/shell/StyleTokens.qml`
+- **Problema**: Los temas claros de DMS lavan el fondo si se usa `Theme.surface` sin control, y los componentes necesitan roles semánticos consistentes para `hybrid`, `dark` y `light`.
+- **Solución**: Carga `uiconfig.json`, resuelve `accentColor` (Matugen o `customAccent`), `scrimColor(mult)`, `surfaceColor(role)`, `onSurfaceColor(role)` y `borderColor(role)` para `"chrome"` y `"card"`.
+
+### `core/shell/ScreenRegistry.qml`
+- **Problema**: `SlideManager` y `TopBar` necesitan conocer las pantallas disponibles sin acoplar rutas ni títulos hardcodeados.
+- **Solución**: Expone el arreglo `screens` con `{ id, labelKey, icon, source }` apuntando a `../../screens/slides/...`.
+
+### `core/shell/SlideManager.qml`
+- **Problema**: Cargar slides dinámicamente, inyectarles los gestores compartidos y capturar fallos de carga QML sin dejar pantalla en blanco.
+- **Solución**: Usa un `Loader` enlazado a `ScreenRegistry.screens[currentIndex]`, inyecta `inputManager`, `layerManager`, `navigationManager`, `iconsPadManager`, `i18n`, `styleTokens`, `motionTokens`, `registry` y `currentSlideIndex`. Si `status === Loader.Error`, captura `errorString()` vía `Qt.createComponent()` para `ErrorBanner`.
+
+### `core/shell/ScreenBase.qml`
+- **Problema**: Evitar que cada slide repita márgenes, propiedades de servicios inyectados y helpers de traducción.
+- **Solución**: `Item` base (`anchors.fill: parent`) con contenedor interior con márgenes `Theme.spacingXL`, propiedades inyectadas y helper `tr(key, fallback)`.
+
+---
+
+## 4. `core/interaction/` — Capas, Foco y Navegación
+
+### `core/interaction/LayerManager.qml`
+- **Problema**: Al abrir un modal o wheel sobre el dashboard, el foco de la pantalla inferior no debe perderse ni responder a eventos.
+- **Solución**: Mantiene la pila de capas (`stack`, `topLayer`), guarda el identificador de la `FocusZone` activa en `focusMemory` al hacer `push()` y expone `setActiveZone()`, `focusZone()` y `rememberedZoneRef()`.
+
+### `core/interaction/NavigationManager.qml`
+- **Problema**: Si múltiples gestores seleccionan foco en paralelo, se producen carreras entre `defaultFocus` y el orden de registro; además las pantallas no deberían cablear manualmente cada `navUp`/`navDown` ni duplicar lógica de hints.
+- **Solución**: Es la **autoridad única** de registro (`registerZone`/`unregisterZone`), selección inicial (`ensureFocus`: memoria → `defaultFocus` → arriba-izquierda), navegación espacial por cono direccional e `_intervalGap` (`move`), validación de capacidades (`subItemCount > 0` para LT/RT, `expandable` para `I.Select`) y cálculo de `activeHints`.
+
+### `core/interaction/FocusZone.qml`
+- **Problema**: Las secciones interactivas necesitan declarar sus capacidades y bloquearse automáticamente cuando están debajo de un modal.
+- **Solución**: `Item` que envuelve una región navegable, calcula `inert` (`!layerManager.isLayerActive(layerName)`), guarda `currentSubIndex` para `LT`/`RT`, declara `defaultFocus`, `expandable`, `actionHints` y emite `activated`, `secondaryTriggered`, `expandRequested` y `subItemCycled`.
+
+---
+
+## 5. `core/motion/` y `services/`
+
+### `core/motion/MotionTokens.qml`
+- **Problema**: Duraciones hardcodeadas impiden desactivar animaciones o ajustar su velocidad globalmente.
+- **Solución**: Lee `uiconfig.json` con `FileView` y expone `durationFast`, `durationNormal`, `durationMorph`, `fadeInDuration`, `fadeOutDuration` (en `0` si `animations.enabled === false`) y curvas estándar.
+
+### `services/DconsoleBridge.qml`
+- **Problema**: Quickshell necesita recibir eventos de gamepad del daemon Go `dconsole` y notificarle si el overlay está abierto para activar el fail-safe.
+- **Solución**: Cliente `Quickshell.Io.Socket` conectado a `$XDG_RUNTIME_DIR/dconsole.sock` con reconexión cada `2000 ms`, `SplitParser` NDJSON hacia `InputManager` y envío de `{ type: "overlay", active }`.
+
+---
+
+## 6. `components/` y `screens/`
+
+### `components/chrome/Bg.qml`
+- **Problema**: Un fondo opaco tapa el juego/escritorio; sin scrim oscuro, un tema claro vuelve ilegible el texto.
+- **Solución**: **Dibuja** dos gradientes (horizontal y vertical) usando `StyleTokens.scrimColor()`, dejando visible la derecha/arriba del escritorio con contraste controlado.
+
+### `components/chrome/TopBar.qml`
+- **Problema**: Las pantallas necesitan una barra superior consistente con pestañas de navegación y estado del sistema.
+- **Solución**: Extiende `SlantedSurface` (`role: "chrome"`) y **dibuja** los glifos `LB`/`RB`, las pestañas desde `ScreenRegistry` + `I18n` y el texto de estado a la derecha.
+
+### `components/chrome/FocusRing.qml`
+- **Problema**: Sin un indicador global unificado, cada botón tendría que dibujar su propio borde animado con saltos al cambiar de zona.
+- **Solución**: **Dibuja** un `Rectangle` transparente con borde `StyleTokens.accentColor` que persigue suavemente la geometría de `layerManager.activeZone` mediante `mapToItem()` y `MotionTokens`.
+
+### `components/chrome/ActionHints.qml`
+- **Problema**: Las barras de ayuda inferiores suelen quedar ilegibles sobre fondos claros o mostrar botones que no aplican a la zona activa.
+- **Solución**: Extiende `SlantedSurface` (`role: "card"`) y **dibuja** una píldora inferior con cada `InputGlyph` + etiqueta traducida desde `NavigationManager.activeHints`.
+
+### `components/chrome/ErrorBanner.qml`
+- **Problema**: Si un slide falla al cargar en tiempo de ejecución, el overlay quedaría vacío sin explicar qué se rompió.
+- **Solución**: **Dibuja** un panel de error de alto contraste (`z: 999`) con textos localizados vía `i18n` (`error.title`, `error.close_hint`), ruta del archivo fallido y mensaje de error.
+
+### `components/primitives/surfaces/SlantedSurface.qml`
+- **Problema**: Inclinar todo un `Item` deforma textos, iconos y cálculo de foco/hit-testing.
+- **Solución**: **Dibuja** un `Rectangle` de fondo (`bgShape`) con `Matrix4x4` shear (`skewAngle`), borde por estado (`normal`, `focused`, `selected`, `disabled`) y mantiene `contentContainer` 100% recto.
+
+### `components/primitives/surfaces/SlantedImage.qml`
+- **Problema**: `clip: true` en QtQuick no recorta esquinas redondeadas ni paralelogramos sin deformar la imagen.
+- **Solución**: **Dibuja** una `Image` recta enmascarada con `MultiEffect` (`maskEnabled: true`) contra un `SlantedSurface` estático (`visible: false; layer.enabled: true`), con soporte `fillMode`, gradiente inferior, fallback y borde de foco.
+
+### `components/primitives/buttons/ActionButton.qml` y `FocusCard.qml`
+- **Problema**: Evitar tarjetas o botones inline dentro de las pantallas.
+- **Solución**: Extienden `SlantedSurface`; `ActionButton` **dibuja** un botón con `InputGlyph` opcional y etiqueta; `FocusCard` **dibuja** una tarjeta de carrusel con `title` y `subtitle`.
+
+### `components/primitives/glyphs/InputGlyph.qml`
+- **Problema**: Los SVGs de Kenney monocromáticos son blancos con recorte transparente y se volvían invisibles sobre fondos claros u oscuros sin badge.
+- **Solución**: **Dibuja** un badge blanco (`#FFFFFF`) con SVG tintado por `MultiEffect` en modo `"dms"`/`"custom"` o SVG nativo en `"colored"`, y `<kbd>` como fallback.
+
+### `components/primitives/text/SectionTitle.qml` y `TestText.qml`
+- **Problema**: Estandarizar encabezados de sección y tarjetas de texto de prueba.
+- **Solución**: **Dibujan** título + subtítulo (`SectionTitle`) o tarjeta de texto destacada (`TestText`) con tokens tipográficos de `Theme`.
+
+### `components/widgets/CarouselView.qml`
+- **Problema**: Un carrusel infinito con ítem central expandido, vecinos compactos y escalado responsivo sin duplicar lógica de foco.
+- **Solución**: **Dibuja** un `PathView` circular controlado por `FocusZone.currentSubIndex`, con `MotionTokens` y `Binding` de `index`, `selected`, `focused` e `itemData` hacia el `delegate`.
+
+### `screens/slides/TestScreen.qml`, `TestScreen2.qml` y `screens/modals/ItemOptionsModal.qml`
+- **Problema**: Validar la arquitectura visual y los 3 niveles ControlFriendly sin hardcodear UI en pantallas.
+- **Solución**: `TestScreen.qml` ensambla `TopBar`, `SectionTitle`, `ActionButton`s, `SlantedImage`, `CarouselView`, `ActionHints` e `ItemOptionsModal` (capa `"modal"`). `TestScreen2.qml` valida el cambio de slide (`LB`/`RB`).

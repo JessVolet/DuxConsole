@@ -11,6 +11,8 @@ Item {
     property bool focused: false
 
     property int maxVisibleItems: 6
+    property int leftCount: -1
+    property int rightCount: -1
     property int maxCachedItems: 2
     property real cardWidth: 180
     property real cardHeight: 120
@@ -28,8 +30,20 @@ Item {
             return Math.max(0, model.count)
         return 0
     }
-    readonly property int visibleItemCount: Math.min(count, Math.max(1, maxVisibleItems))
+    readonly property bool hasAsymmetricCounts: leftCount >= 0 || rightCount >= 0
+    readonly property int resolvedLeftCount: Math.max(0, leftCount)
+    readonly property int resolvedRightCount: Math.max(0, rightCount)
+    readonly property int targetVisibleCount: hasAsymmetricCounts
+        ? resolvedLeftCount + 1 + resolvedRightCount
+        : Math.max(1, maxVisibleItems)
+    readonly property int visibleItemCount: Math.min(count, Math.max(1, targetVisibleCount))
     readonly property int cachedItemCount: Math.min(maxCachedItems, Math.max(0, count - visibleItemCount))
+    readonly property real highlightPosition: {
+        if (!hasAsymmetricCounts)
+            return 0.5
+        const totalSides = resolvedLeftCount + resolvedRightCount
+        return totalSides > 0 ? resolvedLeftCount / totalSides : 0.5
+    }
     readonly property int selectedIndex: count > 0
         ? ((currentIndex % count) + count) % count
         : -1
@@ -53,6 +67,8 @@ Item {
     readonly property real itemStep: resolvedCardWidth + resolvedSpacing
     readonly property real shiftOffset: Math.max(0, (resolvedSelectedWidth - resolvedCardWidth) / 2)
     readonly property real pathSpan: pathIntervals * itemStep
+    readonly property real pathStartX: (width - pathSpan) / 2
+    readonly property real highlightX: pathStartX + highlightPosition * pathSpan
     readonly property int moveDuration: motionTokens ? motionTokens.durationNormal : 0
 
     implicitHeight: resolvedSelectedHeight + 16 * layoutScale
@@ -66,8 +82,8 @@ Item {
         currentIndex: carousel.selectedIndex
         pathItemCount: carousel.visibleItemCount
         cacheItemCount: carousel.cachedItemCount
-        preferredHighlightBegin: 0.5
-        preferredHighlightEnd: 0.5
+        preferredHighlightBegin: carousel.highlightPosition
+        preferredHighlightEnd: carousel.highlightPosition
         highlightRangeMode: PathView.StrictlyEnforceRange
         highlightMoveDuration: carousel.moveDuration
         movementDirection: PathView.Shortest
@@ -79,7 +95,7 @@ Item {
 
             readonly property bool selected: PathView.isCurrentItem
             readonly property bool inPath: PathView.onPath
-            readonly property real sideDistance: x + width / 2 - view.width / 2
+            readonly property real sideDistance: x + width / 2 - carousel.highlightX
             property real translateX: selected || Math.abs(sideDistance) < 1
                 ? 0
                 : (sideDistance < 0 ? -carousel.shiftOffset : carousel.shiftOffset)
@@ -161,10 +177,10 @@ Item {
         }
 
         path: Path {
-            startX: (view.width - carousel.pathSpan) / 2
+            startX: carousel.pathStartX
             startY: view.height / 2
             PathLine {
-                x: (view.width + carousel.pathSpan) / 2
+                x: carousel.pathStartX + carousel.pathSpan
                 y: view.height / 2
             }
         }

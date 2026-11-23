@@ -192,6 +192,8 @@ ScreenBase {
                 height: Math.min(implicitHeight, root.compactLayout ? pageLayout.height * 0.34 : pageLayout.height * 0.42)
                 iconOnly: true
                 defaultFocus: true
+                leftCount: 1
+                rightCount: 3
                 navUp: continueZone
                 windowManager: root.windowManager
                 windowIconProvider: root.windowIconProvider

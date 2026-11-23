@@ -18,6 +18,8 @@ Item {
     property var i18n: null
     property bool iconOnly: false
     property bool defaultFocus: false
+    property int leftCount: -1
+    property int rightCount: -1
     property string layerName: "dashboard"
     property string zoneId: "zone-windows"
 
@@ -130,6 +132,8 @@ Item {
             currentIndex: zone.currentSubIndex
             motionTokens: wc.motionTokens
             focused: zone.active
+            leftCount: wc.leftCount
+            rightCount: wc.rightCount
             maxVisibleItems: width < 720 ? 3 : (width < 980 ? 4 : 6)
             cardWidth: wc.iconOnly ? Math.min(132, width / maxVisibleItems) : Math.min(200, width / maxVisibleItems)
             cardHeight: cardWidth * (wc.iconOnly ? 0.9 : 0.68)

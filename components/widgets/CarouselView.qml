@@ -81,7 +81,6 @@ Item {
         anchors.fill: parent
         visible: carousel.count > 0
         model: carousel.model
-        currentIndex: carousel.selectedIndex
         pathItemCount: carousel.visibleItemCount
         cacheItemCount: carousel.cachedItemCount
         preferredHighlightBegin: carousel.highlightPosition
@@ -90,6 +89,22 @@ Item {
         highlightMoveDuration: carousel.moveDuration
         movementDirection: PathView.Shortest
         interactive: false
+
+        onModelChanged: {
+            if (carousel.selectedIndex >= 0)
+                view.currentIndex = carousel.selectedIndex
+        }
+        onVisibleChanged: {
+            if (visible && carousel.selectedIndex >= 0)
+                view.currentIndex = carousel.selectedIndex
+        }
+
+        Binding {
+            target: view
+            property: "currentIndex"
+            value: carousel.selectedIndex
+            when: carousel.count > 0 && carousel.selectedIndex >= 0
+        }
 
         delegate: Item {
             id: slot

@@ -69,7 +69,21 @@ Item {
         }
     }
 
+    function _syncToFocusedWindow() {
+        if (windows.length === 0)
+            return
+        const focusedIndex = windows.findIndex(w => w.isFocused)
+        if (focusedIndex >= 0) {
+            selectedWindowId = windows[focusedIndex].id
+            zone.currentSubIndex = focusedIndex
+        }
+    }
+
     onWindowsChanged: _syncSelectionFromList()
+    onVisibleChanged: {
+        if (visible)
+            _syncToFocusedWindow()
+    }
     Component.onCompleted: _syncSelectionFromList()
 
     FocusZone {

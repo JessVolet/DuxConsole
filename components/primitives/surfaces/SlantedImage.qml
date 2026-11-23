@@ -24,10 +24,16 @@ Item {
     readonly property bool supportsLayerMask: GraphicsInfo.api !== GraphicsInfo.Software
     readonly property bool hasImage: source.toString() !== "" && img.status === Image.Ready
     readonly property bool isLoading: source.toString() !== "" && img.status === Image.Loading
+    readonly property real _skewPad: Math.min(width * 0.25, Math.abs(Math.tan(skewAngle * Math.PI / 180)) * height)
+    readonly property real _innerX: skewAngle < 0 ? _skewPad : 0
+    readonly property real _innerWidth: Math.max(1, width - _skewPad)
 
     // Fondo fallback cuando no hay imagen lista
     SlantedSurface {
-        anchors.fill: parent
+        x: slantedImg._innerX
+        y: 0
+        width: slantedImg._innerWidth
+        height: slantedImg.height
         styleTokens: slantedImg.styleTokens
         motionTokens: slantedImg.motionTokens
         role: "card"
@@ -39,14 +45,22 @@ Item {
         visible: !slantedImg.hasImage
     }
 
-    // Máscara estática siempre oculta para MultiEffect (evita toggles dinámicos de layer)
-    SlantedSurface {
-        id: maskShape
+    // Máscara estática dentro del bounding box completo para evitar recorte de esquinas inclinadas
+    Item {
+        id: maskWrapper
         anchors.fill: parent
-        skewAngle: slantedImg.skewAngle
-        radius: slantedImg.radius
         visible: false
         layer.enabled: slantedImg.supportsLayerMask
+
+        SlantedSurface {
+            id: maskShape
+            x: slantedImg._innerX
+            y: 0
+            width: slantedImg._innerWidth
+            height: slantedImg.height
+            skewAngle: slantedImg.skewAngle
+            radius: slantedImg.radius
+        }
     }
 
     // Imagen recta (sin shear) recortada con MultiEffect contra la máscara inclinada y redondeada
@@ -59,7 +73,7 @@ Item {
         layer.enabled: slantedImg.hasImage && slantedImg.supportsLayerMask
         layer.effect: MultiEffect {
             maskEnabled: true
-            maskSource: maskShape
+            maskSource: maskWrapper
             maskThresholdMin: 0.5
             maskSpreadAtMin: 0.2
         }
@@ -87,7 +101,10 @@ Item {
 
     // Borde superior de enfoque/selección sobre la imagen recortada
     SlantedSurface {
-        anchors.fill: parent
+        x: slantedImg._innerX
+        y: 0
+        width: slantedImg._innerWidth
+        height: slantedImg.height
         styleTokens: slantedImg.styleTokens
         motionTokens: slantedImg.motionTokens
         role: "card"

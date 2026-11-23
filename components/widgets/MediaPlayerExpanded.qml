@@ -7,6 +7,7 @@ import Quickshell.Services.Mpris
 import qs.Common
 import qs.Widgets
 import qs.Services
+import qs.Modules.DDash.Media
 import "../../core/interaction"
 import "../primitives/buttons"
 import "../primitives/meters"
@@ -190,37 +191,9 @@ SlantedSurface {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 1
 
-                ListView {
-                    id: lyricsList
+                LyricsOverlay {
                     anchors.fill: parent
-                    clip: true
-                    interactive: false
-                    spacing: Theme.spacingM
                     visible: playerRoot.showLyrics && playerRoot.lyricsAvailable && playerRoot.hasPlayer
-                    model: playerRoot.lyricsCtrl?.lines ?? []
-                    currentIndex: playerRoot.lyricsCtrl?.activeIndex ?? -1
-                    preferredHighlightBegin: height * 0.38
-                    preferredHighlightEnd: height * 0.56
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-                    highlightMoveDuration: playerRoot.motionTokens?.durationNormal ?? 220
-
-                    delegate: StyledText {
-                        required property int index
-                        required property var modelData
-                        readonly property bool isCurrent: index === lyricsList.currentIndex
-
-                        width: lyricsList.width
-                        horizontalAlignment: Text.AlignHCenter
-                        wrapMode: Text.WordWrap
-                        text: String(modelData?.x ?? "")
-                        font.pixelSize: isCurrent ? Theme.fontSizeXLarge : Theme.fontSizeLarge
-                        font.weight: isCurrent ? Font.Bold : Font.Medium
-                        color: isCurrent ? playerRoot.fgColor : Qt.alpha(playerRoot.fgColor, 0.38)
-
-                        Behavior on color {
-                            ColorAnimation { duration: playerRoot.motionTokens?.durationFast ?? 120 }
-                        }
-                    }
                 }
 
                 SlantedImage {

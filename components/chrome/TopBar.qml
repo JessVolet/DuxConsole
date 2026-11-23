@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Services.UPower
 import qs.Common
 import qs.Widgets
-import qs.DCommon.Widgets
+import qs.DCommon.Widgets as DCommon
 import "../primitives/glyphs"
 
 Item {
@@ -249,7 +249,7 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 spacing: 4
 
-                DIcon {
+                DCommon.DIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: "sports_esports"
                     size: 16
@@ -269,7 +269,7 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 spacing: 4
 
-                DIcon {
+                DCommon.DIcon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: "battery_std"
                     size: 16

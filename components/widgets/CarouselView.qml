@@ -187,7 +187,11 @@ Item {
             id: slot
             required property int index
 
+            // After a cyclic reset the delegate is recreated before PathView
+            // marks it current; the view index keeps its selected size so the
+            // card does not shrink and grow again with no movement.
             readonly property bool selected: PathView.isCurrentItem
+                || (carousel.cyclic && slot.index === carousel._viewIndex)
             readonly property bool inPath: PathView.onPath
             readonly property int itemIndex: carousel.cyclic ? carousel.wrapIndex(slot.index) : slot.index
             readonly property real sideDistance: carousel.vertical ? y + height / 2 - carousel.highlightY : x + width / 2 - carousel.highlightX

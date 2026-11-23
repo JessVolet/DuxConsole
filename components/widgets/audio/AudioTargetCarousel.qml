@@ -14,6 +14,7 @@ Item {
     property string layerName: "dashboard"
     property int orientation: Qt.Horizontal
     property bool cyclic: false
+    property bool wheel: false
     property bool defaultFocus: false
     property var layerManager: null
     property var navigationManager: null
@@ -23,6 +24,7 @@ Item {
     property var iconsPadManager: null
     readonly property var selectedTarget: model.find(target => target.key === selectedKey) ?? null
     readonly property alias focusZone: zone
+    readonly property var presentationItem: widget.wheel ? wheelView.selectedItem : carousel.selectedItem
     signal volumeRequested(string key, real value)
     signal muteRequested(string key, bool muted)
     signal activationRequested(string key)
@@ -83,13 +85,16 @@ Item {
         ]) : []
         onSubItemCycled: index => { widget.selectedKey = widget.model[index]?.key ?? "" }
         onActivated: { if (widget.selectedTarget?.kind !== "app" && widget.selectedTarget) widget.activationRequested(widget.selectedKey) }
-        onOptionsTriggered: { if (widget.selectedTarget?.hasOptions) widget.optionsRequested(widget.selectedKey, carousel.selectedItem) }
+        onOptionsTriggered: { if (widget.selectedTarget?.hasOptions) widget.optionsRequested(widget.selectedKey, widget.presentationItem) }
         CarouselView {
             id: carousel
             objectName: "audio-target-carousel"
             anchors.fill: parent
+            visible: !widget.wheel
+            enabled: !widget.wheel
             orientation: widget.orientation
             cyclic: widget.cyclic
+            singleItemData: widget.selectedTarget
             model: stableModel
             currentIndex: zone.currentSubIndex
             maxVisibleItems: widget.orientation === Qt.Vertical ? 5 : 3
@@ -113,6 +118,29 @@ Item {
                     widget.selectedKey = itemData.key
                     zone.currentSubIndex = index
                 }
+            }
+        }
+        AudioWheel {
+            id: wheelView
+            anchors.fill: parent
+            visible: widget.wheel
+            enabled: widget.wheel
+            objectName: "audio-target-wheel"
+            model: stableModel
+            currentIndex: zone.currentSubIndex
+            cardWidth: Math.max(250, widget.width * 0.66)
+            selectedWidth: Math.max(290, widget.width * 0.80)
+            cardHeight: 66
+            selectedHeight: 90
+            spacing: Theme.spacingXL
+            motionTokens: widget.motionTokens
+            styleTokens: widget.styleTokens
+            i18n: widget.i18n
+            focused: zone.active
+            onChosen: index => {
+                if (!zone.requestZoneFocus()) return
+                widget.selectedKey = widget.model[index]?.key ?? ""
+                zone.currentSubIndex = index
             }
         }
     }

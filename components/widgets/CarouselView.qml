@@ -19,6 +19,9 @@ Item {
     // Cyclic keeps the selection in the middle with entries wrapped on both
     // sides; only enabled where the model is a wheel (the vertical mixer).
     property bool cyclic: false
+    // Lets a consumer supply the single-entry data reactively; the loader only
+    // renders once, so a plain itemDataAt(0) call would not refresh.
+    property var singleItemData: null
     property int maxCachedItems: 2
     property real cardWidth: 180
     property real cardHeight: 120
@@ -53,7 +56,7 @@ Item {
     readonly property int selectedIndex: count > 0
         ? ((currentIndex % count) + count) % count
         : -1
-    readonly property Item selectedItem: count === 1 ? singleItem.item : view.currentItem
+    readonly property var selectedItem: count === 1 ? singleItem.item : view.currentItem
     readonly property int viewCount: cyclic ? count * 3 : count
     property int _viewIndex: 0
     property int _lastSelected: -1
@@ -314,7 +317,7 @@ Item {
         Binding {
             target: singleItem.item
             property: "itemData"
-            value: carousel.itemDataAt(0)
+            value: carousel.singleItemData !== null ? carousel.singleItemData : carousel.itemDataAt(0)
             when: singleItem.item !== null && ("itemData" in singleItem.item)
         }
     }

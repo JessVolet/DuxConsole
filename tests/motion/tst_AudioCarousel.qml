@@ -78,6 +78,22 @@ TestCase {
         widget.selectedKey = "a"
         widget.focusZone.currentSubIndex = 0
     }
+    function test_wheelKeepsSelectionCentered() {
+        widget.wheel = true
+        widget.model = [entry("a"), entry("b"), entry("c"), entry("d")]
+        widget.selectedKey = "a"
+        wait(50)
+        compare(widget.presentationItem?.index ?? -1, 0)
+        widget.focusZone.cycleSubItem(-1)
+        wait(300)
+        compare(widget.selectedKey, "d")
+        const item = widget.presentationItem
+        verify(item)
+        compare(item.index, 3)
+        fuzzyCompare(item.y + item.height / 2, item.parent.height / 2, 2)
+        widget.wheel = false
+        widget.model = []
+    }
     function test_selectionAcrossModelChange() {
         widget.model = [entry("a"), entry("b"), entry("c")]
         widget.selectedKey = "a"

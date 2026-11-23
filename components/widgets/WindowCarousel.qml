@@ -49,7 +49,45 @@ Item {
 
     implicitHeight: iconOnly ? carousel.implicitHeight : Math.max(200, carousel.implicitHeight)
 
+    ListModel {
+        id: windowModel
+    }
+
+    function _toModelEntry(w) {
+        return {
+            id: Number(w.id ?? -1),
+            title: String(w.title ?? ""),
+            appId: String(w.appId ?? ""),
+            appName: String(w.appName ?? ""),
+            workspaceIndex: Number(w.workspaceIndex ?? -1),
+            output: String(w.output ?? ""),
+            isFocused: Boolean(w.isFocused),
+            isFullscreen: Boolean(w.isFullscreen)
+        }
+    }
+
+    function _syncModelInPlace() {
+        let sameOrder = windowModel.count === windows.length
+        if (sameOrder) {
+            for (let i = 0; i < windows.length; i++) {
+                if (windowModel.get(i).id !== Number(windows[i].id ?? -1)) {
+                    sameOrder = false
+                    break
+                }
+            }
+        }
+        if (sameOrder) {
+            for (let i = 0; i < windows.length; i++)
+                windowModel.set(i, _toModelEntry(windows[i]))
+            return
+        }
+        windowModel.clear()
+        for (let i = 0; i < windows.length; i++)
+            windowModel.append(_toModelEntry(windows[i]))
+    }
+
     function _syncSelectionFromList() {
+        _syncModelInPlace()
         if (windows.length === 0) {
             selectedWindowId = -1
             zone.currentSubIndex = 0
@@ -157,7 +195,7 @@ Item {
             selectedWidth: wc.iconOnly ? Math.min(210, width * 0.28) : Math.min(380, width * 0.48)
             selectedHeight: wc.iconOnly ? selectedWidth * 0.88 : Math.min(184, selectedWidth * 0.48)
             spacing: Math.min(wc.iconOnly ? 14 : 20, width * 0.018)
-            model: wc.windows
+            model: windowModel
             delegate: SlantedSurface {
                 id: winCard
                 property int index: 0

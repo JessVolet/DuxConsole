@@ -72,6 +72,15 @@ Item {
     readonly property real pathStartX: alignLeft ? leftStartX : (width - pathSpan) / 2
     readonly property real highlightX: pathStartX + highlightPosition * pathSpan
     readonly property int moveDuration: motionTokens ? motionTokens.durationNormal : 0
+    property bool _snapping: false
+
+    function snapToSelected() {
+        if (selectedIndex < 0)
+            return
+        _snapping = true
+        view.currentIndex = selectedIndex
+        Qt.callLater(() => { _snapping = false })
+    }
 
     implicitHeight: resolvedSelectedHeight + 16 * layoutScale
     clip: true
@@ -86,17 +95,14 @@ Item {
         preferredHighlightBegin: carousel.highlightPosition
         preferredHighlightEnd: carousel.highlightPosition
         highlightRangeMode: PathView.StrictlyEnforceRange
-        highlightMoveDuration: carousel.moveDuration
+        highlightMoveDuration: carousel._snapping ? 0 : carousel.moveDuration
         movementDirection: PathView.Shortest
         interactive: false
 
-        onModelChanged: {
-            if (carousel.selectedIndex >= 0)
-                view.currentIndex = carousel.selectedIndex
-        }
+        onModelChanged: carousel.snapToSelected()
         onVisibleChanged: {
-            if (visible && carousel.selectedIndex >= 0)
-                view.currentIndex = carousel.selectedIndex
+            if (visible)
+                carousel.snapToSelected()
         }
 
         Binding {

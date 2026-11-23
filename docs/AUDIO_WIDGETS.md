@@ -132,10 +132,12 @@ physical codes:
   would have emitted a final ~14% angle during spring-back instead of holding
   the volume. Re-measure a unit whose drift exceeds the release radius.
 
-Hardware acceptance (physical stick moving the selected app/output volume,
-R3 muting without overwriting it, overlay close restoring game input) is still
-a manual check. Unit tests feed evdev records and normalized axes; they are not
-a controller test.
+Hardware acceptance was checked with the physical pad: the overlay received
+4574 axis samples covering x/y ±1 while a second reader of `/dev/input/event28`
+received none, and a PipeWire monitor recorded the focused app volume following
+the stick plus R3 muting it without changing the saved volume. Overlay close
+released the grab. Physical unplug/replug is only covered by unit tests; the
+daemon is still started manually rather than by a user unit.
 
 ## Verification and deployment
 

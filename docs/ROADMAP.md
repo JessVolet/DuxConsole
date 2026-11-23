@@ -52,7 +52,7 @@
 - [x] Independent AppVolumeMixer (vertical, up to five), AudioOutputSelector and AudioInputSelector; anchored device options, reusable VolumeKnob and assembled Sound screen.
 - [x] Angular 270-degree knob controller with configurable deadzone/hysteresis, target rearming and R3 mute; frontend normalized-axis receiver.
 - [x] Right-stick axis production in the separate dconsole daemon (ABS_X/Y/RX/RY normalized, sent only while grabbed, released on disconnect/failure).
-- [ ] Verify actual controller/audio hotplug behavior in DMS with a physical pad (frontend/synthetic tests are not hardware acceptance).
+- [x] Verify real stick control with a physical pad: axes reach the daemon only while grabbed, a second reader of the device receives nothing, app volume follows the stick and R3 mutes without changing volume. Physical hotplug/reconnect remains covered only by unit tests.
 - [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `CarouselActionAnchor.qml`, `WindowActionsPanel.qml`, `WindowInfoCard.qml`, `WindowInfoCards.qml`, `MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `MediaLyricsPanel.qml`, `audio/AppVolumeMixer.qml`, `audio/AudioOutputSelector.qml`, `audio/AudioInputSelector.qml`; [ ] `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
 - [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowOptionsModal.qml`, `MediaPlayerModal.qml`, `MediaPlayerPicker.qml`.
 - [ ] Perilla de volumen multimedia controlada con stick derecho en `MediaPlayerExpanded.qml` (icono reservado).

@@ -55,7 +55,7 @@ Contract and dependency details: `plan.md`; implementation: `docs/AUDIO_WIDGETS.
 - [x] Verify producer/schema; normalize axes and configure semantic routing.
 - [x] Test bridge input validation, deadzone/hysteresis and one-shot R3.
 - [x] Verify shutdown/inert/disconnect resets and no stale target writes.
-- [ ] Physical stick moves the selected target and R3 mutes it on real hardware.
+- [x] Physical stick moves the selected target and R3 mutes it on real hardware (hotplug only unit-tested).
 
 ## 10. Runnable composition and acceptance (M; depends on 1-9)
 - [x] Wire focused widget selection to the shared controlled knob.

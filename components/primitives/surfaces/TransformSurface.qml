@@ -31,6 +31,7 @@ ContainerTransform {
 
     property Loader originLoader: Loader {
         parent: container
+        active: container.originContent !== null && (container.expanded || container.progress > 0)
         x: container.anchorOffset.x - width / 2
         y: container.anchorOffset.y - height / 2
         width: container.originContentSize.width

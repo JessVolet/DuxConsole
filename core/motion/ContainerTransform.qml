@@ -114,7 +114,7 @@ Item {
             _originActive = true
         }
         if (targetItem)
-            captureDestination()
+            scheduleCaptureDestination()
     }
     onProgressChanged: {
         if (!expanded && progress === 0)

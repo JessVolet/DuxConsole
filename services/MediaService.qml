@@ -29,6 +29,7 @@ Item {
 
     readonly property real length: Math.max(0, Number(activePlayer?.length ?? 0))
     property real position: Math.max(0, Number(activePlayer?.position ?? 0))
+    property double _seekLockUntilMs: 0
     readonly property real progress: length > 0 ? Math.max(0, Math.min(1, position / length)) : 0
 
     readonly property bool canGoNext: Boolean(activePlayer?.canGoNext)
@@ -43,19 +44,35 @@ Item {
     readonly property bool volumeSupported: Boolean(activePlayer?.volumeSupported)
     readonly property real volume: Math.max(0, Math.min(1, Number(activePlayer?.volume ?? 0)))
 
-    function syncPosition() {
+    function syncPosition(force) {
+        if (!force && Date.now() < _seekLockUntilMs)
+            return
         position = Math.max(0, Number(activePlayer?.position ?? 0))
     }
 
-    onActivePlayerChanged: syncPosition()
+    onActivePlayerChanged: {
+        _seekLockUntilMs = 0
+        syncPosition(true)
+    }
 
     Connections {
         target: service.activePlayer
         function onPositionChanged() {
-            service.syncPosition()
+            service.syncPosition(false)
         }
         function onTrackTitleChanged() {
-            service.syncPosition()
+            service._seekLockUntilMs = 0
+            service.syncPosition(true)
+        }
+    }
+
+    Timer {
+        id: seekSettleTimer
+        interval: 450
+        repeat: false
+        onTriggered: {
+            service._seekLockUntilMs = 0
+            service.syncPosition(true)
         }
     }
 
@@ -64,6 +81,8 @@ Item {
         repeat: true
         running: service.isPlaying && service.length > 0
         onTriggered: {
+            if (Date.now() < service._seekLockUntilMs)
+                return
             if (service.activePlayer?.positionSupported)
                 service.activePlayer.positionChanged()
             else
@@ -89,16 +108,21 @@ Item {
     function seekBy(deltaSeconds) {
         if (!activePlayer || !canSeek)
             return
-        activePlayer.seek(deltaSeconds)
+        _seekLockUntilMs = Date.now() + 450
+        seekSettleTimer.restart()
         position = Math.max(0, Math.min(length, position + deltaSeconds))
+        activePlayer.seek(deltaSeconds)
     }
 
     function seekToRatio(ratio) {
         if (!activePlayer || !canSeek || length <= 0)
             return
         const target = Math.max(0, Math.min(length, ratio * length))
-        activePlayer.seek(target - position)
+        const delta = target - position
+        _seekLockUntilMs = Date.now() + 450
+        seekSettleTimer.restart()
         position = target
+        activePlayer.seek(delta)
     }
 
     function matchesTrack(lyricsTrack) {

@@ -26,6 +26,8 @@ SlantedSurface {
     property string layerName: "media-player"
     property var cavaBars: []
     property bool pickerVisible: false
+    property bool contentReady: true
+    property real contentOpacity: 1.0
     signal playersRequested(Item source)
 
     property bool showLyrics: true
@@ -183,6 +185,7 @@ SlantedSurface {
         layerManager: playerRoot.layerManager
         navigationManager: playerRoot.navigationManager
         defaultFocus: true
+        enabled: playerRoot.contentReady
         expandable: playerRoot.hasValidLyrics
         showFocusRing: false
         subItemCount: playerRoot.canSeek ? 3 : 0
@@ -243,6 +246,7 @@ SlantedSurface {
 
         GridLayout {
             anchors.fill: parent
+            opacity: playerRoot.contentOpacity
             anchors.topMargin: playerRoot.compactLayout ? Theme.spacingM : Theme.spacingXL
             anchors.bottomMargin: (playerRoot.compactLayout ? Theme.spacingM : Theme.spacingXL) + (volumeButton.visible ? volumeButton.height : 0)
             anchors.leftMargin: playerRoot.safeHorizontalInset + Theme.spacingL
@@ -500,6 +504,7 @@ SlantedSurface {
         // Reserva visual para futura perilla de volumen controlada con stick R
         ActionPill {
             id: volumeButton
+            opacity: playerRoot.contentOpacity
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.rightMargin: playerRoot.safeHorizontalInset + Theme.spacingL

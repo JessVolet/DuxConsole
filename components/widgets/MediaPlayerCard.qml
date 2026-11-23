@@ -21,6 +21,7 @@ SlantedSurface {
     property string zoneId: "home-media"
     property bool defaultFocus: false
     property bool compact: false
+    property bool hiddenVisual: false
     readonly property alias focusZone: mediaZone
 
     signal expandRequested()
@@ -78,6 +79,7 @@ SlantedSurface {
 
     role: "card"
     focused: mediaZone.active
+    opacity: hiddenVisual ? 0 : 1
     implicitWidth: 360
     implicitHeight: compact ? 84 : 104
 

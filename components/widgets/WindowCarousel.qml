@@ -29,6 +29,7 @@ Item {
     readonly property int count: windows.length
     readonly property bool hasWindows: windows.length > 0
     readonly property alias focusZone: zone
+    readonly property alias selectedCardItem: carousel.selectedItem
     property alias navUp: zone.navUp
     property alias navRight: zone.navRight
     property int selectedWindowId: -1

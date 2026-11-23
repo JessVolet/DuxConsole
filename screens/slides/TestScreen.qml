@@ -184,7 +184,8 @@ ScreenBase {
         }
     }
 
-    WindowActionsModal {
+    WindowOptionsModal {
+        sourceItem: windowCarousel.selectedCardItem
         windowManager: root.windowManager
         layerManager: root.layerManager
         navigationManager: root.navigationManager

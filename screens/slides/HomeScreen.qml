@@ -196,6 +196,7 @@ ScreenBase {
             width: root.compactLayout ? parent.width : Math.min(360, parent.width * 0.30)
             height: root.compactLayout ? 84 : 104
             compact: root.compactLayout
+            hiddenVisual: mediaPlayerModal.transformActive
             defaultFocus: true
             mediaService: root.mediaService
             layerManager: root.layerManager
@@ -205,9 +206,24 @@ ScreenBase {
             i18n: root.i18n
             onExpandRequested: root.layerManager?.push("media-player")
         }
+
+        CarouselActionAnchor {
+            id: carouselActionAnchor
+            targetItem: windowCarousel.selectedCardItem
+            iconsPadManager: root.iconsPadManager
+            styleTokens: root.styleTokens
+            hidden: windowOptionsModal.transformActive
+            enabled: Boolean(root.selectedWindow) && root.dashboardActive
+            onTriggered: {
+                if (root.selectedWindow && root.dashboardActive)
+                    root.openWindowOptions(root.selectedWindow.id)
+            }
+        }
     }
 
     MediaPlayerModal {
+        id: mediaPlayerModal
+        sourceItem: mediaCard
         mediaService: root.mediaService
         layerManager: root.layerManager
         navigationManager: root.navigationManager
@@ -217,7 +233,9 @@ ScreenBase {
         i18n: root.i18n
     }
 
-    WindowActionsModal {
+    WindowOptionsModal {
+        id: windowOptionsModal
+        sourceItem: carouselActionAnchor.buttonItem
         windowManager: root.windowManager
         layerManager: root.layerManager
         navigationManager: root.navigationManager

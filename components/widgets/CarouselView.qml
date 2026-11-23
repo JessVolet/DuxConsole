@@ -48,6 +48,7 @@ Item {
     readonly property int selectedIndex: count > 0
         ? ((currentIndex % count) + count) % count
         : -1
+    readonly property Item selectedItem: view.currentItem
     readonly property int pathIntervals: Math.max(0, visibleItemCount - 1)
     readonly property real unscaledStep: cardWidth + spacing
     readonly property real unscaledShift: Math.max(0, (selectedWidth - cardWidth) / 2)

@@ -68,8 +68,20 @@ TestCase {
         widget.model = []
         widget.focusZone.currentSubIndex = 0
     }
+    function test_externalKeyMovesVisualIndex() {
+        const view = findChild(widget, "audio-target-carousel")
+        widget.model = [entry("a"), entry("b"), entry("c")]
+        widget.selectedKey = "c"
+        compare(widget.selectedTarget?.key ?? "", "c")
+        compare(widget.focusZone.currentSubIndex, 2)
+        compare(view.currentIndex, 2)
+        widget.selectedKey = "a"
+        widget.focusZone.currentSubIndex = 0
+    }
     function test_selectionAcrossModelChange() {
         widget.model = [entry("a"), entry("b"), entry("c")]
+        widget.selectedKey = "a"
+        widget.focusZone.currentSubIndex = 0
         nav.ensureFocus("dashboard")
         widget.focusZone.cycleSubItem(1)
         compare(widget.selectedKey, "b")

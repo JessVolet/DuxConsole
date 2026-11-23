@@ -40,6 +40,15 @@ Item {
         }
         zone.currentSubIndex = Math.max(0, model.findIndex(target => target.key === selectedKey))
     }
+    // The key is the selection authority; an external write must move the
+    // displayed index too. Cycling already updates both, so guard equal writes.
+    function syncIndex() {
+        const index = model.findIndex(target => target.key === selectedKey)
+        if (index < 0 || zone.currentSubIndex === index)
+            return
+        zone.currentSubIndex = index
+    }
+    onSelectedKeyChanged: syncIndex()
     onModelChanged: sync()
     Component.onCompleted: sync()
     ListModel { id: stableModel }

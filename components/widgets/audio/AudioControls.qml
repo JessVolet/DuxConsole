@@ -123,7 +123,7 @@ Item {
                 spacing: Theme.spacingS
 
                 ActionPill {
-                    glyphAction: "I.Action"
+                    glyphAction: "I.PressStick.R"
                     iconsPadManager: controls.iconsPadManager
                     styleTokens: controls.styleTokens
                     text: knob.muted ? controls.tr("audio.unmute", "Unmute") : controls.tr("audio.mute", "Mute")
@@ -133,7 +133,7 @@ Item {
                 }
 
                 ActionPill {
-                    glyphAction: "I.ActionSlide.L"
+                    glyphAction: "I.ActionOption.L"
                     iconsPadManager: controls.iconsPadManager
                     styleTokens: controls.styleTokens
                     text: controls.tr("media.prev", "Previous")
@@ -142,7 +142,7 @@ Item {
                 }
 
                 ActionPill {
-                    glyphAction: "I.ActionSlide.R"
+                    glyphAction: "I.ActionOption.R"
                     iconsPadManager: controls.iconsPadManager
                     styleTokens: controls.styleTokens
                     text: controls.tr("media.next", "Next")

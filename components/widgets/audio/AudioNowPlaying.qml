@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick
+import QtQuick.Effects
 import qs.Common
 import qs.Widgets
 import "../../../core/interaction"
@@ -19,6 +20,8 @@ SlantedSurface {
     property bool defaultFocus: false
     property bool hiddenVisual: false
     opacity: hiddenVisual ? 0 : 1
+
+    readonly property alias focusZone: zone
 
     signal expandRequested()
 
@@ -123,6 +126,13 @@ SlantedSurface {
             source: Qt.resolvedUrl("../../../assets/icons/media/" + (card.isPlaying ? "pause.svg" : "play_arrow.svg"))
             sourceSize: Qt.size(44, 44)
             fillMode: Image.PreserveAspectFit
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                colorization: 1.0
+                colorizationColor: card.styleTokens
+                                   ? card.styleTokens.onSurfaceColor("card")
+                                   : Theme.surfaceText
+            }
         }
     }
 }

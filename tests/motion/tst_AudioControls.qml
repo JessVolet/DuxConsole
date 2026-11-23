@@ -46,6 +46,20 @@ TestCase {
         function disabledSurfaceColor(role) { return "black" }
         function borderColor(role) { return "gray" }
     }
+    QtObject {
+        id: media
+        property bool hasPlayer: true
+        property bool isPlaying: true
+        property string title: "Track"
+        property string artist: "Artist"
+        property string album: "Album"
+        property string identity: "App"
+        property string artUrl: ""
+        property real position: 0
+        property real length: 1
+        property bool canSeek: false
+        function matchesTrack(t) { return false }
+    }
     AudioControlService { id: audio; backend: backend }
     QtObject {
         id: inputBus
@@ -63,6 +77,22 @@ TestCase {
         layerManager: layers
         navigationManager: navigation
         styleTokens: style
+    }
+    AudioNowPlaying {
+        id: player
+        width: 480
+        height: 132
+        mediaService: media
+        layerManager: layers
+        navigationManager: navigation
+        styleTokens: style
+    }
+    SignalSpy { id: expandSpy; target: player; signalName: "expandRequested" }
+    function test_playerExpandSignal() {
+        navigation.ensureFocus("dashboard")
+        expandSpy.clear()
+        player.focusZone.triggerSecondary()
+        compare(expandSpy.count, 1)
     }
     function test_groupVolumeAndStaleKey() {
         compare(audio.applications.length, 1)

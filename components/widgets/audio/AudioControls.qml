@@ -27,6 +27,10 @@ Item {
     readonly property var focusedWidget: layerManager?.activeZone === apps.focusZone ? apps : layerManager?.activeZone === outputs.focusZone ? outputs : layerManager?.activeZone === inputs.focusZone ? inputs : null
     readonly property var activeOutput: (audioService?.outputs ?? []).find(target => target.active) ?? null
     readonly property var activeInput: (audioService?.inputs ?? []).find(target => target.active) ?? null
+    readonly property real columnWidth: Math.max(300, width * 0.30)
+    readonly property real knobPanelHeight: 470
+    readonly property real devicePanelHeight: 242
+    readonly property real playerHeight: 132
     readonly property string summary: {
         const parts = [];
         if (activeOutput)
@@ -85,8 +89,8 @@ Item {
             Layout.row: 0
             Layout.column: 0
             Layout.fillWidth: true
-            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
-            Layout.preferredHeight: 470
+            Layout.preferredWidth: controls.columnWidth
+            Layout.preferredHeight: controls.knobPanelHeight
             Layout.alignment: Qt.AlignTop
             styleTokens: controls.styleTokens
 
@@ -165,7 +169,7 @@ Item {
             Layout.column: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
+            Layout.preferredWidth: controls.columnWidth
             styleTokens: controls.styleTokens
 
             AppVolumeMixer {
@@ -187,8 +191,8 @@ Item {
             Layout.row: 1
             Layout.column: 0
             Layout.fillWidth: true
-            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
-            Layout.preferredHeight: 132
+            Layout.preferredWidth: controls.columnWidth
+            Layout.preferredHeight: controls.playerHeight
             Layout.alignment: Qt.AlignVCenter
             hiddenVisual: controls.mediaTransformActive
             zoneId: "sound-media"
@@ -208,8 +212,8 @@ Item {
             Layout.column: 1
             Layout.fillWidth: true
             Layout.minimumWidth: 300
-            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
-            Layout.preferredHeight: 242
+            Layout.preferredWidth: controls.columnWidth
+            Layout.preferredHeight: controls.devicePanelHeight
             styleTokens: controls.styleTokens
 
             AudioOutputSelector {
@@ -231,8 +235,8 @@ Item {
             Layout.column: 2
             Layout.fillWidth: true
             Layout.minimumWidth: 300
-            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
-            Layout.preferredHeight: 242
+            Layout.preferredWidth: controls.columnWidth
+            Layout.preferredHeight: controls.devicePanelHeight
             styleTokens: controls.styleTokens
 
             AudioInputSelector {

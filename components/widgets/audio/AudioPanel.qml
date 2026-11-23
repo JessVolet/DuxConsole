@@ -19,7 +19,7 @@ Item {
         radius: panel.radius
         color: panel.styleTokens
                ? panel.styleTokens.surfaceColor("card", panel.backgroundOpacity)
-               : Qt.alpha(Theme.surfaceContainerHigh, 0.62)
+               : Qt.alpha(Theme.surfaceContainerHigh, panel.backgroundOpacity)
         border.width: 1
         border.color: panel.styleTokens
                       ? panel.styleTokens.borderColor("card")

@@ -14,6 +14,7 @@ Item {
     property real scrimOpacity: 0.58
     property real uiScale: 1.0
     property real cardOpacity: 0.86
+    property real knobStrokeWidth: 8
 
     property string iconColorMode: "dms"         // "dms" | "colored" | "custom"
     property string iconStyle: "filled"          // "filled" | "outline"
@@ -104,6 +105,8 @@ Item {
                         tokens.scrimOpacity = cfg.theme.scrimOpacity
                     if (typeof cfg.theme.scale === "number")
                         tokens.uiScale = cfg.theme.scale
+                    if (typeof cfg.theme.knobStrokeWidth === "number")
+                        tokens.knobStrokeWidth = Math.max(1, cfg.theme.knobStrokeWidth)
                 }
                 if (cfg?.icons) {
                     if (typeof cfg.icons.colorMode === "string") {

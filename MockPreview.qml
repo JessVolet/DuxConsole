@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import "./core/shell"
+import "./services"
 
 ShellRoot {
     id: preview
@@ -12,7 +13,14 @@ ShellRoot {
         id: overlay
         active: preview.dashboardOpen
         fixtureMode: true
+        fixtureControllerAvailable: gamepad.available
         onCloseRequested: preview.dashboardOpen = false
+    }
+
+    FixtureGamepad {
+        id: gamepad
+        devicePath: Quickshell.env("DUX_PREVIEW_CONTROLLER") ?? ""
+        onButtonChanged: (code, pressed) => overlay.handleFixtureButton(code, pressed)
     }
 
     IpcHandler {

@@ -14,6 +14,7 @@ PanelWindow {
 
     property bool active: false
     property bool fixtureMode: false
+    property bool fixtureControllerAvailable: false
     property bool fixtureWheelOpen: false
     property string fixtureScene: "home"
     property string wheelSide: "left"
@@ -57,6 +58,15 @@ PanelWindow {
         layerManager.push("wheel")
     }
 
+    function handleFixtureButton(code, pressed) {
+        if (!fixtureMode || !inputManager.config.gamepad?.[code])
+            return
+        if (pressed)
+            inputManager.handleRawPress("gamepad", code, "xbox")
+        else
+            inputManager.handleRawRelease("gamepad", code)
+    }
+
     function dispatchAction(action, payload) {
         if (fixtureMode && (action === "I.SystemWheel" || action === "I.QuickWheel")) {
             openWheel(action === "I.QuickWheel" ? "right" : "left")
@@ -80,6 +90,7 @@ PanelWindow {
     function previewState() {
         return JSON.stringify({
             visible: overlay.visible,
+            controller: fixtureControllerAvailable,
             dashboard: overlay.active,
             layer: layerManager.topLayer,
             zone: layerManager.activeZone?.zoneId ?? "",
@@ -244,7 +255,7 @@ PanelWindow {
             iconsPadManager: iconsPadManager
             screens: screenRegistry.screens
             currentIndex: slideManager.currentIndex
-            gamepadConnected: (overlay.bridge?.connected ?? false) && inputManager.activeDevice !== "keyboard"
+            gamepadConnected: (overlay.fixtureControllerAvailable || (overlay.bridge?.connected ?? false)) && inputManager.activeDevice !== "keyboard"
         }
 
         CaptureQuickActions {

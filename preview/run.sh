@@ -2,6 +2,22 @@
 set -euo pipefail
 
 plugin_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+if [[ -n "${DUX_PREVIEW_CONTROLLER:-}" ]]; then
+    if [[ ! "$DUX_PREVIEW_CONTROLLER" =~ ^/dev/input/event[0-9]+$ ]] ||
+       [[ ! -c "$DUX_PREVIEW_CONTROLLER" || ! -r "$DUX_PREVIEW_CONTROLLER" ]]; then
+        printf 'Preview controller must be a readable /dev/input/eventN character device.\n' >&2
+        exit 1
+    fi
+    controller_sysfs="/sys/class/input/${DUX_PREVIEW_CONTROLLER##*/}/device"
+    if [[ ! -d "$controller_sysfs" ]] || ! compgen -G "$controller_sysfs/js[0-9]*" >/dev/null; then
+        printf 'Preview controller must expose a Linux joystick interface.\n' >&2
+        exit 1
+    fi
+    if ! command -v evtest >/dev/null || ! command -v stdbuf >/dev/null; then
+        printf 'The preview controller adapter requires evtest and stdbuf.\n' >&2
+        exit 1
+    fi
+fi
 stage=$(mktemp -d)
 trap 'rm -rf -- "$stage"' EXIT
 

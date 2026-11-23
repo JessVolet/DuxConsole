@@ -196,7 +196,10 @@ ScreenBase {
 
                     SectionTitle {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: root.tr("home.windows_section", "Open windows")
+                        width: implicitWidth
+                        title: root.tr("home.windows_section", "Open windows")
+                        role: "chrome"
+                        titleSize: Theme.fontSizeLarge
                         styleTokens: root.styleTokens
                     }
 

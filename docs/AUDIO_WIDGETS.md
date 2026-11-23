@@ -98,7 +98,7 @@ is zero, up is halfway, lower-right (+135 degrees) is full range. The lower
 
 - Neutral below releaseRadius preserves the last value and rearms input.
 - Movement must exceed engageRadius to start; separate thresholds prevent
-  chatter. `inputconfig.json.analog.right` defaults to 0.30/0.20.
+  chatter. `inputconfig.json.analog.right` defaults to engage 0.40 / release 0.30.
 - Crossing the forbidden gap, changing target, disabling the control or losing
   input requires neutral before reengagement. Invalid/nonfinite axes are ignored.
 - Angular jitter filtering is configured in degrees. Repeated identical backend

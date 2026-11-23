@@ -111,7 +111,8 @@ Normalized audio target:
   value; crossing it must not jump from 100% to 0%. Require neutral rearming
   before accepting the opposite endpoint after crossing that gap.
 - Configurable radial engage/release thresholds provide hysteresis; require
-  0 <= release < engage < 1. Initial proposal: engage 0.30, release 0.20.
+  0 <= release < engage < 1. Defaults: engage 0.40, release 0.30 (the measured
+  resting offset of the test pad is ~0.21).
   Inside release radius, hold volume and discard the unreliable angle.
 - When the target changes, the layer becomes inert, overlay closes or the
   controller disconnects, clear engagement. Require neutral before rearming

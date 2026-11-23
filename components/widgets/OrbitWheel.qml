@@ -17,6 +17,8 @@ Item {
     property bool commandFocused: false
     property bool interactive: true
     property bool opened: false
+    property real ringScale: 0.2
+    readonly property int waveDuration: motionTokens?.wheelWaveDuration ?? 0
     property string originIcon: ""
     property string closeLabel: ""
 
@@ -40,9 +42,40 @@ Item {
         return (count < 2 ? 12 : start + span * index / (count - 1)) * Math.PI / 180
     }
 
+    onOpenedChanged: {
+        if (!opened)
+            wave.stop()
+        else if (waveDuration > 0)
+            wave.restart()
+        else
+            ringScale = 1
+    }
+
+    onWaveDurationChanged: {
+        if (opened && waveDuration === 0) {
+            wave.stop()
+            ringScale = 1
+        }
+    }
+
+    onOpacityChanged: {
+        if (!opened && opacity === 0)
+            ringScale = 0.2
+    }
+
+    NumberAnimation {
+        id: wave
+        target: wheel
+        property: "ringScale"
+        to: 1
+        duration: wheel.waveDuration
+        easing.type: wheel.motionTokens?.easingSpring ?? Easing.OutBack
+        easing.overshoot: wheel.motionTokens?.wheelOvershoot ?? 0.8
+    }
+
     Behavior on opacity {
         NumberAnimation {
-            duration: wheel.opened ? (wheel.motionTokens?.fadeInDuration ?? 0) : (wheel.motionTokens?.fadeOutDuration ?? 0)
+            duration: wheel.opened ? (wheel.motionTokens?.fadeInDuration ?? 0) : (wheel.motionTokens?.wheelCloseDuration ?? 0)
             easing.type: wheel.opened ? (wheel.motionTokens?.fadeInEasing ?? Easing.OutCubic) : (wheel.motionTokens?.fadeOutEasing ?? Easing.InCubic)
         }
     }
@@ -52,15 +85,8 @@ Item {
         transform: Scale {
             origin.x: wheel.originX
             origin.y: wheel.originY
-            xScale: wheel.opened ? 1 : 0.38
+            xScale: wheel.ringScale
             yScale: xScale
-
-            Behavior on xScale {
-                NumberAnimation {
-                    duration: wheel.motionTokens?.durationMorph ?? 0
-                    easing.type: wheel.motionTokens?.easingSnappy ?? Easing.OutCubic
-                }
-            }
         }
 
         Rectangle {

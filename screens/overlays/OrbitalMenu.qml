@@ -164,7 +164,17 @@ Item {
 
     CommandPreview {
         id: preview
-        visible: menu.ringVisible && menu.activeCommand !== null
+        visible: opacity > 0 && menu.activeCommand !== null
+        opacity: menu.ringVisible ? 1 : 0
+        Accessible.ignored: !menu.ringVisible
+        Behavior on opacity {
+            NumberAnimation {
+                duration: menu.ringVisible ? (menu.motionTokens?.fadeInDuration ?? 0)
+                    : (menu.motionTokens?.wheelCloseDuration ?? 0)
+                easing.type: menu.ringVisible ? (menu.motionTokens?.fadeInEasing ?? Easing.OutCubic)
+                    : (menu.motionTokens?.fadeOutEasing ?? Easing.InCubic)
+            }
+        }
         x: menu.side === "right" ? Theme.spacingXL : parent.width - width - Theme.spacingXL
         y: Theme.spacingXL
         width: Math.max(0, Math.min(620, parent.width - wheel.outerRadius - Theme.spacingXL * 3))

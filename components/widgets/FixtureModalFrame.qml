@@ -9,6 +9,35 @@ Item {
     property real preferredWidth: 520
     property real preferredHeight: 350
     property string accessibleLabel: ""
+    property int entranceDuration: 0
+    property int entranceEasing: Easing.OutCubic
+    property real panelProgress: 1
+
+    onVisibleChanged: {
+        if (visible && entranceDuration > 0)
+            entrance.restart()
+        else {
+            entrance.stop()
+            panelProgress = 1
+        }
+    }
+
+    onEntranceDurationChanged: {
+        if (entranceDuration === 0) {
+            entrance.stop()
+            panelProgress = 1
+        }
+    }
+
+    NumberAnimation {
+        id: entrance
+        target: frame
+        property: "panelProgress"
+        duration: frame.entranceDuration
+        from: 0
+        to: 1
+        easing.type: frame.entranceEasing
+    }
     default property alias body: panel.content
 
     z: 40
@@ -29,6 +58,8 @@ Item {
         id: panel
 
         anchors.centerIn: parent
+        anchors.verticalCenterOffset: (1 - frame.panelProgress) * Theme.spacingM
+        opacity: frame.panelProgress
         width: Math.max(0, Math.min(frame.preferredWidth, frame.width - Theme.spacingXL * 2))
         height: Math.max(0, Math.min(frame.preferredHeight, frame.height - Theme.spacingXL * 2))
         styleTokens: frame.styleTokens

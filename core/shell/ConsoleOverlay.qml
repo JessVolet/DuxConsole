@@ -21,10 +21,18 @@ PanelWindow {
     property string noticeKey: ""
     property size previewSize: Qt.size(0, 0)
     readonly property var mockSession: fixtureSession.item
-    readonly property real dashboardOpacity: fixtureWheelOpen ? 0.52 : 1.0
+    property real dashboardOpacity: fixtureWheelOpen ? 0.52 : 1.0
     readonly property var bridge: bridgeLoader.item
     readonly property var wheelMenu: wheelLoader.item
     signal closeRequested()
+
+    Behavior on dashboardOpacity {
+        NumberAnimation {
+            duration: overlay.fixtureMode
+                ? (overlay.fixtureWheelOpen ? motionTokens.fadeInDuration : motionTokens.wheelCloseDuration) : 0
+            easing.type: motionTokens.easingSnappy
+        }
+    }
 
     function showFixture(scene) {
         if (!fixtureMode)
@@ -313,7 +321,7 @@ PanelWindow {
             id: wheelLoader
             anchors.fill: parent
             active: overlay.fixtureMode
-            visible: overlay.fixtureWheelOpen
+            visible: overlay.active || overlay.fixtureWheelOpen
             source: screenRegistry.wheelSource
             onLoaded: {
                 item.side = Qt.binding(() => overlay.wheelSide)

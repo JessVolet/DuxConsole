@@ -6,6 +6,10 @@
     "fadeInMs": 180,
     "fadeOutMs": 140,
     "homeCarouselMs": 350,
+    "wheelWaveMs": 420,
+    "wheelCloseMs": 180,
+    "wheelOvershoot": 0.8,
+    "sheetEntranceMs": 250,
     "noticeMs": 2600
   },
   "theme": {

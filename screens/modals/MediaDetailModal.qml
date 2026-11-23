@@ -18,6 +18,8 @@ FixtureModalFrame {
     signal seekRequested(real position)
 
     visible: layerManager?.stack.includes(layerName) ?? false
+    entranceDuration: motionTokens?.sheetEntranceDuration ?? 0
+    entranceEasing: motionTokens?.easingSnappy ?? Easing.OutCubic
     preferredWidth: 580
     preferredHeight: 360
     accessibleLabel: i18n?.t("media.title", "Media Player") ?? "Media Player"

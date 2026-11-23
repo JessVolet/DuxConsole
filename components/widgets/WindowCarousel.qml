@@ -22,7 +22,10 @@ Item {
     property string zoneId: "zone-windows"
 
     readonly property var windows: windowManager ? windowManager.windows : []
+    readonly property int count: windows.length
     readonly property bool hasWindows: windows.length > 0
+    readonly property alias focusZone: zone
+    property alias navUp: zone.navUp
     property int selectedWindowId: -1
 
     readonly property var selectedWindow: {

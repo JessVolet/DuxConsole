@@ -114,7 +114,12 @@ PanelWindow {
             iconsPadManager: iconsPadManager
             screens: screenRegistry.screens
             currentIndex: slideManager.currentIndex
+            tabControlsEnabled: layerManager.topLayer === "dashboard"
             gamepadConnected: dconsoleBridge.connected && inputManager.activeDevice !== "keyboard"
+            onSlideRequested: slideId => {
+                if (layerManager.topLayer === "dashboard")
+                    slideManager.select(slideId)
+            }
         }
 
         SlideManager {

@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -15,6 +17,9 @@ Item {
     property var iconsPadManager: null
     property var screens: []
     property int currentIndex: 0
+    property bool tabControlsEnabled: true
+
+    signal slideRequested(string slideId)
 
     // Estados visuales para Guide / Start (sin acciones nuevas)
     property string guideState: "idle"
@@ -61,7 +66,7 @@ Item {
         ? profileName
         : (i18n ? i18n.t("topbar.profile_fallback", "Console") : "Console")
 
-    implicitHeight: 50
+    implicitHeight: 58
 
     SystemClock {
         id: sysClock
@@ -73,8 +78,8 @@ Item {
         id: brandPill
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        width: brandRow.implicitWidth + Theme.spacingL * 2
-        height: 48
+        width: brandRow.implicitWidth + Theme.spacingL * 2.2
+        height: 54
         radius: height / 2
         color: bar.pillBg
         border.width: 1
@@ -83,20 +88,20 @@ Item {
         RowLayout {
             id: brandRow
             anchors.centerIn: parent
-            spacing: Theme.spacingS
+            spacing: Theme.spacingM
 
             // Círculo oscuro con logo + anillo circular de progreso Guide
             Rectangle {
                 Layout.alignment: Qt.AlignVCenter
-                width: 34
-                height: 34
-                radius: 17
+                implicitWidth: 38
+                implicitHeight: 38
+                radius: 19
                 color: "#14161D"
 
                 CircularProgressGlyph {
                     anchors.centerIn: parent
-                    ringSize: 34
-                    state: bar.guideState
+                    ringSize: 38
+                    progressState: bar.guideState
                     progress: bar.guideProgress
                     styleTokens: bar.styleTokens
                     motionTokens: bar.motionTokens
@@ -117,16 +122,16 @@ Item {
 
                 StyledText {
                     text: "DUXSHELL"
-                    font.pixelSize: Theme.fontSizeMedium
+                    font.pixelSize: Theme.fontSizeLarge
                     font.weight: Font.Bold
                     color: bar.fgColor
                 }
 
                 StyledText {
                     text: "CONSOLE"
-                    font.pixelSize: 10
+                    font.pixelSize: 11
                     font.weight: Font.DemiBold
-                    font.letterSpacing: 1.2
+                    font.letterSpacing: 1.5
                     color: bar.mutedFg
                 }
             }
@@ -138,7 +143,7 @@ Item {
         id: navBlock
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        spacing: Theme.spacingS
+        spacing: Theme.spacingM
         // Evita solapamiento con Brand y Status en resoluciones reducidas
         readonly property real availableCenterWidth: Math.max(
             120,
@@ -156,8 +161,8 @@ Item {
         Rectangle {
             id: navPill
             Layout.alignment: Qt.AlignVCenter
-            width: navTabsRow.implicitWidth + Theme.spacingS * 2
-            height: 46
+            width: navTabsRow.implicitWidth + Theme.spacingM * 1.5
+            height: 52
             radius: height / 2
             color: bar.pillBg
             border.width: 1
@@ -166,19 +171,34 @@ Item {
             Row {
                 id: navTabsRow
                 anchors.centerIn: parent
-                spacing: 4
+                spacing: 6
 
                 Repeater {
                     model: bar.screens
                     delegate: Rectangle {
+                        id: tab
                         required property int index
                         required property var modelData
                         readonly property bool isCurrent: index === bar.currentIndex
 
-                        implicitWidth: tabLabel.implicitWidth + Theme.spacingL * 1.5
-                        height: 34
+                        implicitWidth: tabLabel.implicitWidth + Theme.spacingL * 1.8
+                        height: 38
                         radius: height / 2
                         color: isCurrent ? bar.accentColor : "transparent"
+
+                        Accessible.role: Accessible.Button
+                        Accessible.name: tabLabel.text
+                        Accessible.selected: isCurrent
+                        Accessible.ignored: !visible || !bar.tabControlsEnabled
+                        Accessible.onPressAction: {
+                            if (bar.tabControlsEnabled)
+                                bar.slideRequested(tab.modelData.id)
+                        }
+
+                        TapHandler {
+                            enabled: bar.tabControlsEnabled
+                            onTapped: bar.slideRequested(tab.modelData.id)
+                        }
 
                         Behavior on color {
                             ColorAnimation { duration: bar.animDuration; easing.type: bar.animEasing }
@@ -188,9 +208,9 @@ Item {
                             id: tabLabel
                             anchors.centerIn: parent
                             text: bar.i18n
-                                  ? bar.i18n.t(modelData.labelKey ?? "", modelData.id ?? "")
-                                  : (modelData.id ?? "")
-                            font.pixelSize: Theme.fontSizeMedium
+                                  ? bar.i18n.t(tab.modelData.labelKey ?? "", tab.modelData.id ?? "")
+                                  : (tab.modelData.id ?? "")
+                            font.pixelSize: Theme.fontSizeMedium + 1
                             font.weight: isCurrent ? Font.Bold : Font.Medium
                             color: isCurrent ? "#FFFFFF" : bar.fgColor
                         }
@@ -212,8 +232,8 @@ Item {
         id: statusPill
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        width: statusRow.implicitWidth + Theme.spacingL * 2
-        height: 48
+        width: statusRow.implicitWidth + Theme.spacingL * 2.2
+        height: 54
         radius: height / 2
         color: bar.pillBg
         border.width: 1
@@ -224,34 +244,58 @@ Item {
             anchors.centerIn: parent
             spacing: Theme.spacingM
 
-            StyledText {
+            Row {
                 Layout.alignment: Qt.AlignVCenter
-                text: "🎮 " + bar.gamepadBatteryText
-                font.pixelSize: Theme.fontSizeSmall
-                font.weight: Font.Medium
-                color: bar.mutedFg
+                spacing: 4
+
+                DIcon {
+                    anchors.verticalCenter: parent.verticalCenter
+                    name: "sports_esports"
+                    size: 16
+                    color: bar.gamepadConnected ? bar.fgColor : bar.mutedFg
+                }
+
+                StyledText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: bar.gamepadBatteryText
+                    font.pixelSize: Theme.fontSizeSmall + 1
+                    font.weight: Font.Medium
+                    color: bar.mutedFg
+                }
             }
 
-            StyledText {
+            Row {
                 Layout.alignment: Qt.AlignVCenter
-                text: "🔋 " + bar.deviceBatteryText
-                font.pixelSize: Theme.fontSizeSmall
-                font.weight: Font.Medium
-                color: bar.mutedFg
+                spacing: 4
+
+                DIcon {
+                    anchors.verticalCenter: parent.verticalCenter
+                    name: "battery_std"
+                    size: 16
+                    color: bar.mutedFg
+                }
+
+                StyledText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: bar.deviceBatteryText
+                    font.pixelSize: Theme.fontSizeSmall + 1
+                    font.weight: Font.Medium
+                    color: bar.mutedFg
+                }
             }
 
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
                 text: Qt.formatTime(sysClock.date, "HH:mm")
-                font.pixelSize: Theme.fontSizeMedium
-                font.weight: Font.DemiBold
+                font.pixelSize: Theme.fontSizeLarge
+                font.weight: Font.Bold
                 color: bar.fgColor
             }
 
             CircularProgressGlyph {
                 Layout.alignment: Qt.AlignVCenter
-                ringSize: 32
-                state: bar.startState
+                ringSize: 36
+                progressState: bar.startState
                 progress: bar.startProgress
                 styleTokens: bar.styleTokens
                 motionTokens: bar.motionTokens
@@ -261,16 +305,18 @@ Item {
 
             Rectangle {
                 Layout.alignment: Qt.AlignVCenter
-                implicitWidth: profileLabel.implicitWidth + Theme.spacingM * 2
-                height: 28
+                implicitWidth: profileLabel.implicitWidth + Theme.spacingL * 1.4
+                height: 32
                 radius: height / 2
-                color: Qt.alpha(bar.accentColor, 0.16)
+                color: Qt.alpha(bar.accentColor, 0.22)
+                border.width: 1
+                border.color: Qt.alpha(bar.accentColor, 0.5)
 
                 StyledText {
                     id: profileLabel
                     anchors.centerIn: parent
                     text: bar.resolvedProfile
-                    font.pixelSize: Theme.fontSizeSmall
+                    font.pixelSize: Theme.fontSizeSmall + 1
                     font.weight: Font.DemiBold
                     color: bar.fgColor
                 }

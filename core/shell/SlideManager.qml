@@ -21,6 +21,12 @@ Item {
     property string loadError: ""
     property string failedSource: ""
 
+    function select(slideId) {
+        const index = registry.screens.findIndex(entry => entry.id === slideId)
+        if (index >= 0)
+            currentIndex = index
+    }
+
     function next() {
         if (!registry.screens.length) return
         currentIndex = (currentIndex + 1) % registry.screens.length

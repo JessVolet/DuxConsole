@@ -22,7 +22,7 @@ Item {
         : 160
 
     anchors.fill: parent
-    visible: opacity > 0.01
+    visible: isOpen || opacity > 0.01
     opacity: isOpen ? 1 : 0
     z: 100
 

@@ -189,7 +189,7 @@ SlantedSurface {
         showFocusRing: false
         subItemCount: playerRoot.canSeek ? 3 : 0
         currentSubIndex: 1
-        wrapSubItems: false
+        wrapSubItems: true
         actionHints: {
             const list = [
                 { action: "I.ActionSlide.L", labelKey: "media.prev", fallback: "Previous" },

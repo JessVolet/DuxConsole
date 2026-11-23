@@ -63,6 +63,8 @@
     "shuffle": "Aleatorio",
     "repeat": "Repetir",
     "lyrics": "Letras",
+    "show_lyrics": "Ver letras",
+    "show_art": "Ver carátula",
     "switch_player": "Reproductor",
     "volume": "Volumen"
   },

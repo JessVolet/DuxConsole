@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import Quickshell.Services.Mpris
 import qs.Common
 import qs.Widgets
-import qs.DCommon.Widgets as DCommon
 import qs.Services
 import qs.Modules.DDash.Media
 import "../../core/interaction"
@@ -15,19 +14,16 @@ import "../primitives/meters"
 import "../primitives/surfaces"
 import "../primitives/text"
 
-Rectangle {
+SlantedSurface {
     id: playerRoot
 
     property var mediaService: null
     property var layerManager: null
     property var navigationManager: null
     property var iconsPadManager: null
-    property var styleTokens: null
-    property var motionTokens: null
     property var i18n: null
     property string layerName: "media-player"
 
-    property bool showOptions: false
     property bool showLyrics: true
     property int focusedOptionIndex: 0
 
@@ -65,6 +61,19 @@ Rectangle {
         return mins + ":" + (secs < 10 ? "0" + secs : String(secs))
     }
 
+    function optionIcon(optId) {
+        if (optId === "lyrics") return Qt.resolvedUrl("../../assets/icons/media/lyrics.svg")
+        if (optId === "shuffle") return Qt.resolvedUrl("../../assets/icons/media/shuffle.svg")
+        if (optId === "repeat") {
+            return (mediaService?.loopState ?? MprisLoopState.None) === MprisLoopState.Track
+                ? Qt.resolvedUrl("../../assets/icons/media/repeat_one.svg")
+                : Qt.resolvedUrl("../../assets/icons/media/repeat.svg")
+        }
+        if (optId === "player") return Qt.resolvedUrl("../../assets/icons/media/speaker_group.svg")
+        if (optId === "volume") return Qt.resolvedUrl("../../assets/icons/media/volume_up.svg")
+        return ""
+    }
+
     function triggerOption(optId) {
         if (optId === "lyrics")
             showLyrics = !showLyrics
@@ -78,11 +87,11 @@ Rectangle {
             mediaService?.adjustVolume(0.1)
     }
 
-    radius: 28
+    role: "card"
+    skewAngle: -5
+    surfaceRadius: 24
     clip: true
-    color: styleTokens ? styleTokens.surfaceColor("card") : "#161822"
-    border.width: 1
-    border.color: styleTokens ? styleTokens.borderColor("card") : Qt.rgba(1, 1, 1, 0.14)
+    focused: modalZone.active
 
     // Fondo difuminado basado en la carátula del álbum
     Image {
@@ -102,7 +111,7 @@ Rectangle {
 
     Rectangle {
         anchors.fill: parent
-        color: Qt.rgba(0.05, 0.06, 0.09, 0.72)
+        color: Qt.rgba(0.05, 0.06, 0.09, 0.68)
     }
 
     FocusZone {
@@ -113,6 +122,7 @@ Rectangle {
         layerManager: playerRoot.layerManager
         navigationManager: playerRoot.navigationManager
         defaultFocus: true
+        expandable: true
         showFocusRing: false
         subItemCount: 3
         currentSubIndex: 1
@@ -125,24 +135,29 @@ Rectangle {
                 { action: "I.ActionOption.L", labelKey: "media.seek_back", fallback: "-10s" },
                 { action: "I.ActionOption.R", labelKey: "media.seek_forward", fallback: "+10s" }
             ]
-            if (playerRoot.availableOptions.length > 0)
-                list.push({ action: "I.Options", labelKey: "media.options", fallback: "Options" })
+            if (playerRoot.lyricsAvailable) {
+                list.push({
+                    action: "I.Select",
+                    labelKey: playerRoot.showLyrics ? "media.show_art" : "media.show_lyrics",
+                    fallback: playerRoot.showLyrics ? "Show cover" : "Show lyrics"
+                })
+            }
             return list
         }
 
         onSlideLeftRequested: playerRoot.mediaService?.previous()
         onSlideRightRequested: playerRoot.mediaService?.next()
         onSecondaryTriggered: playerRoot.mediaService?.togglePlaying()
+        onExpandRequested: {
+            if (playerRoot.lyricsAvailable)
+                playerRoot.showLyrics = !playerRoot.showLyrics
+        }
         onSubItemCycled: (newIndex, delta) => {
             playerRoot.mediaService?.seekBy(delta * 10)
             modalZone.currentSubIndex = 1
         }
-        onOptionsTriggered: {
-            if (playerRoot.availableOptions.length > 0)
-                playerRoot.showOptions = !playerRoot.showOptions
-        }
         onActivated: {
-            if (playerRoot.showOptions && playerRoot.availableOptions.length > 0) {
+            if (playerRoot.availableOptions.length > 0) {
                 const opt = playerRoot.availableOptions[playerRoot.focusedOptionIndex]
                 if (opt)
                     playerRoot.triggerOption(opt)
@@ -151,7 +166,7 @@ Rectangle {
             }
         }
         onDpadUnhandled: direction => {
-            if (!playerRoot.showOptions || playerRoot.availableOptions.length === 0)
+            if (playerRoot.availableOptions.length === 0)
                 return
             if (direction === "left")
                 playerRoot.focusedOptionIndex = (playerRoot.focusedOptionIndex - 1 + playerRoot.availableOptions.length) % playerRoot.availableOptions.length
@@ -170,7 +185,7 @@ Rectangle {
             anchors.margins: Theme.spacingXL
             spacing: Theme.spacingXL
 
-            // Columna izquierda: letras sincronizadas o carátula ampliada
+            // Columna izquierda: letras sincronizadas o carátula ampliada (alternable con Select)
             Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -196,7 +211,7 @@ Rectangle {
                 }
             }
 
-            // Columna derecha: fuente, metadatos, progreso, transporte y opciones
+            // Columna derecha: fuente, metadatos, progreso, transporte y opciones fijas
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -298,16 +313,17 @@ Rectangle {
                     }
                 }
 
-                // Transporte principal: Anterior (LB) / Pausa-Play (X) / Siguiente (RB)
+                // Transporte principal: icono + texto + glifo de mando
                 Row {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: Theme.spacingM
 
                     ActionPill {
-                        text: ""
-                        implicitWidth: 64
-                        implicitHeight: 52
+                        text: playerRoot.tr("media.prev", "Previous")
+                        implicitHeight: 50
                         glyphAction: "I.ActionSlide.L"
+                        iconSource: Qt.resolvedUrl("../../assets/icons/media/skip_previous.svg")
+                        iconSize: 20
                         iconsPadManager: playerRoot.iconsPadManager
                         styleTokens: playerRoot.styleTokens
                         enabled: Boolean(playerRoot.mediaService?.canGoPrevious)
@@ -318,9 +334,13 @@ Rectangle {
                         text: playerRoot.isPlaying
                             ? playerRoot.tr("media.pause", "Pause")
                             : playerRoot.tr("media.play", "Play")
-                        implicitHeight: 56
+                        implicitHeight: 54
                         primary: true
                         glyphAction: "I.Action"
+                        iconSource: playerRoot.isPlaying
+                            ? Qt.resolvedUrl("../../assets/icons/media/pause.svg")
+                            : Qt.resolvedUrl("../../assets/icons/media/play_arrow.svg")
+                        iconSize: 22
                         iconsPadManager: playerRoot.iconsPadManager
                         styleTokens: playerRoot.styleTokens
                         enabled: Boolean(playerRoot.mediaService?.canTogglePlaying)
@@ -328,10 +348,11 @@ Rectangle {
                     }
 
                     ActionPill {
-                        text: ""
-                        implicitWidth: 64
-                        implicitHeight: 52
+                        text: playerRoot.tr("media.next", "Next")
+                        implicitHeight: 50
                         glyphAction: "I.ActionSlide.R"
+                        iconSource: Qt.resolvedUrl("../../assets/icons/media/skip_next.svg")
+                        iconSize: 20
                         iconsPadManager: playerRoot.iconsPadManager
                         styleTokens: playerRoot.styleTokens
                         enabled: Boolean(playerRoot.mediaService?.canGoNext)
@@ -339,12 +360,12 @@ Rectangle {
                     }
                 }
 
-                // Opciones dispersas (Y): letras, aleatorio, repetir, cambiar reproductor, volumen
+                // Opciones siempre visibles, navegables con D-Pad + A
                 Flow {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter
                     spacing: Theme.spacingS
-                    visible: playerRoot.showOptions && playerRoot.availableOptions.length > 0
+                    visible: playerRoot.availableOptions.length > 0
 
                     Repeater {
                         model: playerRoot.availableOptions
@@ -354,6 +375,8 @@ Rectangle {
                             required property string modelData
 
                             highlighted: playerRoot.focusedOptionIndex === index
+                            iconSource: playerRoot.optionIcon(modelData)
+                            iconSize: 18
                             styleTokens: playerRoot.styleTokens
                             primary: {
                                 if (modelData === "lyrics") return playerRoot.showLyrics

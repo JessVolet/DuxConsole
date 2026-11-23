@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 import qs.Common
 import qs.Widgets
 import "../glyphs"
@@ -10,6 +11,8 @@ AbstractButton {
     property var styleTokens: null
     property var iconsPadManager: null
     property string glyphAction: ""
+    property url iconSource: ""
+    property real iconSize: 18
     property bool highlighted: false
     property bool primary: false
     readonly property string role: primary ? "chrome" : "card"
@@ -44,7 +47,23 @@ AbstractButton {
                 action: pill.glyphAction
             }
 
+            Image {
+                visible: pill.iconSource.toString() !== ""
+                anchors.verticalCenter: labels.verticalCenter
+                width: pill.iconSize
+                height: pill.iconSize
+                source: pill.iconSource
+                sourceSize: Qt.size(pill.iconSize * 2, pill.iconSize * 2)
+                fillMode: Image.PreserveAspectFit
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    colorization: 1.0
+                    colorizationColor: pill.styleTokens?.onSurfaceColor(pill.role) ?? (Theme.surfaceText ?? "#F2F4F8")
+                }
+            }
+
             StyledText {
+                visible: pill.text !== ""
                 anchors.verticalCenter: labels.verticalCenter
                 text: pill.text
                 font.pixelSize: Theme.fontSizeMedium

@@ -63,6 +63,8 @@
     "shuffle": "Shuffle",
     "repeat": "Repeat",
     "lyrics": "Lyrics",
+    "show_lyrics": "Show lyrics",
+    "show_art": "Show cover",
     "switch_player": "Player",
     "volume": "Volume"
   },

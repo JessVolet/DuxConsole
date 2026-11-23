@@ -16,6 +16,7 @@ Item {
     property var windowManager: null
     property var windowIconProvider: null
     property var mediaService: null
+    property var audioService: null
     property var registry: null
     property int currentSlideIndex: 0
     property var screenActionHints: []

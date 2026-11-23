@@ -37,6 +37,14 @@
     "BTN_THUMBR": "I.PressStick.R",
     "BTN_THUMBL": "I.PressStick.L"
   },
+  "analog": {
+    "right": {
+      "action": "I.Stick.R",
+      "engageRadius": 0.30,
+      "releaseRadius": 0.20,
+      "angularEpsilon": 1
+    }
+  },
   "gestures": {
     "repeatInitialMs": 330,
     "repeatIntervalMs": 110,

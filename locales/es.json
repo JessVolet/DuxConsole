@@ -47,6 +47,26 @@
     "no_active_app": "Sin aplicación activa",
     "windows_section": "Ventanas abiertas"
   },
+  "audio": {
+    "apps": "Volumen de aplicaciones",
+    "outputs": "Dispositivos de salida",
+    "inputs": "Dispositivos de entrada",
+    "empty": "No hay dispositivos o aplicaciones de audio",
+    "unavailable": "No disponible",
+    "active": "Activo",
+    "pinned": "Fijado",
+    "muted": "Silenciado",
+    "mute": "Silenciar",
+    "unmute": "Reactivar sonido",
+    "volume": "Volumen",
+    "activate": "Activar dispositivo",
+    "options": "Opciones de dispositivo",
+    "pin": "Fijar al principio",
+    "unpin": "Desfijar",
+    "select_target": "Selecciona una aplicación o dispositivo",
+    "knob_hint": "Stick derecho: volumen · R3: silenciar",
+    "operation_failed": "No se pudo completar la operación de audio"
+  },
   "media": {
     "players": "Reproductores",
     "choose_player": "Elegir reproductor",

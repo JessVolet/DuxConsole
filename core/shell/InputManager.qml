@@ -7,6 +7,7 @@ Item {
 
     // Señal única que consume toda la UI
     signal triggered(string action, var payload)
+    signal analogReset()
 
     // Para glifos adaptativos: "keyboard" | "xbox" | "playstation"
     property string activeDevice: "keyboard"
@@ -142,11 +143,13 @@ Item {
 
     // Para ejes analógicos (Stick R) cuando conectemos dconsole
     function handleAnalog(axisAction, x, y, deviceLabel) {
+        if (!Number.isFinite(x) || !Number.isFinite(y) || Math.abs(x) > 1 || Math.abs(y) > 1) return
         activeDevice = deviceLabel ?? "xbox"
         _emit(axisAction, { x: x, y: y })
     }
 
     function resetState() {
+        analogReset()
         _guideHeld = false
         _chordConsumed = false
         guideHoldTimer.stop()

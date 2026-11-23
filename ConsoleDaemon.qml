@@ -25,6 +25,7 @@ PluginComponent {
     }
 
     ConsoleOverlay {
+        pluginService: root.pluginService
         active: root.overlayOpen
         onCloseRequested: root.overlayOpen = false
     }

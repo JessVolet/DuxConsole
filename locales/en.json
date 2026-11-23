@@ -47,6 +47,26 @@
     "no_active_app": "No active application",
     "windows_section": "Active Windows"
   },
+  "audio": {
+    "apps": "Application volume",
+    "outputs": "Output devices",
+    "inputs": "Input devices",
+    "empty": "No audio devices or applications",
+    "unavailable": "Unavailable",
+    "active": "Active",
+    "pinned": "Pinned",
+    "muted": "Muted",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "volume": "Volume",
+    "activate": "Activate device",
+    "options": "Device options",
+    "pin": "Pin first",
+    "unpin": "Unpin",
+    "select_target": "Select an application or device",
+    "knob_hint": "Right stick: volume · R3: mute",
+    "operation_failed": "Audio operation failed"
+  },
   "media": {
     "players": "Players",
     "choose_player": "Select player",

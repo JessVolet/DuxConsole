@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import qs.Common as DmsCommon
+import qs.Services as DmsServices
 import "../../components/chrome"
 import "../../services"
 import "../interaction"
@@ -11,6 +12,7 @@ PanelWindow {
     id: overlay
 
     property bool active: false
+    property var pluginService: null
     signal closeRequested()
 
     visible: active
@@ -74,6 +76,12 @@ PanelWindow {
 
     MediaService {
         id: mediaService
+    }
+    AudioControlService {
+        id: audioService
+        backend: DmsServices.AudioService
+        stateStore: overlay.pluginService
+        live: overlay.active && slideManager.currentScreenMeta?.id === "test2"
     }
 
     InputManager {
@@ -149,6 +157,7 @@ PanelWindow {
             windowManager: windowManager
             windowIconProvider: windowIconProvider
             mediaService: mediaService
+            audioService: audioService
             onCloseOverlayRequested: overlay.closeRequested()
         }
 

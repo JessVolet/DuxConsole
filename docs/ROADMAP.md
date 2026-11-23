@@ -41,6 +41,7 @@
 - [x] Refactorizar `screens/slides/TestScreen.qml` para consumir únicamente primitives, `ActionHints` y un modal reutilizable (0 UI inline).
 
 ## FASE 4 — Servicios del Sistema (`services/` — Integración DMS)
+- [x] AudioControlService + AudioDevicePreferences: normalized application/output/input targets, volume/mute, activation and persistent independent multi-pin ordering.
 - [x] `services/WindowManager.qml`: adaptador reactivo Niri IPC (`$NIRI_SOCKET` `EventStream` + cola de comandos `FocusWindow`, `MoveWindowToMonitor`, `MoveWindowToWorkspace`, `FullscreenWindow` y `CloseWindow`); no expone PID ni termina procesos.
 - [x] `services/WindowIconProvider.qml`: resolución de iconos XDG inyectada desde el Composition Root.
 - [x] `services/MediaService.qml` y `services/CavaService.qml`: adaptador MPRIS real (`Quickshell.Services.Mpris`) y espectro Cava bajo demanda para el reproductor expandido.
@@ -48,13 +49,16 @@
 - [ ] `services/StartupCheck.qml`: validación de dependencias opcionales (`dconsole` daemon, InputPlumber, `gpu-screen-recorder`).
 
 ## FASE 5 — Widgets y Pantallas Reales (`components/widgets/` + `screens/`)
-- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `CarouselActionAnchor.qml`, `WindowActionsPanel.qml`, `WindowInfoCard.qml`, `WindowInfoCards.qml`, `MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `MediaLyricsPanel.qml`; [ ] `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
+- [x] Independent AppVolumeMixer (vertical, up to five), AudioOutputSelector and AudioInputSelector; anchored device options, reusable VolumeKnob and assembled Sound screen.
+- [x] Angular 270-degree knob controller with configurable deadzone/hysteresis, target rearming and R3 mute; frontend normalized-axis receiver.
+- [ ] Implement right-stick axis production in the separate dconsole daemon and verify actual controller/audio hotplug behavior in DMS (frontend/synthetic tests are not hardware acceptance).
+- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `CarouselActionAnchor.qml`, `WindowActionsPanel.qml`, `WindowInfoCard.qml`, `WindowInfoCards.qml`, `MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `MediaLyricsPanel.qml`, `audio/AppVolumeMixer.qml`, `audio/AudioOutputSelector.qml`, `audio/AudioInputSelector.qml`; [ ] `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
 - [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowOptionsModal.qml`, `MediaPlayerModal.qml`, `MediaPlayerPicker.qml`.
 - [ ] Perilla de volumen multimedia controlada con stick derecho en `MediaPlayerExpanded.qml` (icono reservado).
 - [ ] Ruedas Orbitales (`screens/overlays/`): `OrbitalMenu.qml` (`SystemWheel` con hold `I.Guide` y `QuickWheel` con acorde `I.Guide + I.ActionSlide.R`).
 - [ ] Slides (`screens/slides/`):
   - [x] `HomeScreen.qml` (título/descripción de ventana seleccionada, carrusel `iconOnly` centrado abajo y `MediaPlayerCard` abajo a la derecha).
-  - [ ] `SoundScreen.qml` (dispositivos salida/entrada con LT/RT + mezclador por app).
+  - [x] `AudioScreen.qml` (dispositivos salida/entrada independientes con LT/RT y activación con A, mezclador vertical por app y perilla reutilizable).
   - [ ] `CaptureScreen.qml` (captura de pantalla, grabación, replay 30s).
   - [ ] `LauncherScreen.qml` (biblioteca Steam + ROMs + estado ProtonDB/SteamDB).
   - [ ] `AchievementsScreen.qml` (logros Steam + RetroAchievements).

@@ -1,5 +1,22 @@
 # DuxConsole — Arquitectura por Archivo (Problema → Solución)
 
+### Audio controls
+
+- `services/AudioControlService.qml` normalizes DMS audio and applies volume,
+  mute, device activation and supported output options by current stable key.
+- `services/AudioDevicePreferences.qml` persists independent multiple input and
+  output pins through injected DMS plugin state.
+- `components/widgets/audio/` contains independent AppVolumeMixer,
+  AudioOutputSelector and AudioInputSelector; shared internal presentation is
+  AudioTargetCarousel/AudioTargetCard. AudioDeviceOptions owns reusable option
+  content and anchored presentation; AudioControls composes them with a knob.
+- `components/primitives/controls/VolumeKnob.qml` is a backend-free controlled
+  primitive; `core/interaction/AngularKnobController.qml` and AngularKnobMath
+  implement absolute 270-degree mapping, deadzone, hysteresis and rearming.
+- `screens/slides/AudioScreen.qml` assembles widgets only. ConsoleOverlay
+  injects DMS AudioService and plugin state through the existing slide boundary.
+- Full contracts and remaining hardware dependency: [AUDIO_WIDGETS.md](AUDIO_WIDGETS.md).
+
 ### Anchored transform modules
 
 - `core/motion/ContainerGeometry.js`: pure placement and viewport constraints.

@@ -9,6 +9,8 @@ Item {
     property Component delegate: null
     property var motionTokens: null
     property bool focused: false
+    property int orientation: Qt.Horizontal
+    readonly property bool vertical: orientation === Qt.Vertical
 
     property int maxVisibleItems: 6
     property int leftCount: -1
@@ -50,28 +52,30 @@ Item {
         : -1
     readonly property Item selectedItem: view.currentItem
     readonly property int pathIntervals: Math.max(0, visibleItemCount - 1)
-    readonly property real unscaledStep: cardWidth + spacing
-    readonly property real unscaledShift: Math.max(0, (selectedWidth - cardWidth) / 2)
-    readonly property real unscaledExpansion: Math.max(0, selectedWidth - cardWidth)
+    readonly property real unscaledStep: (vertical ? cardHeight : cardWidth) + spacing
+    readonly property real unscaledShift: unscaledExpansion / 2
+    readonly property real unscaledExpansion: Math.max(0, vertical ? selectedHeight - cardHeight : selectedWidth - cardWidth)
     readonly property int selectedNeighborCount: Math.min(2, pathIntervals)
-    readonly property real requiredWidth: visibleItemCount * cardWidth
+    readonly property real requiredWidth: visibleItemCount * (vertical ? cardHeight : cardWidth)
         + pathIntervals * spacing
         + unscaledExpansion
         + selectedNeighborCount * unscaledShift
-    readonly property real layoutScale: width > 0 && requiredWidth > width
-        ? width / requiredWidth
-        : 1
+    readonly property real layoutScale: vertical
+        ? Math.min(1, height / Math.max(1, requiredWidth), width / Math.max(1, selectedWidth))
+        : (width > 0 && requiredWidth > width ? width / requiredWidth : 1)
     readonly property real resolvedCardWidth: cardWidth * layoutScale
     readonly property real resolvedCardHeight: cardHeight * layoutScale
     readonly property real resolvedSelectedWidth: selectedWidth * layoutScale
     readonly property real resolvedSelectedHeight: selectedHeight * layoutScale
     readonly property real resolvedSpacing: spacing * layoutScale
-    readonly property real itemStep: resolvedCardWidth + resolvedSpacing
-    readonly property real shiftOffset: Math.max(0, (resolvedSelectedWidth - resolvedCardWidth) / 2)
+    readonly property real itemStep: (vertical ? resolvedCardHeight : resolvedCardWidth) + resolvedSpacing
+    readonly property real shiftOffset: unscaledShift * layoutScale
     readonly property real pathSpan: pathIntervals * itemStep
     readonly property real leftStartX: resolvedSelectedWidth / 2 + 16 * layoutScale
-    readonly property real pathStartX: alignLeft ? leftStartX : (width - pathSpan) / 2
+    readonly property real pathStartX: vertical ? width / 2 : (alignLeft ? leftStartX : (width - pathSpan) / 2)
+    readonly property real pathStartY: vertical ? (height - pathSpan) / 2 : height / 2
     readonly property real highlightX: pathStartX + highlightPosition * pathSpan
+    readonly property real highlightY: pathStartY + highlightPosition * pathSpan
     readonly property int moveDuration: motionTokens ? motionTokens.durationNormal : 0
     property bool _snapping: false
 
@@ -119,7 +123,7 @@ Item {
 
             readonly property bool selected: PathView.isCurrentItem
             readonly property bool inPath: PathView.onPath
-            readonly property real sideDistance: x + width / 2 - carousel.highlightX
+            readonly property real sideDistance: carousel.vertical ? y + height / 2 - carousel.highlightY : x + width / 2 - carousel.highlightX
             property real translateX: selected || Math.abs(sideDistance) < 1
                 ? 0
                 : (sideDistance < 0 ? -carousel.shiftOffset : carousel.shiftOffset)
@@ -131,7 +135,7 @@ Item {
             opacity: inPath ? 1 : 0
             visible: opacity > 0.01
 
-            transform: Translate { x: slot.translateX }
+            transform: Translate { x: carousel.vertical ? 0 : slot.translateX; y: carousel.vertical ? slot.translateX : 0 }
 
             Behavior on width {
                 NumberAnimation {
@@ -202,10 +206,10 @@ Item {
 
         path: Path {
             startX: carousel.pathStartX
-            startY: view.height / 2
+            startY: carousel.pathStartY
             PathLine {
-                x: carousel.pathStartX + carousel.pathSpan
-                y: view.height / 2
+                x: carousel.vertical ? carousel.pathStartX : carousel.pathStartX + carousel.pathSpan
+                y: carousel.vertical ? carousel.pathStartY + carousel.pathSpan : carousel.pathStartY
             }
         }
     }

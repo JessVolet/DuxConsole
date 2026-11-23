@@ -26,6 +26,8 @@ Item {
         onConnectedChanged: {
             if (connected)
                 bridge._sendOverlayState()
+            else
+                bridge.inputManager?.resetState()
         }
 
         parser: SplitParser {
@@ -43,6 +45,13 @@ Item {
 
                 if (!msg || !bridge.inputManager || !bridge.overlayActive)
                     return
+
+                if (msg.type === "axis" && typeof msg.stick === "string") {
+                    const action = bridge.inputManager.config?.analog?.[msg.stick]?.action
+                    if (action) bridge.inputManager.handleAnalog(action, msg.x, msg.y, msg.device)
+                } else if (msg.type === "status" && msg.connected === false) {
+                    bridge.inputManager.resetState()
+                }
 
                 if (msg.type === "button" && typeof msg.code === "string") {
                     if (msg.pressed === true)

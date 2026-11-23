@@ -1,5 +1,8 @@
 {
   "nav": {
+    "capture": "Captura",
+    "launcher": "Lanzador",
+    "achievements": "Logros",
     "home": "Inicio",
     "lab": "Laboratorio",
     "sound": "Sonido"
@@ -83,5 +86,256 @@
       "ipc_unknown_response": "Niri devolvió una respuesta desconocida.",
       "unknown": "No se pudo completar la acción de ventana."
     }
+  },
+  "mockup": {
+    "simulated": "Acción simulada",
+    "screenshot": "Capturar pantalla",
+    "record": "Grabar",
+    "replay": "Guardar repetición",
+    "home": {
+      "window_count": "%1 en esta sesión",
+      "options": "Opciones",
+      "recent_achievement": "Logro reciente",
+      "achievement_progress": "Progreso de logros",
+      "no_achievement": "No hay logros recientes",
+      "no_social": "Sin conexión"
+    },
+    "nav": {
+      "audio": "Sonido",
+      "capture": "Captura"
+    },
+    "audio": {
+      "active": "Activo",
+      "change": "Cambiar dispositivo",
+      "lower": "Bajar",
+      "microphones": "Micrófonos",
+      "mixer": "Mezclador",
+      "mute": "Silenciar",
+      "muted": "Silenciado",
+      "noChannels": "No hay canales de audio",
+      "noDevices": "No hay dispositivos",
+      "output": "Salida de audio",
+      "raise": "Subir",
+      "speakers": "Altavoces",
+      "unmute": "Activar sonido",
+      "channel": {
+        "chat": "Chat de voz",
+        "browser": "Navegador",
+        "game": "Juego",
+        "music": "Música",
+        "voice": "Voz"
+      }
+    },
+    "capture": {
+      "buffer": "Búfer de repetición",
+      "bufferDisabled": "Activa el búfer de repetición en Ajustes",
+      "empty": "Aún no hay capturas",
+      "gallery": "Capturas y grabaciones",
+      "imageItem": "Captura de demostración",
+      "microphone": "Incluir micrófono",
+      "off": "Desactivado",
+      "on": "Activado",
+      "record": "Grabar",
+      "recordingItem": "Grabación de demostración",
+      "replay": "Últimos 30 segundos",
+      "run": "Ejecutar acción",
+      "savedImage": "Captura guardada en la galería",
+      "savedVideo": "Grabación guardada en la galería",
+      "screenshot": "Capturar pantalla",
+      "settings": "Ajustes",
+      "stop": "Detener grabación",
+      "toggle": "Alternar",
+      "unavailable": "Vista previa no disponible",
+      "viewer": "Visor de capturas"
+    },
+    "media": {
+      "artwork": "Audio",
+      "back": "Retroceder 10 s",
+      "forward": "Avanzar 10 s",
+      "idle": "Sin reproducción activa",
+      "pause": "Pausar",
+      "play": "Reproducir",
+      "playPause": "Reproducir / Pausar",
+      "progress": "Progreso de reproducción",
+      "restart": "Reiniciar"
+    }
+  },
+  "mockCollection": {
+    "details": "Detalles",
+    "browse": "Recorrer",
+    "filter": "Filtros",
+    "all": "Todos",
+    "missingArt": "No disponible"
+  },
+  "mockLibrary": {
+    "games": "Juegos",
+    "apps": "Aplicaciones",
+    "empty": "No hay elementos",
+    "play": "Jugar",
+    "title": "Biblioteca",
+    "missingArt": "No hay una imagen para este elemento.",
+    "video": "Vídeo",
+    "music": "Música",
+    "action": "Acción · Plataformas",
+    "adventure": "Aventura",
+    "platformer": "Plataformas"
+  },
+  "mockAchievements": {
+    "unlocked": "Desbloqueados",
+    "locked": "Bloqueados",
+    "progress": "%1 de %2 desbloqueados",
+    "empty": "No hay logros para este filtro.",
+    "missingArt": "No hay una captura para este logro.",
+    "signal": {
+      "title": "Mantén la señal",
+      "description": "Completa una misión sin perder la señal."
+    },
+    "collector": {
+      "title": "Coleccionista",
+      "description": "Recupera todas las reliquias del puesto avanzado."
+    },
+    "relay": {
+      "title": "Corredor de relevos",
+      "description": "Vuelve a conectar el relé Nova."
+    },
+    "explorer": {
+      "title": "Explorador",
+      "description": "Descubre el observatorio de Cloudline."
+    }
+  },
+  "mockWheel": {
+    "controllerBattery": "Mando %1%",
+    "hostBattery": "Batería %1%",
+    "performance": "Equilibrado · %1 FPS",
+    "category": "Categoría",
+    "categories": {
+      "controller": "Mando",
+      "display": "Pantalla",
+      "performance": "Rendimiento",
+      "power": "Energía",
+      "audio": "Audio",
+      "media": "Multimedia",
+      "session": "Sesión",
+      "social": "Perfil"
+    },
+    "commands": {
+      "controller-power": {
+        "title": "Apagar mando",
+        "description": "Enciende o apaga el mando de demostración."
+      },
+      "controller-profile": {
+        "title": "Perfil del mando",
+        "description": "Elige un perfil de glifos para esta sesión."
+      },
+      "controller-inputs": {
+        "title": "Guía de entradas",
+        "description": "Usa la cruceta para cambiar de zona y los gatillos para recorrerla."
+      },
+      "brightness-level": {
+        "title": "Brillo",
+        "description": "Elige un nivel de brillo simulado."
+      },
+      "night-light": {
+        "title": "Luz nocturna",
+        "description": "Cambia la luz nocturna en la demostración."
+      },
+      "display-awake": {
+        "title": "Mantener pantalla activa",
+        "description": "Elige si la pantalla de demostración permanece activa."
+      },
+      "power-profile": {
+        "title": "Perfil de energía",
+        "description": "Elige un perfil de energía simulado."
+      },
+      "fps-limit": {
+        "title": "Límite de FPS",
+        "description": "Establece un límite de fotogramas simulado."
+      },
+      "reduced-motion": {
+        "title": "Movimiento reducido",
+        "description": "Cambia la preferencia de movimiento de la demostración."
+      },
+      "ambient-mode": {
+        "title": "Modo ambiente",
+        "description": "Previsualiza el ajuste del modo ambiente."
+      },
+      "power-suspend": {
+        "title": "Suspender",
+        "description": "Simula suspender el equipo."
+      },
+      "power-off": {
+        "title": "Apagar computadora",
+        "description": "Simula apagar el equipo."
+      },
+      "volume-level": {
+        "title": "Volumen de salida",
+        "description": "Elige un volumen de salida simulado."
+      },
+      "microphone-level": {
+        "title": "Micrófono",
+        "description": "Elige un nivel de micrófono simulado."
+      },
+      "audio-mixer": {
+        "title": "Mezclador",
+        "description": "Consulta los niveles de audio de la sesión."
+      },
+      "audio-devices": {
+        "title": "Dispositivos",
+        "description": "Consulta los dispositivos de entrada y salida simulados."
+      },
+      "media-toggle": {
+        "title": "Reproducir / pausar",
+        "description": "Alterna la reproducción de la pista actual."
+      },
+      "media-previous": {
+        "title": "Pista anterior",
+        "description": "Selecciona la pista de demostración anterior."
+      },
+      "media-next": {
+        "title": "Pista siguiente",
+        "description": "Selecciona la pista de demostración siguiente."
+      },
+      "capture-screenshot": {
+        "title": "Capturar pantalla",
+        "description": "Añade una imagen de ejemplo a la galería."
+      },
+      "capture-record": {
+        "title": "Grabar / detener",
+        "description": "Alterna el indicador de grabación simulada."
+      },
+      "capture-replay": {
+        "title": "Últimos 30 segundos",
+        "description": "Guarda una repetición simulada cuando el búfer está activo."
+      },
+      "social-profile": {
+        "title": "Perfil de Nova",
+        "description": "Consulta el perfil y la actividad simulada."
+      },
+      "social-friends": {
+        "title": "Amigos",
+        "description": "Consulta el panel social simulado de la sesión."
+      },
+      "discord-mute": {
+        "title": "Silenciar Discord",
+        "description": "Controla el micrófono simulado de Discord."
+      }
+    },
+    "choices": {
+      "connected": "Conectado",
+      "disconnected": "Desconectado",
+      "xbox": "Xbox",
+      "playstation": "PlayStation",
+      "desktop": "Escritorio",
+      "on": "Activado",
+      "off": "Desactivado",
+      "saver": "Ahorro",
+      "balanced": "Equilibrado",
+      "performance": "Rendimiento",
+      "unlimited": "Sin límite",
+      "active": "Activo",
+      "muted": "Silenciado"
+    },
+    "profileInSession": "En una sesión de juego",
+    "profileOnline": "En línea"
   }
 }

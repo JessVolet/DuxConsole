@@ -1,0 +1,178 @@
+{
+  "appearance": {
+    "accent": "#ecd5ff",
+    "chrome": "#f5eefb",
+    "chromeText": "#251e32",
+    "card": "#22192e",
+    "cardText": "#fcf4ff",
+    "scrim": "#100a1a",
+    "selectedCard": "#51396c"
+  },
+  "scenes": {
+    "home": {
+      "slide": "home",
+      "time": "09:51",
+      "reference": "00:08",
+      "selectedWindowId": 102
+    },
+    "home-next": {
+      "slide": "home",
+      "time": "09:51",
+      "reference": "00:28",
+      "selectedWindowId": 101
+    },
+    "home-options": {
+      "slide": "home",
+      "time": "09:51",
+      "reference": "00:20"
+    },
+    "audio": {
+      "slide": "audio",
+      "time": "09:52",
+      "reference": "00:47"
+    },
+    "audio-expanded": {
+      "slide": "audio",
+      "time": "09:52",
+      "reference": "00:40"
+    },
+    "capture": {
+      "slide": "capture",
+      "time": "09:52",
+      "reference": "01:01"
+    },
+    "capture-viewer": {
+      "slide": "capture",
+      "time": "09:52",
+      "reference": "01:07"
+    },
+    "launcher": {
+      "slide": "launcher",
+      "time": "09:52",
+      "reference": "01:12"
+    },
+    "achievements": {
+      "slide": "achievements",
+      "time": "09:52",
+      "reference": "01:18"
+    },
+    "achievement-detail": {
+      "slide": "achievements",
+      "time": "09:52",
+      "reference": "01:21"
+    },
+    "system-wheel": {
+      "slide": "home",
+      "wheel": "left",
+      "time": "09:52",
+      "reference": "00:35"
+    },
+    "quick-wheel": {
+      "slide": "home",
+      "wheel": "right",
+      "time": "09:52",
+      "reference": "01:30"
+    },
+    "wheel-only": {
+      "slide": "home",
+      "wheel": "right",
+      "backdropOnly": true,
+      "time": "09:52",
+      "reference": "01:49"
+    },
+    "dismissed": {
+      "slide": "home",
+      "backdropOnly": true,
+      "time": "09:52",
+      "reference": "01:51"
+    },
+    "audio-unavailable": {
+      "slide": "audio",
+      "time": "09:52"
+    },
+    "capture-viewer-image": {
+      "slide": "capture",
+      "time": "09:52"
+    },
+    "capture-recording": {
+      "slide": "capture",
+      "time": "09:52"
+    },
+    "capture-empty": {
+      "slide": "capture",
+      "time": "09:52"
+    },
+    "capture-settings": {
+      "slide": "capture",
+      "time": "09:52"
+    },
+    "launcher-filter": {
+      "slide": "launcher",
+      "time": "09:52"
+    },
+    "wheel-controller": {
+      "slide": "home",
+      "wheel": "left",
+      "time": "09:52",
+      "reference": "00:35"
+    },
+    "wheel-social": {
+      "slide": "home",
+      "wheel": "right",
+      "time": "09:52",
+      "reference": "01:30"
+    },
+    "wheel-capture": {
+      "slide": "home",
+      "wheel": "right",
+      "time": "09:52",
+      "reference": "01:36"
+    },
+    "wheel-discord": {
+      "slide": "home",
+      "wheel": "right",
+      "time": "09:52",
+      "reference": "01:40"
+    },
+    "wheel-power": {
+      "slide": "home",
+      "wheel": "left",
+      "time": "09:52",
+      "reference": "01:46"
+    },
+    "wheel-media": {
+      "slide": "home",
+      "wheel": "right",
+      "time": "09:52",
+      "reference": "01:49"
+    },
+    "home-0": {
+      "slide": "home",
+      "time": "09:51"
+    },
+    "home-1": {
+      "slide": "home",
+      "time": "09:51"
+    },
+    "home-2": {
+      "slide": "home",
+      "time": "09:51"
+    },
+    "home-4": {
+      "slide": "home",
+      "time": "09:51"
+    },
+    "home-6": {
+      "slide": "home",
+      "time": "09:51"
+    },
+    "home-7": {
+      "slide": "home",
+      "time": "09:51"
+    },
+    "home-8": {
+      "slide": "home",
+      "time": "09:51"
+    }
+  }
+}

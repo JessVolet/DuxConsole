@@ -6,12 +6,14 @@ Item {
     visible: false
 
     property bool animationsEnabled: true
+    property bool suppressAnimations: false
     property real speedScale: 1.0
     property int fadeInMs: 180
     property int fadeOutMs: 140
+    property int noticeMs: 2600
 
     function scaled(baseMs) {
-        if (!animationsEnabled)
+        if (!animationsEnabled || suppressAnimations)
             return 0
         return Math.max(0, Math.round(baseMs / Math.max(0.1, speedScale)))
     }
@@ -44,6 +46,8 @@ Item {
                         motion.speedScale = cfg.animations.speed
                     if (typeof cfg.animations.fadeInMs === "number")
                         motion.fadeInMs = cfg.animations.fadeInMs
+                    if (typeof cfg.animations.noticeMs === "number")
+                        motion.noticeMs = Math.max(0, cfg.animations.noticeMs)
                     if (typeof cfg.animations.fadeOutMs === "number")
                         motion.fadeOutMs = cfg.animations.fadeOutMs
                 }

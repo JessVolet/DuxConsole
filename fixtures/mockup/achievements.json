@@ -1,0 +1,8 @@
+{
+  "entries": [
+    { "id": "signal", "titleKey": "mockAchievements.signal.title", "descriptionKey": "mockAchievements.signal.description", "icon": "sensors", "unlocked": false },
+    { "id": "collector", "titleKey": "mockAchievements.collector.title", "descriptionKey": "mockAchievements.collector.description", "icon": "collections_bookmark", "unlocked": false },
+    { "id": "relay", "titleKey": "mockAchievements.relay.title", "descriptionKey": "mockAchievements.relay.description", "icon": "emoji_events", "unlocked": true },
+    { "id": "explorer", "titleKey": "mockAchievements.explorer.title", "descriptionKey": "mockAchievements.explorer.description", "icon": "explore", "unlocked": true }
+  ]
+}

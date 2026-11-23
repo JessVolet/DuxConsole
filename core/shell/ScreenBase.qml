@@ -15,11 +15,14 @@ Item {
     property var motionTokens: null
     property var windowManager: null
     property var windowIconProvider: null
+    property var mockSession: null
+    property var fixtureSelection: null
     property var registry: null
     property int currentSlideIndex: 0
     default property alias content: body.data
 
     signal closeOverlayRequested()
+    signal slideRequested(string slideId)
 
     anchors.fill: parent
 

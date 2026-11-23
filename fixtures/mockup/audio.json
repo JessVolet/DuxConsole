@@ -1,0 +1,86 @@
+{
+  "outputs": [
+    {
+      "id": "hdmi",
+      "name": "HDMI",
+      "level": 15
+    },
+    {
+      "id": "headphones",
+      "name": "USB Audio",
+      "level": 45
+    },
+    {
+      "id": "wireless",
+      "name": "Bluetooth Audio",
+      "level": 60
+    }
+  ],
+  "inputs": [
+    {
+      "id": "usb-mic",
+      "name": "USB",
+      "level": 54
+    },
+    {
+      "id": "internal-mic",
+      "name": "Internal",
+      "level": 32
+    }
+  ],
+  "channels": [
+    {
+      "id": "chat",
+      "labelKey": "mockup.audio.channel.chat",
+      "level": 46
+    },
+    {
+      "id": "browser",
+      "labelKey": "mockup.audio.channel.browser",
+      "level": 68
+    },
+    {
+      "id": "game",
+      "labelKey": "mockup.audio.channel.game",
+      "level": 72
+    },
+    {
+      "id": "music",
+      "labelKey": "mockup.audio.channel.music",
+      "level": 35
+    },
+    {
+      "id": "voice",
+      "labelKey": "mockup.audio.channel.voice",
+      "level": 80
+    }
+  ],
+  "selectedOutput": "hdmi",
+  "selectedInput": "usb-mic",
+  "playlist": [
+    {
+      "title": "Straight Ahead",
+      "artist": "DuxShell Sessions",
+      "playing": true,
+      "position": 24,
+      "duration": 168,
+      "artwork": "art/session-cover.png"
+    },
+    {
+      "title": "Below the Signal",
+      "artist": "DuxShell Sessions",
+      "playing": false,
+      "position": 0,
+      "duration": 146,
+      "artwork": "art/orbital.png"
+    },
+    {
+      "title": "Night Loop",
+      "artist": "DuxShell Sessions",
+      "playing": false,
+      "position": 0,
+      "duration": 192,
+      "artwork": "art/heights.png"
+    }
+  ]
+}

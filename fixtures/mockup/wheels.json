@@ -1,0 +1,279 @@
+{
+  "originIcon": "sports_esports",
+  "telemetry": {
+    "controller": 84,
+    "host": 76,
+    "fps": 60
+  },
+  "left": [
+    {
+      "id": "controller",
+      "icon": "sports_esports",
+      "commands": [
+        {
+          "id": "controller-power",
+          "icon": "power_settings_new",
+          "detail": true,
+          "choices": [
+            "connected",
+            "disconnected"
+          ]
+        },
+        {
+          "id": "controller-profile",
+          "icon": "sports_esports",
+          "detail": true,
+          "choices": [
+            "xbox",
+            "playstation",
+            "desktop"
+          ]
+        },
+        {
+          "id": "controller-inputs",
+          "icon": "tune",
+          "detail": true
+        }
+      ]
+    },
+    {
+      "id": "display",
+      "icon": "light_mode",
+      "commands": [
+        {
+          "id": "brightness-level",
+          "icon": "light_mode",
+          "detail": true,
+          "choices": [
+            15,
+            40,
+            65,
+            100
+          ]
+        },
+        {
+          "id": "night-light",
+          "icon": "nightlight",
+          "detail": true,
+          "choices": [
+            "on",
+            "off"
+          ]
+        },
+        {
+          "id": "display-awake",
+          "icon": "monitor",
+          "detail": true,
+          "choices": [
+            "on",
+            "off"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "performance",
+      "icon": "speed",
+      "commands": [
+        {
+          "id": "power-profile",
+          "icon": "speed",
+          "detail": true,
+          "choices": [
+            "saver",
+            "balanced",
+            "performance"
+          ]
+        },
+        {
+          "id": "fps-limit",
+          "icon": "bolt",
+          "detail": true,
+          "choices": [
+            45,
+            60,
+            90,
+            "unlimited"
+          ]
+        },
+        {
+          "id": "reduced-motion",
+          "icon": "auto_awesome",
+          "detail": true,
+          "choices": [
+            "on",
+            "off"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "power",
+      "icon": "power_settings_new",
+      "commands": [
+        {
+          "id": "ambient-mode",
+          "icon": "auto_awesome",
+          "detail": true,
+          "choices": [
+            "on",
+            "off"
+          ]
+        },
+        {
+          "id": "power-suspend",
+          "icon": "bedtime",
+          "detail": true
+        },
+        {
+          "id": "power-off",
+          "icon": "power_settings_new",
+          "detail": true
+        }
+      ]
+    }
+  ],
+  "right": [
+    {
+      "id": "audio",
+      "icon": "volume_up",
+      "commands": [
+        {
+          "id": "volume-level",
+          "icon": "volume_up",
+          "detail": true,
+          "choices": [
+            15,
+            40,
+            65,
+            100
+          ]
+        },
+        {
+          "id": "microphone-level",
+          "icon": "mic",
+          "detail": true,
+          "choices": [
+            15,
+            40,
+            65,
+            100
+          ]
+        },
+        {
+          "id": "audio-mixer",
+          "icon": "tune",
+          "detail": true
+        },
+        {
+          "id": "audio-devices",
+          "icon": "headphones",
+          "detail": true
+        }
+      ]
+    },
+    {
+      "id": "media",
+      "icon": "queue_music",
+      "commands": [
+        {
+          "id": "media-toggle",
+          "icon": "play_pause"
+        },
+        {
+          "id": "media-previous",
+          "icon": "skip_previous"
+        },
+        {
+          "id": "media-next",
+          "icon": "skip_next"
+        }
+      ]
+    },
+    {
+      "id": "session",
+      "icon": "photo_camera",
+      "commands": [
+        {
+          "id": "capture-screenshot",
+          "icon": "photo_camera"
+        },
+        {
+          "id": "capture-record",
+          "icon": "videocam"
+        },
+        {
+          "id": "capture-replay",
+          "icon": "replay_30"
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "icon": "person",
+      "commands": [
+        {
+          "id": "social-profile",
+          "icon": "person",
+          "detail": true
+        },
+        {
+          "id": "social-friends",
+          "icon": "group",
+          "detail": true
+        },
+        {
+          "id": "discord-mute",
+          "icon": "mic_off",
+          "detail": true,
+          "choices": [
+            "active",
+            "muted"
+          ]
+        }
+      ]
+    }
+  ],
+  "scenes": {
+    "wheel-controller": {
+      "side": "left",
+      "category": "controller",
+      "command": "controller-profile"
+    },
+    "wheel-power": {
+      "side": "left",
+      "category": "power",
+      "command": "power-off"
+    },
+    "wheel-social": {
+      "side": "right",
+      "category": "social",
+      "command": "social-profile"
+    },
+    "wheel-discord": {
+      "side": "right",
+      "category": "social",
+      "command": "discord-mute"
+    },
+    "wheel-capture": {
+      "side": "right",
+      "category": "session",
+      "command": "capture-screenshot"
+    },
+    "wheel-media": {
+      "side": "right",
+      "category": "media",
+      "command": "media-toggle"
+    }
+  },
+  "companions": [
+    {
+      "name": "Nova",
+      "statusKey": "mockWheel.profileInSession"
+    },
+    {
+      "name": "Mika",
+      "statusKey": "mockWheel.profileOnline"
+    }
+  ]
+}

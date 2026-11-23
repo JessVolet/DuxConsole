@@ -1,6 +1,6 @@
 # DuxConsole visual prototype architecture
 
-Status: proposed. Target the QML overlay on this branch. Use the existing web mockup as the baseline for visual details and as a separate host for any later frontend extraction. DOM and QML views are separate renderers.
+Status: implemented as an isolated QML preview. Visual acceptance is tracked in the roadmap. Use the existing web mockup as the baseline for visual details and as a separate host for any later frontend extraction. DOM and QML views are separate renderers.
 
 ## Native file map
 
@@ -11,15 +11,29 @@ Paths are relative to DuxConsole. Reuse existing files where listed. Introduce n
 | M01 | `core/shell/{ConsoleOverlay,ScreenRegistry,SlideManager}.qml` register and mount the opt-in composition using the existing registry/source pattern. `components/chrome/{Bg,TopBar,FooterBar}.qml` keep ownership of persistent chrome. `components/chrome/CaptureQuickActions.qml` emits the three semantic capture intents via the composition root. |
 | M02 | `core/shell/{StyleTokens,I18n,IconsPadManager}.qml`, `core/motion/MotionTokens.qml`, existing config files and locales. `components/primitives/{surfaces/SlantedSurface,text/DisplayTitle,glyphs/InputGlyph,buttons/ActionButton}.qml` own treatment and glyph rendering. Add `components/primitives/meters/ValueMeter.qml` for a reusable gauge/progress view. |
 | M03 | Reuse `core/shell/InputManager.qml` and `core/interaction/{NavigationManager,FocusZone,LayerManager}.qml`. Keep one routing authority. Screens register capabilities and receive semantic signals. Extend existing contracts only when a demonstrated gap requires it. |
-| M04 | `components/widgets/CarouselView.qml` owns visual bounds, card transition and the renderer contract; use `WindowCarousel.qml` as the native focus/data adapter. Selection remains controlled by the active zone and stable item ID. |
+| M04 | `components/widgets/QueueCarousel.qml` and `CarouselLayout.js` own placement and transitions in fixture screens. Home, Audio, Capture, Launcher and Achievements supply delegates and selected IDs. The production `WindowCarousel.qml` and lab keep the existing `CarouselView.qml` PathView contract. Migration to the queue requires a separate compatibility check. |
 | M05 | `screens/slides/MockHomeScreen.qml` assembles `components/widgets/{SessionHero,WindowCarousel,MediaPlayerCard,SocialStatusCard,AchievementDigest}.qml`. Keep active session and focused window as separate inputs. |
 | M06 | `screens/slides/AudioScreen.qml` assembles `components/widgets/{AudioMixer,DeviceStrip,MediaPlayerCard}.qml` and the shared meter. Widgets emit intents with device and channel IDs; fixture service owns values. |
-| M07 | `screens/slides/CaptureScreen.qml` assembles `components/widgets/{CaptureActions,CaptureGallery,CapturePreview}.qml`. Gallery delegates use CarouselView. Capture action handlers live at the injected mock service boundary. |
+| M07 | `screens/slides/CaptureScreen.qml` assembles `components/widgets/{CaptureActions,CaptureGallery,CapturePreview}.qml`. Gallery delegates use QueueCarousel. Capture action handlers live at the injected mock service boundary. |
 | M08 | `screens/slides/LauncherScreen.qml` assembles `components/widgets/{SessionHero,LibraryShelf,FilterBar}.qml`. App IDs, selection and filter state stay independent from renderer instances. |
-| M09 | `screens/slides/AchievementsScreen.qml` assembles `components/widgets/{AchievementShelf,AchievementDetail}.qml` with the existing carousel and shared meter. |
+| M09 | `screens/slides/AchievementsScreen.qml` assembles `components/widgets/{AchievementShelf,AchievementDetail}.qml` with QueueCarousel and the shared meter. |
 | M10 | `screens/overlays/OrbitalMenu.qml` binds `components/widgets/{OrbitWheel,CommandPreview}.qml` to semantic command data and actions. Mount the overlay through registry-provided sources or a screen-owned Loader; keep the core import rule intact. |
 | M11 | `screens/modals/{MediaDetailModal,CaptureViewerModal,CommandDetailsModal}.qml` assemble shared `components/chrome/{ModalPanel,Toast}.qml` and widgets supplied with view state. LayerManager restores focus. |
 | M12 | `services/MockSession.qml` owns fixture state and action results using data from `fixtures/mockup/*.json`. Inject it through the existing composition root and screen property pattern. No widgets import the service or fixture directory. |
+
+## Running the native preview
+
+Run `./preview/run.sh` inside a Wayland session. The script stages the QML and fixture assets in a temporary directory and prints its shell path. In a second terminal, use that path for the isolated IPC target.
+
+```sh
+qs -p /path/printed/by/preview/shell.qml ipc call duxConsoleMock scene capture-viewer
+qs -p /path/printed/by/preview/shell.qml ipc call duxConsoleMock state
+qs -p /path/printed/by/preview/shell.qml ipc call duxConsoleMock frame /tmp/dux-frame.png
+qs -p /path/printed/by/preview/shell.qml ipc call duxConsoleMock close
+qs kill -p /path/printed/by/preview/shell.qml
+```
+
+`MockPreview.qml` is the standalone composition entry. The staging process exposes the minimum `qs.Common` and `qs.Widgets` theme/text contracts plus an icon adapter from `preview/compat`. This keeps the desktop theme singleton and compositor service out of the temporary process. The process uses a real Quickshell Wayland surface. `viewport WIDTH HEIGHT` constrains the captured content for layout comparisons, and `action I.ActionOption.R` drives the normal semantic dispatcher. Scene names and reference times are in `fixtures/mockup/scenes.json`. Native production still uses its normal DMS modules.
 
 ## Host lifecycle
 

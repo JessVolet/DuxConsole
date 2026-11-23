@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -15,6 +17,10 @@ Item {
     property var iconsPadManager: null
     property var screens: []
     property int currentIndex: 0
+    property bool tabControlsEnabled: false
+    property string fixtureBattery: "76%"
+    property string fixtureTime: ""
+    signal slideRequested(string slideId)
 
     // Estados visuales para Guide / Start (sin acciones nuevas)
     property string guideState: "idle"
@@ -43,6 +49,8 @@ Item {
     readonly property color accentColor: styleTokens ? styleTokens.accentColor : Theme.primary
 
     readonly property string deviceBatteryText: {
+        if (fixtureTime)
+            return fixtureBattery
         const dev = UPower.displayDevice
         if (!dev || !dev.ready || !dev.isPresent)
             return "--"
@@ -88,15 +96,15 @@ Item {
             // Círculo oscuro con logo + anillo circular de progreso Guide
             Rectangle {
                 Layout.alignment: Qt.AlignVCenter
-                width: 34
-                height: 34
+                implicitWidth: 34
+                implicitHeight: 34
                 radius: 17
                 color: "#14161D"
 
                 CircularProgressGlyph {
                     anchors.centerIn: parent
                     ringSize: 34
-                    state: bar.guideState
+                    progressState: bar.guideState
                     progress: bar.guideProgress
                     styleTokens: bar.styleTokens
                     motionTokens: bar.motionTokens
@@ -156,8 +164,8 @@ Item {
         Rectangle {
             id: navPill
             Layout.alignment: Qt.AlignVCenter
-            width: navTabsRow.implicitWidth + Theme.spacingS * 2
-            height: 46
+            implicitWidth: navTabsRow.implicitWidth + Theme.spacingS * 2
+            implicitHeight: 46
             radius: height / 2
             color: bar.pillBg
             border.width: 1
@@ -171,6 +179,7 @@ Item {
                 Repeater {
                     model: bar.screens
                     delegate: Rectangle {
+                        id: tab
                         required property int index
                         required property var modelData
                         readonly property bool isCurrent: index === bar.currentIndex
@@ -179,6 +188,18 @@ Item {
                         height: 34
                         radius: height / 2
                         color: isCurrent ? bar.accentColor : "transparent"
+                        Accessible.role: Accessible.Button
+                        Accessible.name: tabLabel.text
+                        Accessible.selected: isCurrent
+                        Accessible.onPressAction: {
+                            if (bar.tabControlsEnabled)
+                                bar.slideRequested(tab.modelData.id)
+                        }
+
+                        TapHandler {
+                            enabled: bar.tabControlsEnabled
+                            onTapped: bar.slideRequested(tab.modelData.id)
+                        }
 
                         Behavior on color {
                             ColorAnimation { duration: bar.animDuration; easing.type: bar.animEasing }
@@ -188,11 +209,11 @@ Item {
                             id: tabLabel
                             anchors.centerIn: parent
                             text: bar.i18n
-                                  ? bar.i18n.t(modelData.labelKey ?? "", modelData.id ?? "")
-                                  : (modelData.id ?? "")
+                                  ? bar.i18n.t(tab.modelData.labelKey ?? "", tab.modelData.id ?? "")
+                                  : (tab.modelData.id ?? "")
                             font.pixelSize: Theme.fontSizeMedium
-                            font.weight: isCurrent ? Font.Bold : Font.Medium
-                            color: isCurrent ? "#FFFFFF" : bar.fgColor
+                            font.weight: tab.isCurrent ? Font.Bold : Font.Medium
+                            color: tab.isCurrent && !bar.fixtureTime ? "#FFFFFF" : bar.fgColor
                         }
                     }
                 }
@@ -242,7 +263,7 @@ Item {
 
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
-                text: Qt.formatTime(sysClock.date, "HH:mm")
+                text: bar.fixtureTime || Qt.formatTime(sysClock.date, "HH:mm")
                 font.pixelSize: Theme.fontSizeMedium
                 font.weight: Font.DemiBold
                 color: bar.fgColor
@@ -251,7 +272,7 @@ Item {
             CircularProgressGlyph {
                 Layout.alignment: Qt.AlignVCenter
                 ringSize: 32
-                state: bar.startState
+                progressState: bar.startState
                 progress: bar.startProgress
                 styleTokens: bar.styleTokens
                 motionTokens: bar.motionTokens
@@ -262,7 +283,7 @@ Item {
             Rectangle {
                 Layout.alignment: Qt.AlignVCenter
                 implicitWidth: profileLabel.implicitWidth + Theme.spacingM * 2
-                height: 28
+                implicitHeight: 28
                 radius: height / 2
                 color: Qt.alpha(bar.accentColor, 0.16)
 

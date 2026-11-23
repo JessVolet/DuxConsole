@@ -6,6 +6,8 @@ Item {
     id: tokens
     visible: false
 
+    property var fixturePalette: ({})
+
     property string themeMode: "hybrid"          // "hybrid" | "dark" | "light"
     property string accentSource: "primary"      // "primary" | "secondary" | "tertiary" | "custom"
     property color customAccent: "#A855F7"
@@ -21,6 +23,8 @@ Item {
     property bool iconShowBackdrop: true
 
     readonly property color accentColor: {
+        if (fixturePalette.accent)
+            return fixturePalette.accent
         switch (accentSource) {
         case "secondary":
             return Theme.secondary
@@ -47,9 +51,13 @@ Item {
     }
 
     function surfaceColor(role, opacityMultiplier) {
-        const alpha = role === "card"
+        const alpha = role === "card" || role === "selectedCard"
             ? Math.max(0.55, Math.min(1.0, cardOpacity * (opacityMultiplier ?? 1.0)))
             : 1.0
+        const fixtureColor = role === "chrome" ? fixturePalette.chrome
+            : (role === "selectedCard" ? fixturePalette.selectedCard : fixturePalette.card)
+        if (fixtureColor)
+            return Qt.alpha(fixtureColor, alpha)
         return _isLightRole(role) ? Qt.rgba(0.95, 0.96, 0.97, alpha) : Qt.rgba(0.08, 0.09, 0.11, alpha)
     }
 
@@ -58,6 +66,9 @@ Item {
     }
 
     function onSurfaceColor(role) {
+        const fixtureColor = role === "chrome" ? fixturePalette.chromeText : fixturePalette.cardText
+        if (fixtureColor)
+            return fixtureColor
         return _isLightRole(role) ? "#14161D" : "#F2F4F8"
     }
 
@@ -75,7 +86,7 @@ Item {
         const mult = alphaMultiplier ?? 1.0
         const alpha = Math.max(0, Math.min(0.92, scrimOpacity * mult))
         // Scrim global siempre oscuro incluso en theme.mode = "light"
-        return Qt.rgba(0.04, 0.05, 0.08, alpha)
+        return fixturePalette.scrim ? Qt.alpha(fixturePalette.scrim, alpha) : Qt.rgba(0.04, 0.05, 0.08, alpha)
     }
 
     FileView {

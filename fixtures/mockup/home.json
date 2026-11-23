@@ -1,0 +1,29 @@
+{
+  "session": {
+    "title": "Violet Rail",
+    "titleLines": ["Violet Rail", "Night Loop"],
+    "metadata": ["Action · Platforms", "Game session"],
+    "social": {
+      "room": "Room · 3",
+      "members": ["Lio", "Ira", "Mika"]
+    },
+    "achievement": {
+      "title": "Signal found",
+      "nextTitle": "Keep the rhythm",
+      "progress": 45,
+      "total": 75
+    }
+  },
+  "windows": [
+    {"id": 101, "title": "Lantern Hollow", "appName": "Lantern Hollow", "workspaceIndex": 2, "output": "Display 1", "artwork": "art/window-hollow.png"},
+    {"id": 102, "title": "Alpine Relay", "appName": "Alpine Relay", "workspaceIndex": 1, "output": "Display 1", "artwork": "art/window-summit.png"},
+    {"id": 103, "title": "Web Browser", "appName": "Web Browser", "workspaceIndex": 1, "output": "Display 1"},
+    {"id": 104, "title": "Violet Rail", "appName": "Violet Rail", "workspaceIndex": 1, "output": "Display 1", "artwork": "art/backdrop.png"},
+    {"id": 105, "title": "Orbital Drift", "appName": "Orbital Drift", "workspaceIndex": 3, "output": "Display 2", "artwork": "art/window-hollow.png"},
+    {"id": 106, "title": "Sound Library", "appName": "Sound Library", "workspaceIndex": 3, "output": "Display 2"},
+    {"id": 107, "title": "Winter Observatory", "appName": "Winter Observatory", "workspaceIndex": 2, "output": "Display 1", "artwork": "art/window-summit.png"},
+    {"id": 108, "title": "Cliffside Terminal", "appName": "Cliffside Terminal", "workspaceIndex": 1, "output": "Display 1"}
+  ],
+  "defaultWindowCount": 4,
+  "initialWindowId": 102
+}

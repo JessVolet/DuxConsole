@@ -1,15 +1,15 @@
 # DuxConsole mockup roadmap
 
-The planning branch stages documentation first. Implementation starts in a later turn when the scope is accepted. Track state and review evidence here at each increment.
+The native fixture implementation is available on the planning branch. This roadmap records functional verification and the remaining visual acceptance work.
 
 | Stage | Status | Work and deliverable | Exit criteria |
 | --- | --- | --- | --- |
-| P0 | Documentation | Inspect video and existing plugin, define M01–M12, dependency rules, fidelity matrix and independent audit. | Auditor reviews branch diff and planning findings have dispositions. |
-| P1 | Planned | Add an opt-in QML fixture composition, config, mock service and deterministic scene loader. Reuse the native focus and input stack. Map timestamped references to named fixtures and measure geometry and transitions. M01–M03, M12. | Opt-in QML preview opens, theme/i18n/hints resolve via config, key and pointer routes converge, layer restoration works, the fixture path opens no production sockets, and closing all layers releases exclusive keyboard focus. Reference inventory records exact frames and boundaries for visual comparison. |
-| P2 | Planned | Build Home and shared carousel with sample art and live-looking fixtures. M04–M05 and mini media from M11. | Match the Home anchors. Compare 0/1/2/4/6/7+ items, clip/fade, repeated input, missing icon and independent session/window state. |
-| P3 | Planned | Add Audio and Capture. Finish expanded player, capture viewer/settings and feedback layers. M06–M07, M11. | Compare audio, gallery, viewer, options and toast states. Confirm mocks, focus returns and unavailable-device branches. |
-| P4 | Planned | Add Launcher, Achievements and both wheels. M08–M10. | Compare all remaining named scenes including missing achievement art and wheel opened over the backdrop. Exercise command selection, cancel, modal return and keyboard release after closing a wheel opened over the bare backdrop. |
-| P5 | Planned | Compare the full native sequence, address visual gaps and demonstrate reuse of shared visual widgets via a second fixture composition. All modules. | Attached parity evidence, working import in independent composition, zero unresolved blocking audit findings. |
+| P0 | Complete | Inspect video and existing plugin, define M01–M12, dependency rules, fidelity matrix and independent audit. | Auditor reviews branch diff and planning findings have dispositions. |
+| P1 | Implemented | Add an opt-in QML fixture composition, config, mock service and deterministic scene loader. Reuse the native focus and input stack. Map timestamped references to named fixtures and measure geometry and transitions. M01–M03, M12. | Opt-in QML preview opens, theme/i18n/hints resolve via config, key and pointer routes converge, layer restoration works, the fixture path opens no production sockets, and closing all layers releases exclusive keyboard focus. Reference inventory records exact frames and boundaries for visual comparison. |
+| P2 | Implemented | Build Home and shared carousel with sample art and live-looking fixtures. M04–M05 and mini media from M11. | Match the Home anchors. Compare 0/1/2/4/6/7+ items, clip/fade, repeated input, missing icon and independent session/window state. |
+| P3 | Implemented | Add Audio and Capture. Finish expanded player, capture viewer/settings and feedback layers. M06–M07, M11. | Compare audio, gallery, viewer, options and toast states. Confirm mocks, focus returns and unavailable-device branches. |
+| P4 | Implemented | Add Launcher, Achievements and both wheels. M08–M10. | Compare all remaining named scenes including missing achievement art and wheel opened over the backdrop. Exercise command selection, cancel, modal return and keyboard release after closing a wheel opened over the bare backdrop. |
+| P5 | Visual review in progress | Compare the full native sequence, address visual gaps and demonstrate reuse of shared visual widgets via a second fixture composition. All modules. | Attached parity evidence, working import in independent composition, zero unresolved blocking audit findings. |
 | Follow-up | Separate scope | Assess production service integration or a reusable web extraction after native parity and user review. | Agree on scope, reuse plan, runtime dependencies and independent implementation review. |
 
 ## Action plan for every increment
@@ -26,3 +26,13 @@ Reinvoke the independent reviewer on future work sessions. Use the repository's 
 Independent review: approved with observations. The plan now includes the capture viewer variants, wheel-only host lifecycle and exclusive keyboard release in P1/P4. JSON validation passed for the six root configuration and locale files.
 
 Baseline `qmlls --ignore-settings` reported on 43 QML files. It found existing diagnostics in `ActionHints.qml`, `TopBar.qml`, `CircularProgressGlyph.qml`, `ItemOptionsModal.qml` and `ConsoleOverlay.qml`. In P1, verify the `PanelWindow` diagnostic against the running Quickshell environment and clear the local warnings in components touched by each stage. The planning diff contains only Markdown.
+
+
+## Implementation review
+
+- The standalone Wayland smoke check covered each of the five slides, the Home capture options state, capture image and video viewers, a missing-achievement preview, both wheels and the wheel over the bare backdrop.
+- Semantic input checks exercised Home counts 0, 1, 2, 4, 6, 7 and 8, Select expansion, Refuse, and wheel dismissal with the dashboard closed. After browsing Capture, Launcher and Achievements details with the D-pad, each dashboard retained its original ID. The wheel could not open over Capture's named modal.
+- QueueCarousel is used with independent window, gallery, device, library and achievement models. The track renderer is shared between Home and Audio, and Capture settings is reused from both Home and Capture.
+- The independent reviewer approved the corrected layer and selection logic. It reviewed fixture isolation, the wheel layer guard, the shared Home capture options and the shortcut access guard.
+- Visual acceptance is still open. The reference/render comparisons at 1920 × 1080 and layout captures at 1600 × 900 and 1280 × 720 expose differences in wheel profile detail, typography and some panel proportions. The backdrop and art are original fixtures by design. The per-region 2% acceptance and timed motion comparison remain unverified. The semantic path was exercised via IPC, and physical controller, pointer and assistive-technology acceptance remain to be demonstrated.
+- Final Wayland sweep collected 45 scene/action states. The runtime log contained no local QML warnings or errors. `qmlls --ignore-settings` returned diagnostics for all 56 changed application QML files. Its only warning was the static `PanelWindow` backend diagnostic, which the Wayland run resolved. All 13 configuration, locale and fixture JSON files parsed.

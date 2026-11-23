@@ -9,13 +9,14 @@ Column {
     property string subtitle: ""
     property string role: "card"
     property var styleTokens: null
+    property real titleSize: Theme.fontSizeMedium
 
     spacing: 2
 
     StyledText {
         width: section.width
         text: section.title
-        font.pixelSize: Theme.fontSizeMedium
+        font.pixelSize: section.titleSize
         font.weight: Font.Bold
         elide: Text.ElideRight
         color: section.styleTokens

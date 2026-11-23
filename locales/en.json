@@ -1,5 +1,8 @@
 {
   "nav": {
+    "capture": "Capture",
+    "launcher": "Launcher",
+    "achievements": "Achievements",
     "home": "Home",
     "lab": "Lab",
     "sound": "Sound"
@@ -83,5 +86,256 @@
       "ipc_unknown_response": "Niri returned an unknown response.",
       "unknown": "The window action could not be completed."
     }
+  },
+  "mockup": {
+    "simulated": "Simulated action",
+    "screenshot": "Take screenshot",
+    "record": "Record",
+    "replay": "Save replay",
+    "home": {
+      "window_count": "%1 in this session",
+      "options": "Options",
+      "recent_achievement": "Recent achievement",
+      "achievement_progress": "Achievement progress",
+      "no_achievement": "No recent achievements",
+      "no_social": "Offline"
+    },
+    "nav": {
+      "audio": "Sound",
+      "capture": "Capture"
+    },
+    "audio": {
+      "active": "Active",
+      "change": "Change device",
+      "lower": "Lower",
+      "microphones": "Microphones",
+      "mixer": "Mixer",
+      "mute": "Mute",
+      "muted": "Muted",
+      "noChannels": "No audio channels",
+      "noDevices": "No devices",
+      "output": "Audio output",
+      "raise": "Raise",
+      "speakers": "Speakers",
+      "unmute": "Unmute",
+      "channel": {
+        "chat": "Voice chat",
+        "browser": "Browser",
+        "game": "Game",
+        "music": "Music",
+        "voice": "Voice"
+      }
+    },
+    "capture": {
+      "buffer": "Replay buffer",
+      "bufferDisabled": "Enable the replay buffer in Settings",
+      "empty": "No captures yet",
+      "gallery": "Screenshots and recordings",
+      "imageItem": "Demo screenshot",
+      "microphone": "Include microphone",
+      "off": "Off",
+      "on": "On",
+      "record": "Record",
+      "recordingItem": "Demo recording",
+      "replay": "Last 30 seconds",
+      "run": "Run action",
+      "savedImage": "Screenshot saved to the gallery",
+      "savedVideo": "Recording saved to the gallery",
+      "screenshot": "Take screenshot",
+      "settings": "Settings",
+      "stop": "Stop recording",
+      "toggle": "Toggle",
+      "unavailable": "Preview unavailable",
+      "viewer": "Capture viewer"
+    },
+    "media": {
+      "artwork": "Audio",
+      "back": "Back 10 s",
+      "forward": "Forward 10 s",
+      "idle": "No active media",
+      "pause": "Pause",
+      "play": "Play",
+      "playPause": "Play / Pause",
+      "progress": "Playback progress",
+      "restart": "Restart"
+    }
+  },
+  "mockCollection": {
+    "details": "Details",
+    "browse": "Browse",
+    "filter": "Filters",
+    "all": "All",
+    "missingArt": "Not found"
+  },
+  "mockLibrary": {
+    "games": "Games",
+    "apps": "Apps",
+    "empty": "No entries",
+    "play": "Play",
+    "title": "Library",
+    "missingArt": "No artwork is available for this entry.",
+    "video": "Video",
+    "music": "Music",
+    "action": "Action · Platformer",
+    "adventure": "Adventure",
+    "platformer": "Platformer"
+  },
+  "mockAchievements": {
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "progress": "%1 of %2 unlocked",
+    "empty": "No achievements match this filter.",
+    "missingArt": "No screenshot is available for this achievement.",
+    "signal": {
+      "title": "Keep the Signal",
+      "description": "Complete a mission without breaking the signal."
+    },
+    "collector": {
+      "title": "Collector",
+      "description": "Recover every relic from the outpost."
+    },
+    "relay": {
+      "title": "Relay Runner",
+      "description": "Reconnect the Nova relay."
+    },
+    "explorer": {
+      "title": "Explorer",
+      "description": "Discover the Cloudline observatory."
+    }
+  },
+  "mockWheel": {
+    "controllerBattery": "Controller %1%",
+    "hostBattery": "Battery %1%",
+    "performance": "Balanced · %1 FPS",
+    "category": "Category",
+    "categories": {
+      "controller": "Controller",
+      "display": "Display",
+      "performance": "Performance",
+      "power": "Power",
+      "audio": "Audio",
+      "media": "Media",
+      "session": "Session",
+      "social": "Profile"
+    },
+    "commands": {
+      "controller-power": {
+        "title": "Turn off controller",
+        "description": "Switch the demo controller off or back on."
+      },
+      "controller-profile": {
+        "title": "Controller profile",
+        "description": "Select a glyph profile for this session."
+      },
+      "controller-inputs": {
+        "title": "Input guide",
+        "description": "Use the D-pad to change regions. Triggers browse within a region."
+      },
+      "brightness-level": {
+        "title": "Brightness",
+        "description": "Choose a simulated brightness level."
+      },
+      "night-light": {
+        "title": "Night light",
+        "description": "Change the night light setting in the demo."
+      },
+      "display-awake": {
+        "title": "Keep display awake",
+        "description": "Set whether the demo display stays awake."
+      },
+      "power-profile": {
+        "title": "Power profile",
+        "description": "Select a simulated power profile."
+      },
+      "fps-limit": {
+        "title": "Frame limit",
+        "description": "Set a simulated frame limit."
+      },
+      "reduced-motion": {
+        "title": "Reduced motion",
+        "description": "Set the demo motion preference."
+      },
+      "ambient-mode": {
+        "title": "Ambient mode",
+        "description": "Preview the ambient mode setting."
+      },
+      "power-suspend": {
+        "title": "Suspend",
+        "description": "Simulate suspending the computer."
+      },
+      "power-off": {
+        "title": "Shut down",
+        "description": "Simulate shutting down the computer."
+      },
+      "volume-level": {
+        "title": "Output volume",
+        "description": "Choose a simulated volume level."
+      },
+      "microphone-level": {
+        "title": "Microphone",
+        "description": "Choose a simulated microphone level."
+      },
+      "audio-mixer": {
+        "title": "Mixer",
+        "description": "Review the audio levels for this session."
+      },
+      "audio-devices": {
+        "title": "Devices",
+        "description": "Review the simulated input and output devices."
+      },
+      "media-toggle": {
+        "title": "Play / pause",
+        "description": "Toggle playback for the current track."
+      },
+      "media-previous": {
+        "title": "Previous track",
+        "description": "Select the preceding demo track."
+      },
+      "media-next": {
+        "title": "Next track",
+        "description": "Select the next demo track."
+      },
+      "capture-screenshot": {
+        "title": "Take screenshot",
+        "description": "Add a sample image to the capture gallery."
+      },
+      "capture-record": {
+        "title": "Start / stop recording",
+        "description": "Toggle the demo recording indicator."
+      },
+      "capture-replay": {
+        "title": "Last 30 seconds",
+        "description": "Save a simulated replay when the buffer is enabled."
+      },
+      "social-profile": {
+        "title": "Nova profile",
+        "description": "View the simulated profile and activity."
+      },
+      "social-friends": {
+        "title": "Friends",
+        "description": "View the session’s simulated social panel."
+      },
+      "discord-mute": {
+        "title": "Mute Discord",
+        "description": "Control the simulated Discord microphone."
+      }
+    },
+    "choices": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "xbox": "Xbox",
+      "playstation": "PlayStation",
+      "desktop": "Desktop",
+      "on": "On",
+      "off": "Off",
+      "saver": "Power saver",
+      "balanced": "Balanced",
+      "performance": "Performance",
+      "unlimited": "Unlimited",
+      "active": "Active",
+      "muted": "Muted"
+    },
+    "profileInSession": "In a game session",
+    "profileOnline": "Online"
   }
 }

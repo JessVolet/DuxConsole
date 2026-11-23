@@ -1,6 +1,6 @@
 # DuxConsole visual prototype specifications
 
-Status: proposed. Reference: user-provided `MOCKUPWEB.mp4`, 1920 × 1080, 112 seconds. SHA-256: `b0f84b2712d1f65c44c3755f53b53091441e2311206c51173d1c73e8c26ddad7`. Timestamps refer to elapsed file time. The reference defines layout and visual states. Inputs and behavior below are design contracts derived from DuxConsole, since the recording does not establish every input binding.
+Status: implementation available. Visual acceptance remains open where the roadmap records deviations. Reference: user-provided `MOCKUPWEB.mp4`, 1920 × 1080, 112 seconds. SHA-256: `b0f84b2712d1f65c44c3755f53b53091441e2311206c51173d1c73e8c26ddad7`. Timestamps refer to elapsed file time. The reference defines layout and visual states. Inputs and behavior below are design contracts derived from DuxConsole, since the recording does not establish every input binding.
 
 ## Scope
 

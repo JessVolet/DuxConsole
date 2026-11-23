@@ -4,7 +4,8 @@
     "enabled": true,
     "speed": 1.0,
     "fadeInMs": 180,
-    "fadeOutMs": 140
+    "fadeOutMs": 140,
+    "noticeMs": 2600
   },
   "theme": {
     "mode": "hybrid",

@@ -1,0 +1,9 @@
+{
+  "entries": [
+    { "id": "studio", "title": "Stream Studio", "category": "apps", "subtitleKey": "mockLibrary.video", "icon": "live_tv" },
+    { "id": "waves", "title": "Wave Radio", "category": "apps", "subtitleKey": "mockLibrary.music", "icon": "multitrack_audio" },
+    { "id": "frontier", "title": "Violet Rail", "category": "games", "subtitleKey": "mockLibrary.action", "icon": "sports_esports", "art": "fixtures/mockup/art/backdrop.png" },
+    { "id": "hollow-light", "title": "Lantern Hollow", "category": "games", "subtitleKey": "mockLibrary.adventure", "icon": "explore", "art": "fixtures/mockup/art/window-hollow.png" },
+    { "id": "cloudline", "title": "Alpine Relay", "category": "games", "subtitleKey": "mockLibrary.platformer", "icon": "landscape", "art": "fixtures/mockup/art/window-summit.png" }
+  ]
+}

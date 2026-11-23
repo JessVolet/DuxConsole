@@ -89,7 +89,7 @@ SlantedSurface {
 
     role: "card"
     skewAngle: -5
-    surfaceRadius: 24
+    radius: 24
     clip: true
     focused: modalZone.active
 

@@ -148,7 +148,7 @@ SlantedSurface {
         navLeft: mediaCard.navLeft
         navUp: mediaCard.navUp
         showFocusRing: false
-        ringRadius: mediaCard.surfaceRadius
+        ringRadius: mediaCard.radius
         actionHints: mediaCard.hasPlayer
             ? [
                 { action: "I.Accept", labelKey: "media.expand", fallback: "Open player" },

@@ -1,6 +1,8 @@
 {
   "language": "es",
   "animations": {
+    "containerTransformMs": 240,
+    "containerTransformCurve": "OutCubic",
     "enabled": true,
     "speed": 1.0,
     "fadeInMs": 180,
@@ -15,6 +17,18 @@
     "marqueePauseEndMs": 900,
     "marqueeMsPerPx": 28,
     "marqueeReturnMs": 600
+  },
+  "containerTransform": {
+    "horizontalDirection": "auto",
+    "verticalDirection": "auto",
+    "width": 640,
+    "height": 420,
+    "edgeMargin": 24,
+    "anchorX": 0.5,
+    "anchorY": 0.5,
+    "shape": "slanted",
+    "radius": 18,
+    "padding": 20
   },
   "theme": {
     "mode": "hybrid",

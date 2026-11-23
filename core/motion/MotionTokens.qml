@@ -20,6 +20,12 @@ Item {
     property int marqueePauseEndMs: 900
     property int marqueeMsPerPx: 28
     property int marqueeReturnMs: 600
+    property int containerTransformMs: 240
+    property string containerTransformCurve: "OutCubic"
+    property var containerTransform: ({})
+    readonly property int containerTransformDuration: scaled(containerTransformMs)
+    readonly property int containerTransformEasing: containerTransformCurve === "InOutCubic"
+        ? Easing.InOutCubic : Easing.OutCubic
 
     function scaled(baseMs) {
         if (!animationsEnabled || suppressAnimations)
@@ -60,7 +66,12 @@ Item {
         onLoaded: {
             try {
                 const cfg = JSON.parse(text())
+                motion.containerTransform = cfg.containerTransform ?? ({})
                 if (cfg?.animations) {
+                    if (typeof cfg.animations.containerTransformMs === "number")
+                        motion.containerTransformMs = Math.max(0, cfg.animations.containerTransformMs)
+                    if (typeof cfg.animations.containerTransformCurve === "string")
+                        motion.containerTransformCurve = cfg.animations.containerTransformCurve
                     if (typeof cfg.animations.enabled === "boolean")
                         motion.animationsEnabled = cfg.animations.enabled
                     if (typeof cfg.animations.speed === "number")

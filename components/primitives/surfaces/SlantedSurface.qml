@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Effects
 import qs.Common
@@ -18,13 +19,19 @@ Item {
     property int selectedBorderWidth: 2
     property real radius: Theme.cornerRadius
     property real surfaceOpacity: 1.0
+    property bool contained: false
+    property real contentPadding: 0
     property int borderWidth: !disabled && focused
         ? focusedBorderWidth
         : (!disabled && selected ? selectedBorderWidth : 1)
     property alias backdrop: backdropContainer.data
     default property alias content: contentContainer.data
 
-    readonly property real _shearX: Math.tan(skewAngle * Math.PI / 180)
+    readonly property real _requestedShear: Math.tan(skewAngle * Math.PI / 180)
+    readonly property real _shearX: contained && height > 0
+        ? Math.max(-width / (2 * height), Math.min(width / (2 * height), _requestedShear))
+        : _requestedShear
+    readonly property real shapeInset: contained ? Math.abs(_shearX) * height : 0
     readonly property real safeHorizontalInset: SlantedGeometry.safeHorizontalInset(height, skewAngle, radius, 0)
     readonly property int _animDuration: motionTokens ? motionTokens.durationFast : 120
     readonly property int _animEasing: motionTokens ? motionTokens.easingSnappy : Easing.OutCubic
@@ -53,7 +60,9 @@ Item {
 
     Rectangle {
         id: bgShape
-        anchors.fill: parent
+        x: surface.contained && surface._shearX < 0 ? surface.shapeInset : 0
+        width: Math.max(0, surface.width - surface.shapeInset)
+        height: surface.height
         radius: surface.radius
         color: surface.resolvedSurfaceColor
         border.width: surface.borderWidth
@@ -81,7 +90,7 @@ Item {
             anchors.fill: parent
             radius: surface.radius
             visible: false
-            layer.enabled: true
+            layer.enabled: backdropContainer.children.length > 0
         }
 
         Item {
@@ -98,6 +107,9 @@ Item {
 
     Item {
         id: contentContainer
-        anchors.fill: parent
+        x: surface.shapeInset + surface.contentPadding
+        y: surface.contentPadding
+        width: Math.max(0, surface.width - 2 * (surface.shapeInset + surface.contentPadding))
+        height: Math.max(0, surface.height - 2 * surface.contentPadding)
     }
 }

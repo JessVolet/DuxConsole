@@ -1,5 +1,17 @@
 # DuxConsole — Arquitectura por Archivo (Problema → Solución)
 
+### Anchored transform modules
+
+- `core/motion/ContainerGeometry.js`: pure placement and viewport constraints.
+- `core/motion/ContainerTransform.qml`: source snapshot, reversible progress,
+  exact origin anchor and configurable destination; no UI dependencies.
+- `components/primitives/surfaces/TransformSurface.qml`: contained inclined,
+  rounded or rectangular surface with optional stationary origin delegate.
+- `SlantedSurface.contained`: opt-in bounded shape and safe content margins;
+  legacy callers keep their geometry. Empty backdrops no longer enable a mask
+  layer unnecessarily.
+- Contract, composition and audit: [CONTAINER_TRANSFORM.md](CONTAINER_TRANSFORM.md).
+
 Este documento detalla qué problema resuelve cada archivo de `DuxConsole/`, cómo lo soluciona, qué dibuja (si es visual) y cómo se mantienen desacopladas las dependencias.
 
 ---

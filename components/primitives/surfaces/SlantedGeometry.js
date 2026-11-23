@@ -7,7 +7,7 @@ function horizontalShearOffset(height, angleDeg) {
 function safeHorizontalInset(height, angleDeg, radius, extraMargin) {
     const shear = horizontalShearOffset(height, angleDeg)
     const corner = Math.max(0, radius || 0) * 0.25
-    return Math.ceil(shear * 0.5 + corner + (extraMargin || 0))
+    return Math.ceil(shear + corner + (extraMargin || 0))
 }
 
 function effectiveSkewAngle(baseAngle, width, height) {

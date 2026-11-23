@@ -1,5 +1,13 @@
 # DuxConsole — Especificaciones Técnicas
 
+## Anchored container transform
+
+Reusable transition contract: [CONTAINER_TRANSFORM.md](CONTAINER_TRANSFORM.md).
+Global configuration controls direction, size, shape, radius, padding, anchor,
+duration and curve. Geometry is isolated in `core/motion`; UI is composed by
+`TransformSurface`. Existing surfaces are compatible by default; new contained
+surfaces reserve their full shear displacement inside the declared bounds.
+
 ## 1. Visión y Arquitectura General (2 piezas desacopladas)
 
 ### Frontend (`DuxConsole` — Plugin Quickshell / DMS)

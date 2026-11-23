@@ -46,6 +46,7 @@ PanelWindow {
         id: navigationManager
         layerManager: layerManager
         rootContainer: overlayContent
+        screenHints: slideManager.activeScreen?.screenActionHints ?? []
     }
     I18n { id: i18n }
     StyleTokens { id: styleTokens }
@@ -86,6 +87,8 @@ PanelWindow {
                     slideManager.next()
                 else
                     slideManager.prev()
+            } else if (layerManager.topLayer === "dashboard" && slideManager.activeScreen?.handleScreenAction?.(action, payload)) {
+                return
             } else {
                 navigationManager.handleAction(action, payload)
             }

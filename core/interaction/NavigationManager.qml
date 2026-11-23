@@ -6,17 +6,20 @@ QtObject {
     property var layerManager: null
     property Item rootContainer: null
     property var zones: []
+    property var screenHints: []
 
     readonly property var activeHints: {
         const lm = layerManager
         const zone = lm ? lm.activeZone : null
         const zoneHints = (zone && Array.isArray(zone.actionHints)) ? zone.actionHints : []
+        const extraHints = (lm && lm.topLayer === "dashboard" && Array.isArray(screenHints)) ? screenHints : []
 
         const result = []
         const seen = ({})
 
-        for (let i = 0; i < zoneHints.length; i++) {
-            const h = zoneHints[i]
+        const combined = zoneHints.concat(extraHints)
+        for (let i = 0; i < combined.length; i++) {
+            const h = combined[i]
             if (h && h.action && !seen[h.action]) {
                 seen[h.action] = true
                 result.push(h)

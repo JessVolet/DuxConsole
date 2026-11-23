@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 import "../../core/shell"
-import "../../core/interaction"
 import "../../components/primitives/buttons"
 import "../../components/primitives/text"
 import "../../components/widgets"
@@ -19,6 +18,29 @@ ScreenBase {
     readonly property bool compactLayout: width < 900 || height < 520
     readonly property real heroScale: Math.max(0.48, Math.min(0.75, width / 1920, height / 870))
     readonly property var selectedWindow: windowCarousel.selectedWindow
+
+    screenActionHints: windowCarousel.hasWindows ? [
+        { action: "I.Accept", labelKey: "windows.hint_focus", fallback: "Focus window" },
+        { action: "I.Options", labelKey: "windows.hint_options", fallback: "Window options" },
+        { action: "I.ActionOption.L", labelKey: "hints.cycle", fallback: "Cycle" },
+        { action: "I.ActionOption.R", labelKey: "hints.cycle", fallback: "Cycle" }
+    ] : []
+
+    function handleScreenAction(action, payload) {
+        if (action === "I.ActionOption.L")
+            return windowCarousel.cycle(-1)
+        if (action === "I.ActionOption.R")
+            return windowCarousel.cycle(1)
+        if (action === "I.Accept" && root.selectedWindow) {
+            root.focusAndClose(root.selectedWindow.id)
+            return true
+        }
+        if (action === "I.Options" && root.selectedWindow) {
+            root.openWindowOptions(root.selectedWindow.id)
+            return true
+        }
+        return false
+    }
 
     function errorText(code) {
         return root.tr("windows.errors." + code, root.tr("windows.errors.unknown", "The window action could not be completed."))
@@ -89,72 +111,30 @@ ScreenBase {
                         metadata: [root.tr("windows.empty", "No open windows")]
                     })
 
-                FocusZone {
-                    id: continueZone
-                    zoneId: "home-continue"
-                    layerManager: root.layerManager
-                    navigationManager: root.navigationManager
-                    navRight: optionsZone
-                    navDown: windowCarousel.focusZone
-                    showFocusRing: false
-                    width: continueButton.implicitWidth
-                    height: continueButton.implicitHeight
+                ActionPill {
+                    id: continueButton
+                    text: root.tr("home.continue", "Continue")
+                    glyphAction: "I.Accept"
+                    iconsPadManager: root.iconsPadManager
+                    styleTokens: root.styleTokens
+                    primary: true
                     enabled: Boolean(root.selectedWindow)
-                    actionHints: [{ action: "I.Accept", labelKey: "home.continue", fallback: "Continue" }]
-
-                    onActivated: {
+                    onClicked: {
                         if (root.selectedWindow)
                             root.focusAndClose(root.selectedWindow.id)
                     }
-
-                    ActionPill {
-                        id: continueButton
-                        anchors.fill: parent
-                        text: root.tr("home.continue", "Continue")
-                        glyphAction: "I.Accept"
-                        iconsPadManager: root.iconsPadManager
-                        styleTokens: root.styleTokens
-                        primary: true
-                        highlighted: continueZone.active
-                        enabled: continueZone.enabled && !continueZone.inert
-                        onClicked: {
-                            if (continueZone.requestZoneFocus())
-                                continueZone.activate()
-                        }
-                    }
                 }
 
-                FocusZone {
-                    id: optionsZone
-                    zoneId: "home-options"
-                    layerManager: root.layerManager
-                    navigationManager: root.navigationManager
-                    navLeft: continueZone
-                    navDown: windowCarousel.focusZone
-                    showFocusRing: false
-                    width: optionsButton.implicitWidth
-                    height: optionsButton.implicitHeight
+                ActionPill {
+                    id: optionsButton
+                    text: root.tr("windows.hint_options", "Window options")
+                    glyphAction: "I.Options"
+                    iconsPadManager: root.iconsPadManager
+                    styleTokens: root.styleTokens
                     enabled: Boolean(root.selectedWindow)
-                    actionHints: [{ action: "I.Accept", labelKey: "windows.hint_options", fallback: "Window options" }]
-
-                    onActivated: {
+                    onClicked: {
                         if (root.selectedWindow)
                             root.openWindowOptions(root.selectedWindow.id)
-                    }
-
-                    ActionPill {
-                        id: optionsButton
-                        anchors.fill: parent
-                        text: root.tr("windows.hint_options", "Window options")
-                        glyphAction: "I.Select"
-                        iconsPadManager: root.iconsPadManager
-                        styleTokens: root.styleTokens
-                        highlighted: optionsZone.active
-                        enabled: optionsZone.enabled && !optionsZone.inert
-                        onClicked: {
-                            if (optionsZone.requestZoneFocus())
-                                optionsZone.activate()
-                        }
                     }
                 }
             }
@@ -191,12 +171,10 @@ ScreenBase {
                 width: parent.width
                 height: Math.min(implicitHeight, root.compactLayout ? pageLayout.height * 0.34 : pageLayout.height * 0.42)
                 iconOnly: true
-                defaultFocus: true
+                focusable: false
                 leftCount: 1
                 rightCount: 3
                 alignLeft: true
-                navUp: continueZone
-                navRight: mediaCard.focusZone
                 windowManager: root.windowManager
                 windowIconProvider: root.windowIconProvider
                 layerManager: root.layerManager
@@ -217,10 +195,10 @@ ScreenBase {
             width: root.compactLayout ? parent.width : Math.min(360, parent.width * 0.30)
             height: root.compactLayout ? 84 : 104
             compact: root.compactLayout
+            defaultFocus: true
             mediaService: root.mediaService
             layerManager: root.layerManager
             navigationManager: root.navigationManager
-            navLeft: windowCarousel.focusZone
             styleTokens: root.styleTokens
             motionTokens: root.motionTokens
             i18n: root.i18n

@@ -19,6 +19,7 @@ Item {
     signal closeOverlayRequested()
 
     readonly property var currentScreenMeta: registry.screens[currentIndex] ?? null
+    readonly property var activeScreen: slideLoader.item
     property string loadError: ""
     property string failedSource: ""
 

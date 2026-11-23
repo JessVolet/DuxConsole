@@ -18,6 +18,7 @@ Item {
     property var i18n: null
     property bool iconOnly: false
     property bool defaultFocus: false
+    property bool focusable: true
     property int leftCount: -1
     property int rightCount: -1
     property bool alignLeft: false
@@ -124,9 +125,20 @@ Item {
     }
     Component.onCompleted: _syncSelectionFromList()
 
+    function cycle(delta) {
+        if (windows.length === 0)
+            return false
+        const len = windows.length
+        const next = ((zone.currentSubIndex + delta) % len + len) % len
+        zone.currentSubIndex = next
+        selectedWindowId = windows[next].id
+        return true
+    }
+
     FocusZone {
         id: zone
         anchors.fill: parent
+        enabled: wc.focusable
         zoneId: wc.zoneId
         layerName: wc.layerName
         layerManager: wc.layerManager
@@ -185,7 +197,7 @@ Item {
             visible: wc.hasWindows
             currentIndex: zone.currentSubIndex
             motionTokens: wc.motionTokens
-            focused: zone.active
+            focused: zone.active || !wc.focusable
             leftCount: wc.leftCount
             rightCount: wc.rightCount
             alignLeft: wc.alignLeft

@@ -18,6 +18,7 @@ Item {
     property var mediaService: null
     property var registry: null
     property int currentSlideIndex: 0
+    property var screenActionHints: []
     default property alias content: body.data
 
     signal closeOverlayRequested()
@@ -26,6 +27,10 @@ Item {
 
     function tr(key, fallback) {
         return i18n ? i18n.t(key, fallback) : (fallback ?? key)
+    }
+
+    function handleScreenAction(action, payload) {
+        return false
     }
 
     Item {

@@ -19,6 +19,7 @@ SlantedSurface {
     property var navUp: null
     property string layerName: "dashboard"
     property string zoneId: "home-media"
+    property bool defaultFocus: false
     property bool compact: false
     readonly property alias focusZone: mediaZone
 
@@ -88,19 +89,16 @@ SlantedSurface {
         layerName: mediaCard.layerName
         layerManager: mediaCard.layerManager
         navigationManager: mediaCard.navigationManager
+        defaultFocus: mediaCard.defaultFocus
         navLeft: mediaCard.navLeft
         navUp: mediaCard.navUp
         showFocusRing: false
         ringRadius: mediaCard.radius
-        actionHints: mediaCard.hasPlayer
-            ? [
-                { action: "I.Accept", labelKey: "media.expand", fallback: "Open player" },
-                { action: "I.Action", labelKey: mediaCard.isPlaying ? "media.pause" : "media.play", fallback: mediaCard.isPlaying ? "Pause" : "Play" }
-            ]
-            : [{ action: "I.Accept", labelKey: "media.expand", fallback: "Open player" }]
+        actionHints: [
+            { action: "I.Action", labelKey: "media.expand", fallback: "Open player" }
+        ]
 
-        onActivated: mediaCard.expandRequested()
-        onSecondaryTriggered: mediaCard.mediaService?.togglePlaying()
+        onSecondaryTriggered: mediaCard.expandRequested()
 
         TapHandler {
             enabled: !mediaZone.inert

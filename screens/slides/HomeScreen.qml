@@ -181,7 +181,7 @@ ScreenBase {
                 width: parent.width
                 title: root.tr("home.windows_section", "Open windows")
                 badgeText: String(windowCarousel.count)
-                role: "chrome"
+                role: "card"
                 titleSize: Theme.fontSizeLarge
                 styleTokens: root.styleTokens
             }
@@ -194,6 +194,7 @@ ScreenBase {
                 defaultFocus: true
                 leftCount: 1
                 rightCount: 3
+                alignLeft: true
                 navUp: continueZone
                 windowManager: root.windowManager
                 windowIconProvider: root.windowIconProvider

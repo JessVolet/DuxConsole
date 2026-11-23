@@ -13,6 +13,7 @@ Item {
     property int maxVisibleItems: 6
     property int leftCount: -1
     property int rightCount: -1
+    property bool alignLeft: false
     property int maxCachedItems: 2
     property real cardWidth: 180
     property real cardHeight: 120
@@ -67,7 +68,8 @@ Item {
     readonly property real itemStep: resolvedCardWidth + resolvedSpacing
     readonly property real shiftOffset: Math.max(0, (resolvedSelectedWidth - resolvedCardWidth) / 2)
     readonly property real pathSpan: pathIntervals * itemStep
-    readonly property real pathStartX: (width - pathSpan) / 2
+    readonly property real leftStartX: resolvedSelectedWidth / 2 + 16 * layoutScale
+    readonly property real pathStartX: alignLeft ? leftStartX : (width - pathSpan) / 2
     readonly property real highlightX: pathStartX + highlightPosition * pathSpan
     readonly property int moveDuration: motionTokens ? motionTokens.durationNormal : 0
 

@@ -78,12 +78,23 @@ Item {
     readonly property real highlightY: pathStartY + highlightPosition * pathSpan
     readonly property int moveDuration: motionTokens ? motionTokens.durationNormal : 0
     property bool _snapping: false
+    property bool _snapScheduled: false
+
+    function scheduleSnap() {
+        if (_snapScheduled || selectedIndex < 0)
+            return
+        _snapScheduled = true
+        Qt.callLater(snapToSelected)
+    }
 
     function snapToSelected() {
-        if (selectedIndex < 0)
+        _snapScheduled = false
+        if (count <= 0 || selectedIndex < 0)
+            return
+        if (view.currentIndex === selectedIndex)
             return
         _snapping = true
-        view.currentIndex = selectedIndex
+        view.positionViewAtIndex(selectedIndex, PathView.SnapPosition)
         Qt.callLater(() => { _snapping = false })
     }
 
@@ -104,10 +115,10 @@ Item {
         movementDirection: PathView.Shortest
         interactive: false
 
-        onModelChanged: carousel.snapToSelected()
+        onModelChanged: carousel.scheduleSnap()
         onVisibleChanged: {
             if (visible)
-                carousel.snapToSelected()
+                carousel.scheduleSnap()
         }
 
         Binding {

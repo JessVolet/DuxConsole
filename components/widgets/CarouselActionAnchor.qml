@@ -14,18 +14,39 @@ Item {
     property bool hidden: false
     property real edgePadding: 8
 
+    property bool _syncScheduled: false
+    property bool _syncing: false
+
     readonly property alias buttonItem: actionPill
 
     signal triggered()
 
-    function syncPosition() {
-        if (!targetItem || !parent)
+    function scheduleSync() {
+        if (_syncScheduled || _syncing)
             return
+        _syncScheduled = true
+        Qt.callLater(_runSync)
+    }
+
+    function _runSync() {
+        _syncScheduled = false
+        syncPosition()
+    }
+
+    function syncPosition() {
+        if (_syncing || !targetItem || !parent)
+            return
+        _syncing = true
         const mapped = targetItem.mapToItem(parent, 0, 0, targetItem.width, targetItem.height)
         const maxX = Math.max(edgePadding, parent.width - width - edgePadding)
         const maxY = Math.max(edgePadding, parent.height - height - edgePadding)
-        x = Math.max(edgePadding, Math.min(maxX, mapped.x + mapped.width - width * 0.65))
-        y = Math.max(edgePadding, Math.min(maxY, mapped.y - height * 0.35))
+        const nextX = Math.max(edgePadding, Math.min(maxX, mapped.x + mapped.width - width * 0.65))
+        const nextY = Math.max(edgePadding, Math.min(maxY, mapped.y - height * 0.35))
+        if (Math.abs(x - nextX) > 0.5)
+            x = nextX
+        if (Math.abs(y - nextY) > 0.5)
+            y = nextY
+        _syncing = false
     }
 
     implicitWidth: actionPill.implicitWidth
@@ -35,21 +56,21 @@ Item {
     visible: targetItem !== null && !hidden
     z: 20
 
-    onTargetItemChanged: Qt.callLater(syncPosition)
-    onParentChanged: Qt.callLater(syncPosition)
+    onTargetItemChanged: scheduleSync()
+    onParentChanged: scheduleSync()
 
     Connections {
         target: anchor.targetItem
-        function onXChanged() { anchor.syncPosition() }
-        function onYChanged() { anchor.syncPosition() }
-        function onWidthChanged() { anchor.syncPosition() }
-        function onHeightChanged() { anchor.syncPosition() }
+        function onXChanged() { anchor.scheduleSync() }
+        function onYChanged() { anchor.scheduleSync() }
+        function onWidthChanged() { anchor.scheduleSync() }
+        function onHeightChanged() { anchor.scheduleSync() }
     }
 
     Connections {
         target: anchor.parent
-        function onWidthChanged() { anchor.syncPosition() }
-        function onHeightChanged() { anchor.syncPosition() }
+        function onWidthChanged() { anchor.scheduleSync() }
+        function onHeightChanged() { anchor.scheduleSync() }
     }
 
     ActionPill {

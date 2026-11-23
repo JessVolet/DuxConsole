@@ -17,6 +17,8 @@ Item {
     property real edgeMargin: config.edgeMargin ?? 24
     property point sourceAnchor: Qt.point(config.anchorX ?? 0.5, config.anchorY ?? 0.5)
     property bool _originActive: false
+    property bool _destScheduled: false
+    property bool _capturingDest: false
     property rect bounds: Qt.rect(edgeMargin, edgeMargin,
         Math.max(0, (parent ? parent.width : 0) - 2 * edgeMargin),
         Math.max(0, (parent ? parent.height : 0) - 2 * edgeMargin))
@@ -32,46 +34,78 @@ Item {
     signal originCaptured()
     signal destinationCaptured()
 
+    function _rectsEqual(a, b) {
+        return Math.abs(a.x - b.x) < 0.01
+            && Math.abs(a.y - b.y) < 0.01
+            && Math.abs(a.width - b.width) < 0.01
+            && Math.abs(a.height - b.height) < 0.01
+    }
+
     function captureOrigin() {
         if (!sourceItem || !parent)
             return false
-        sourceRect = sourceItem.mapToItem(parent, 0, 0, sourceItem.width, sourceItem.height)
+        const nextRect = sourceItem.mapToItem(parent, 0, 0, sourceItem.width, sourceItem.height)
+        if (_rectsEqual(sourceRect, nextRect))
+            return true
+        sourceRect = nextRect
         originCaptured()
         return true
     }
 
+    function scheduleCaptureDestination() {
+        if (_destScheduled || _capturingDest)
+            return
+        _destScheduled = true
+        Qt.callLater(_runCaptureDestination)
+    }
+
+    function _runCaptureDestination() {
+        _destScheduled = false
+        captureDestination()
+    }
+
     function captureDestination() {
+        if (_capturingDest)
+            return false
+        _capturingDest = true
         if (!targetItem || !parent) {
-            explicitTargetRect = Qt.rect(0, 0, -1, -1)
+            const emptyRect = Qt.rect(0, 0, -1, -1)
+            if (!_rectsEqual(explicitTargetRect, emptyRect))
+                explicitTargetRect = emptyRect
+            _capturingDest = false
             return false
         }
-        explicitTargetRect = targetItem.mapToItem(parent, 0, 0, targetItem.width, targetItem.height)
-        destinationCaptured()
+        const nextRect = targetItem.mapToItem(parent, 0, 0, targetItem.width, targetItem.height)
+        if (!_rectsEqual(explicitTargetRect, nextRect)) {
+            explicitTargetRect = nextRect
+            destinationCaptured()
+        }
+        _capturingDest = false
         return true
     }
 
-    onTargetItemChanged: captureDestination()
+    onTargetItemChanged: scheduleCaptureDestination()
     onParentChanged: {
         if (targetItem)
-            captureDestination()
+            scheduleCaptureDestination()
     }
     Connections {
         target: transform.parent
         function onWidthChanged() {
             if (transform.targetItem)
-                transform.captureDestination()
+                transform.scheduleCaptureDestination()
         }
         function onHeightChanged() {
             if (transform.targetItem)
-                transform.captureDestination()
+                transform.scheduleCaptureDestination()
         }
     }
     Connections {
         target: transform.targetItem
-        function onXChanged() { transform.captureDestination() }
-        function onYChanged() { transform.captureDestination() }
-        function onWidthChanged() { transform.captureDestination() }
-        function onHeightChanged() { transform.captureDestination() }
+        function onXChanged() { transform.scheduleCaptureDestination() }
+        function onYChanged() { transform.scheduleCaptureDestination() }
+        function onWidthChanged() { transform.scheduleCaptureDestination() }
+        function onHeightChanged() { transform.scheduleCaptureDestination() }
     }
 
     onExpandedChanged: {

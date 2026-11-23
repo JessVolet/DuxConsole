@@ -55,7 +55,7 @@ SlantedSurface {
     readonly property color fgColor: styleTokens ? styleTokens.onSurfaceColor("card") : (Theme.surfaceText ?? "#F2F4F8")
     readonly property color mutedFg: Qt.alpha(fgColor, 0.72)
 
-    readonly property var availableOptions: {
+    readonly property var inlineOptions: {
         const opts = []
         if (hasValidLyrics)
             opts.push("lyrics")
@@ -63,15 +63,12 @@ SlantedSurface {
             opts.push("repeat")
         if (mediaService?.shuffleSupported)
             opts.push("shuffle")
-        opts.push("player")
-        if (mediaService?.volumeSupported)
-            opts.push("volume")
         return opts
     }
 
-    onAvailableOptionsChanged: {
-        if (focusedOptionIndex >= availableOptions.length)
-            focusedOptionIndex = Math.max(0, availableOptions.length - 1)
+    onInlineOptionsChanged: {
+        if (focusedOptionIndex >= inlineOptions.length)
+            focusedOptionIndex = Math.max(0, inlineOptions.length - 1)
     }
 
     function tr(key, fallback) {
@@ -81,10 +78,8 @@ SlantedSurface {
     function mediaIcon(name) {
         return iconsPadManager ? iconsPadManager.resolveMediaIcon(name) : ""
     }
-    readonly property var inlineOptions: availableOptions.filter(option => option !== "player" && option !== "volume")
+
     function optionSource(option) {
-        if (option === "player") return playerButton
-        if (option === "volume") return volumeButton
         return optionRepeater.itemAt(inlineOptions.indexOf(option))
     }
 
@@ -97,17 +92,13 @@ SlantedSurface {
         return mediaIcon(optId)
     }
 
-    function triggerOption(optId, source) {
+    function triggerOption(optId) {
         if (optId === "lyrics")
             showLyrics = !showLyrics
         else if (optId === "shuffle")
             mediaService?.toggleShuffle()
         else if (optId === "repeat")
             mediaService?.cycleLoop()
-        else if (optId === "player")
-            playersRequested(source ?? playerRoot)
-        else if (optId === "volume")
-            mediaService?.adjustVolume(0.1)
     }
 
     role: "card"
@@ -174,8 +165,8 @@ SlantedSurface {
 
                         Behavior on height {
                             NumberAnimation {
-                                duration: playerRoot.motionTokens ? Math.min(60, playerRoot.motionTokens.durationFast) : 0
-                                easing.type: Easing.OutQuad
+                                duration: playerRoot.motionTokens ? playerRoot.motionTokens.visualizerBarDuration : 0
+                                easing.type: playerRoot.motionTokens ? playerRoot.motionTokens.visualizerEasing : Easing.OutQuad
                             }
                         }
                     }
@@ -233,27 +224,21 @@ SlantedSurface {
             modalZone.currentSubIndex = 1
         }
         onActivated: {
-            if (playerRoot.availableOptions.length > 0) {
-                const opt = playerRoot.availableOptions[playerRoot.focusedOptionIndex]
+            if (playerRoot.inlineOptions.length > 0) {
+                const opt = playerRoot.inlineOptions[playerRoot.focusedOptionIndex]
                 if (opt)
-                    playerRoot.triggerOption(opt, playerRoot.optionSource(opt))
+                    playerRoot.triggerOption(opt)
             } else {
                 playerRoot.mediaService?.togglePlaying()
             }
         }
         onDpadUnhandled: direction => {
-            if (playerRoot.availableOptions.length === 0)
+            if (playerRoot.inlineOptions.length === 0)
                 return
             if (direction === "left")
-                playerRoot.focusedOptionIndex = (playerRoot.focusedOptionIndex - 1 + playerRoot.availableOptions.length) % playerRoot.availableOptions.length
+                playerRoot.focusedOptionIndex = (playerRoot.focusedOptionIndex - 1 + playerRoot.inlineOptions.length) % playerRoot.inlineOptions.length
             else if (direction === "right")
-                playerRoot.focusedOptionIndex = (playerRoot.focusedOptionIndex + 1) % playerRoot.availableOptions.length
-            else if (playerRoot.availableOptions[playerRoot.focusedOptionIndex] === "volume") {
-                if (direction === "up")
-                    playerRoot.mediaService?.adjustVolume(0.05)
-                else if (direction === "down")
-                    playerRoot.mediaService?.adjustVolume(-0.05)
-            }
+                playerRoot.focusedOptionIndex = (playerRoot.focusedOptionIndex + 1) % playerRoot.inlineOptions.length
         }
 
         GridLayout {
@@ -325,7 +310,6 @@ SlantedSurface {
                         glyphAction: "I.Options"
                         iconsPadManager: playerRoot.iconsPadManager
                         styleTokens: playerRoot.styleTokens
-                        highlighted: playerRoot.availableOptions[playerRoot.focusedOptionIndex] === "player"
                         opacity: playerRoot.pickerVisible ? 0 : 1
                         onClicked: playerRoot.playersRequested(playerButton)
                     }
@@ -471,7 +455,7 @@ SlantedSurface {
                     id: optionRow
                     Layout.alignment: Qt.AlignHCenter
                     spacing: Theme.spacingS
-                    visible: playerRoot.availableOptions.length > 0
+                    visible: playerRoot.inlineOptions.length > 0
 
                     Repeater {
                         id: optionRepeater
@@ -482,7 +466,7 @@ SlantedSurface {
                             required property string modelData
 
                             width: (optionRow.parent.width - optionRow.spacing * 2) / 3
-                            highlighted: playerRoot.availableOptions[playerRoot.focusedOptionIndex] === modelData
+                            highlighted: playerRoot.focusedOptionIndex === index
                             iconSource: playerRoot.optionIcon(modelData)
                             iconSize: 18
                             styleTokens: playerRoot.styleTokens
@@ -502,8 +486,8 @@ SlantedSurface {
                                 return modelData
                             }
                             onClicked: {
-                                playerRoot.focusedOptionIndex = playerRoot.availableOptions.indexOf(modelData)
-                                playerRoot.triggerOption(modelData, optPill)
+                                playerRoot.focusedOptionIndex = index
+                                playerRoot.triggerOption(modelData)
                             }
                         }
                     }
@@ -513,6 +497,7 @@ SlantedSurface {
             }
         }
 
+        // Reserva visual para futura perilla de volumen controlada con stick R
         ActionPill {
             id: volumeButton
             anchors.right: parent.right
@@ -523,12 +508,7 @@ SlantedSurface {
             width: implicitHeight
             iconSource: playerRoot.mediaIcon("volume")
             styleTokens: playerRoot.styleTokens
-            highlighted: playerRoot.availableOptions[playerRoot.focusedOptionIndex] === "volume"
             Accessible.name: playerRoot.tr("media.volume", "Volume") + " " + Math.round((playerRoot.mediaService?.volume ?? 0) * 100) + "%"
-            onClicked: {
-                playerRoot.focusedOptionIndex = playerRoot.availableOptions.indexOf("volume")
-                playerRoot.triggerOption("volume", volumeButton)
-            }
         }
     }
 }

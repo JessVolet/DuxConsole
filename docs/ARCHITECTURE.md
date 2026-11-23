@@ -162,9 +162,9 @@ control at the safe bottom-right edge, with a localized accessible percentage.
   no other player is substituted until the same key reconnects, another is
   selected, or Automatic clears the pin. Pins are session state, not disk state.
 
-### `components/widgets/MediaPlayerCard.qml`, `MediaPlayerExpanded.qml` y `screens/modals/MediaPlayerModal.qml`
-- **Problema**: Mostrar un mini reproductor compacto con letras sincronizadas cuando existan (y carátula por defecto si faltan, cargan o no corresponden a la pista) y un reproductor expandido ControlFriendly con `LT`/`RT` visibles, transporte con SVG centralizados en `iconsconfig.json` y opciones accesibles por D-Pad.
-- **Solución**: `MediaPlayerCard` muestra carátula, metadatos y marquee de letra sincronizada (usando `MotionTokens`); con `X` empuja la capa `"media-player"` (`MediaPlayerModal` + `MediaPlayerExpanded`), donde `Select` alterna entre `MediaLyricsPanel` y carátula cuando hay letras válidas, `LT`/`RT` buscan `±10s` si `canSeek`, `LB`/`RB` cambian pista y `B` restaura el foco.
+### `components/widgets/MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `screens/modals/MediaPlayerModal.qml` y `MediaPlayerPicker.qml`
+- **Problema**: Mostrar un mini reproductor compacto con letras sincronizadas cuando existan (y carátula por defecto si faltan, cargan o no corresponden a la pista) y un reproductor expandido ControlFriendly con `LT`/`RT` visibles, transporte con SVG centralizados en `iconsconfig.json`, selector de reproductores y reserva para volumen por stick derecho.
+- **Solución**: `MediaPlayerCard` muestra carátula, metadatos y marquee de letra sincronizada (usando `MotionTokens`); con `X` empuja la capa `"media-player"` (`MediaPlayerModal` + `MediaPlayerExpanded`), donde `Select` alterna entre `MediaLyricsPanel` y carátula cuando hay letras válidas, `LT`/`RT` buscan `±10s` si `canSeek`, `LB`/`RB` cambian pista, la cruceta D-Pad recorre únicamente `Letras`, `Repetir` y `Aleatorio` disponibles, `Y` abre `MediaPlayerPicker` desde `playerButton`, el icono de volumen queda reservado para una futura perilla con stick derecho y `B` cierra y restaura el foco.
 
 ### `components/widgets/WindowCarousel.qml`, `MediaPlayerCard.qml` y `screens/slides/HomeScreen.qml`
 - **Problema**: Se requiere un prototipo inicial de `Inicio` separado del laboratorio `TestScreen.qml`.

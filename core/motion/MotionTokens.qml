@@ -20,6 +20,7 @@ Item {
     property int marqueePauseEndMs: 900
     property int marqueeMsPerPx: 28
     property int marqueeReturnMs: 600
+    property int visualizerBarMs: 60
     property int containerTransformMs: 240
     property string containerTransformCurve: "OutCubic"
     property var containerTransform: ({})
@@ -49,6 +50,7 @@ Item {
     readonly property int marqueePauseStartDuration: scaled(marqueePauseStartMs)
     readonly property int marqueePauseEndDuration: scaled(marqueePauseEndMs)
     readonly property int marqueeReturnDuration: scaled(marqueeReturnMs)
+    readonly property int visualizerBarDuration: scaled(visualizerBarMs)
 
     readonly property int easingSnappy: Easing.OutCubic
     readonly property int easingSmooth: Easing.InOutCubic
@@ -56,6 +58,7 @@ Item {
     readonly property int fadeInEasing: Easing.OutCubic
     readonly property int fadeOutEasing: Easing.InCubic
     readonly property int marqueeEasing: Easing.InOutSine
+    readonly property int visualizerEasing: Easing.OutQuad
 
     FileView {
         id: uiConfigFile
@@ -100,6 +103,8 @@ Item {
                         motion.marqueeMsPerPx = Math.max(1, cfg.animations.marqueeMsPerPx)
                     if (typeof cfg.animations.marqueeReturnMs === "number")
                         motion.marqueeReturnMs = Math.max(0, cfg.animations.marqueeReturnMs)
+                    if (typeof cfg.animations.visualizerBarMs === "number")
+                        motion.visualizerBarMs = Math.max(0, cfg.animations.visualizerBarMs)
                 }
             } catch (e) {
                 console.warn("DuxConsole [MotionTokens]: Error en uiconfig.json ->", e)

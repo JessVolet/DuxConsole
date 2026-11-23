@@ -16,7 +16,8 @@
     "marqueePauseStartMs": 700,
     "marqueePauseEndMs": 900,
     "marqueeMsPerPx": 28,
-    "marqueeReturnMs": 600
+    "marqueeReturnMs": 600,
+    "visualizerBarMs": 60
   },
   "containerTransform": {
     "horizontalDirection": "auto",

@@ -52,9 +52,10 @@ Contract and dependency details: `plan.md`; implementation: `docs/AUDIO_WIDGETS.
 - [ ] Both independent device widgets work alone and together against DMS.
 
 ## 9. Right-stick transport (M; depends on verified daemon axis contract, 1)
-- [ ] Verify producer/schema; normalize axes and configure semantic routing.
-- [ ] Test bridge input validation, deadzone/hysteresis and one-shot R3.
-- [ ] Verify shutdown/inert/disconnect resets and no stale target writes.
+- [x] Verify producer/schema; normalize axes and configure semantic routing.
+- [x] Test bridge input validation, deadzone/hysteresis and one-shot R3.
+- [x] Verify shutdown/inert/disconnect resets and no stale target writes.
+- [ ] Physical stick moves the selected target and R3 mutes it on real hardware.
 
 ## 10. Runnable composition and acceptance (M; depends on 1-9)
 - [x] Wire focused widget selection to the shared controlled knob.

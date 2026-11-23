@@ -139,7 +139,7 @@ flowchart TD
 
 ### `services/DconsoleBridge.qml`
 - **Problema**: Quickshell necesita recibir eventos de gamepad del daemon Go `dconsole` y notificarle si el overlay está abierto para activar el fail-safe.
-- **Solución**: Cliente `Quickshell.Io.Socket` conectado a `$XDG_RUNTIME_DIR/dconsole.sock` con reconexión cada `2000 ms`, `SplitParser` NDJSON hacia `InputManager` y envío de `{ type: "overlay", active }`.
+- **Solución**: Cliente `Quickshell.Io.Socket` conectado a `$XDG_RUNTIME_DIR/dconsole.sock` con reconexión cada `2000 ms`, `SplitParser` NDJSON hacia `InputManager` y envío de `{ type: "overlay", active }`. Enruta `{ type: "axis", stick, x, y }` por `inputconfig.analog` (nunca códigos físicos) y reinicia `InputManager` ante `status` con `connected:false` o `grabbed:false`, de modo que soltar, desconectar o fallar la captura exige una posición neutra antes de rearmar.
 
 ### `services/WindowManager.qml`
 - **Problema**: Las pantallas y widgets necesitan enumerar ventanas, workspaces y monitores reales de Niri y ejecutar acciones sobre una ventana por ID sin acoplar sockets ni comandos IPC en el QML visual.

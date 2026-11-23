@@ -102,11 +102,20 @@ TestCase {
         fuzzyCompare(appAudio.volume, 5/6, 0.001)
         compare(outputAudio.volume, 0.6)
         const before = appAudio.muted
+        const volumeBeforeMute = appAudio.volume
         inputBus.triggered("I.PressStick.R", null)
         compare(appAudio.muted, !before)
+        fuzzyCompare(appAudio.volume, volumeBeforeMute, 0.001)
+        // The bottom gap keeps the last value and drops engagement.
+        inputBus.triggered("I.Stick.R", {x:0,y:1})
+        fuzzyCompare(appAudio.volume, volumeBeforeMute, 0.001)
         inputBus.analogReset()
         inputBus.triggered("I.Stick.R", {x:0,y:-1})
-        fuzzyCompare(appAudio.volume, 5/6, 0.001)
+        fuzzyCompare(appAudio.volume, volumeBeforeMute, 0.001)
+        // Re-engagement requires a neutral position first.
+        inputBus.triggered("I.Stick.R", {x:0,y:0})
+        inputBus.triggered("I.Stick.R", {x:0,y:-1})
+        fuzzyCompare(appAudio.volume, 0.5, 0.001)
     }
     function test_deviceIndependence() {
         verify(audio.activate("output:speaker"))

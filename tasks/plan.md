@@ -1,7 +1,8 @@
 # Audio widgets and absolute-angle volume knob
 
-Status: widgets, adapter, composition and frontend input receiver implemented.
-Physical daemon axis production and real DMS/hardware acceptance remain pending.
+Status: widgets, adapter, composition and input transport implemented end to
+end (daemon axis producer plus frontend receiver). Real DMS audio and physical
+controller acceptance remain a manual check.
 Tasks are tracked in `tasks/todo.md`; contracts are in `docs/AUDIO_WIDGETS.md`.
 
 ## Scope and accepted behavior

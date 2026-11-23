@@ -81,21 +81,38 @@ is zero, up is halfway, lower-right (+135 degrees) is full range. The lower
   changes and supplies observed value/mute back. Mouse dragging is supported.
 - `theme.knobStrokeWidth` controls the arc thickness through StyleTokens.
 
-### Transport status: frontend ready, physical producer pending
+### Transport status
 
-InputManager validates normalized axes. DconsoleBridge accepts this proposed
-message and maps the stick through inputconfig, never hardcoded physical codes:
+The Go daemon now produces the normalized axes and the frontend consumes the
+same contract. DconsoleBridge maps sticks through inputconfig, never hardcoded
+physical codes:
 
 ```json
 {"type":"axis","stick":"right","x":0,"y":-1,"device":"xbox"}
+{"type":"status","active":true,"connected":false,"grabbed":false}
 ```
 
-The checked local daemon (`dconsole/internal/gamepad/evdev.go`) currently emits
-button events only and ignores ABS_RX/ABS_RY. This frontend does not make a
-physical right stick work until that separate producer is implemented. No
-files in the daemon repository were changed. Socket loss and input reset clear
-engagement; a connected=false status message is also accepted by the frontend.
-Synthetic normalized input tests are not a hardware test.
+- The daemon normalizes each evdev range around its midpoint, `x`
+  right-positive and `y` down-positive, and only sends axes while `EVIOCGRAB`
+  is actually held. If capture fails, it broadcasts `grabbed:false` with
+  `error:"grab_failed"` and sends no axes, so the knob cannot move while the
+  game still receives the same stick.
+- `connected:false` (pad unplugged) or `grabbed:false` makes the bridge reset
+  InputManager, which clears controller engagement. Re-engagement always needs
+  a neutral position first.
+- Closing the overlay, socket loss, pad disconnect, a stalled client or daemon
+  shutdown releases the grab; the kernel also releases it on process death.
+  A pad that reconnects while the overlay is open is re-grabbed automatically.
+- `inputconfig.json.analog.right` uses `engageRadius: 0.40` and
+  `releaseRadius: 0.30`. The measured resting offset of the test pad's right
+  stick is ~0.21, so the previous 0.20 release radius never armed neutral and
+  would have emitted a final ~14% angle during spring-back instead of holding
+  the volume. Re-measure a unit whose drift exceeds the release radius.
+
+Hardware acceptance (physical stick moving the selected app/output volume,
+R3 muting without overwriting it, overlay close restoring game input) is still
+a manual check. Unit tests feed evdev records and normalized axes; they are not
+a controller test.
 
 ## Verification and deployment
 

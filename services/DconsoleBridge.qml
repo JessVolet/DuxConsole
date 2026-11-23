@@ -49,8 +49,11 @@ Item {
                 if (msg.type === "axis" && typeof msg.stick === "string") {
                     const action = bridge.inputManager.config?.analog?.[msg.stick]?.action
                     if (action) bridge.inputManager.handleAnalog(action, msg.x, msg.y, msg.device)
-                } else if (msg.type === "status" && msg.connected === false) {
-                    bridge.inputManager.resetState()
+                } else if (msg.type === "status") {
+                    // Device gone or capture refused: drop engagement so a
+                    // neutral position is required again before the next write.
+                    if (msg.connected === false || msg.grabbed === false)
+                        bridge.inputManager.resetState()
                 }
 
                 if (msg.type === "button" && typeof msg.code === "string") {

@@ -35,4 +35,18 @@ TestCase {
         controller.handleStick(0, -1)
         compare(spy.count, 0)
     }
+    function test_restOffsetAboveReleaseDoesNotOverwrite() {
+        // Measured right-stick offset of the test pad is ~0.21 radial; with a
+        // release radius below it, spring-back would emit an unintended angle.
+        controller.engageRadius = 0.40
+        controller.releaseRadius = 0.30
+        controller.reset()
+        controller.handleStick(0, 0)
+        controller.handleStick(0, -1)
+        compare(spy.count, 1)
+        controller.handleStick(-0.207, 0.03)
+        compare(spy.count, 1)
+        controller.engageRadius = 0.30
+        controller.releaseRadius = 0.20
+    }
 }

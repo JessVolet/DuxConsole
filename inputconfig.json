@@ -40,8 +40,8 @@
   "analog": {
     "right": {
       "action": "I.Stick.R",
-      "engageRadius": 0.30,
-      "releaseRadius": 0.20,
+      "engageRadius": 0.40,
+      "releaseRadius": 0.30,
       "angularEpsilon": 1
     }
   },

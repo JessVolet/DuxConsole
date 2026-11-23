@@ -71,18 +71,21 @@ PanelWindow {
         id: windowIconProvider
     }
 
+    MediaService {
+        id: mediaService
+    }
+
     InputManager {
         id: inputManager
         onTriggered: (action, payload) => {
             if (action === "I.Refuse") {
                 if (!layerManager.pop())
                     overlay.closeRequested()
-            } else if ((action === "I.ActionSlide.R" || action === "I.ActionSlide.L") && layerManager.topLayer !== "dashboard") {
-                return
-            } else if (action === "I.ActionSlide.R") {
-                slideManager.next()
-            } else if (action === "I.ActionSlide.L") {
-                slideManager.prev()
+            } else if ((action === "I.ActionSlide.R" || action === "I.ActionSlide.L") && layerManager.topLayer === "dashboard") {
+                if (action === "I.ActionSlide.R")
+                    slideManager.next()
+                else
+                    slideManager.prev()
             } else {
                 navigationManager.handleAction(action, payload)
             }
@@ -140,6 +143,7 @@ PanelWindow {
             motionTokens: motionTokens
             windowManager: windowManager
             windowIconProvider: windowIconProvider
+            mediaService: mediaService
             onCloseOverlayRequested: overlay.closeRequested()
         }
 

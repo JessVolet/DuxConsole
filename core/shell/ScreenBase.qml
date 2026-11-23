@@ -15,6 +15,7 @@ Item {
     property var motionTokens: null
     property var windowManager: null
     property var windowIconProvider: null
+    property var mediaService: null
     property var registry: null
     property int currentSlideIndex: 0
     default property alias content: body.data

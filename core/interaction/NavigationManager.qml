@@ -227,6 +227,12 @@ QtObject {
             return zone.subItemCount > 0 ? zone.cycleSubItem(-1) : false
         case "I.ActionOption.R":
             return zone.subItemCount > 0 ? zone.cycleSubItem(1) : false
+        case "I.ActionSlide.L":
+            zone.slideLeftRequested(zone.currentSubIndex)
+            return true
+        case "I.ActionSlide.R":
+            zone.slideRightRequested(zone.currentSubIndex)
+            return true
         case "I.Accept":
             return zone.activate()
         case "I.Action":

@@ -196,6 +196,7 @@ ScreenBase {
                 rightCount: 3
                 alignLeft: true
                 navUp: continueZone
+                navRight: mediaCard.focusZone
                 windowManager: root.windowManager
                 windowIconProvider: root.windowIconProvider
                 layerManager: root.layerManager
@@ -213,13 +214,28 @@ ScreenBase {
             id: mediaCard
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            width: root.compactLayout ? parent.width : Math.min(340, parent.width * 0.28)
-            height: root.compactLayout ? Math.min(120, pageLayout.height * 0.24) : Math.min(200, pageLayout.height * 0.34)
+            width: root.compactLayout ? parent.width : Math.min(360, parent.width * 0.30)
+            height: root.compactLayout ? 84 : 104
             compact: root.compactLayout
+            mediaService: root.mediaService
+            layerManager: root.layerManager
+            navigationManager: root.navigationManager
+            navLeft: windowCarousel.focusZone
             styleTokens: root.styleTokens
             motionTokens: root.motionTokens
             i18n: root.i18n
+            onExpandRequested: root.layerManager?.push("media-player")
         }
+    }
+
+    MediaPlayerModal {
+        mediaService: root.mediaService
+        layerManager: root.layerManager
+        navigationManager: root.navigationManager
+        iconsPadManager: root.iconsPadManager
+        styleTokens: root.styleTokens
+        motionTokens: root.motionTokens
+        i18n: root.i18n
     }
 
     WindowActionsModal {

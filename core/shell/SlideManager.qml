@@ -13,6 +13,7 @@ Item {
     property var motionTokens: null
     property var windowManager: null
     property var windowIconProvider: null
+    property var mediaService: null
     property int currentIndex: 0
 
     signal closeOverlayRequested()
@@ -76,6 +77,8 @@ Item {
                 item.windowManager = manager.windowManager
             if ("windowIconProvider" in item)
                 item.windowIconProvider = manager.windowIconProvider
+            if ("mediaService" in item)
+                item.mediaService = manager.mediaService
             if ("registry" in item)
                 item.registry = manager.registry
             if ("currentSlideIndex" in item)

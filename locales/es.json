@@ -49,8 +49,22 @@
   },
   "media": {
     "title": "Reproductor",
-    "idle_subtitle": "Espacio reservado MPRIS",
-    "idle_body": "Sin reproducción activa"
+    "idle_subtitle": "MPRIS",
+    "idle_body": "Sin reproducción activa",
+    "listening_from": "Escuchando desde",
+    "expand": "Abrir reproductor",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "seek_back": "-10s",
+    "seek_forward": "+10s",
+    "options": "Opciones",
+    "shuffle": "Aleatorio",
+    "repeat": "Repetir",
+    "lyrics": "Letras",
+    "switch_player": "Reproductor",
+    "volume": "Volumen"
   },
   "windows": {
     "unavailable": "Niri IPC no disponible",

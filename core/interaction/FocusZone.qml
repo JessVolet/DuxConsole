@@ -35,6 +35,8 @@ Item {
     signal secondaryTriggered(int subIndex)
     signal optionsTriggered(int subIndex)
     signal expandRequested(int subIndex)
+    signal slideLeftRequested(int subIndex)
+    signal slideRightRequested(int subIndex)
     signal subItemCycled(int newIndex, int delta)
     signal dpadUnhandled(string direction)
 

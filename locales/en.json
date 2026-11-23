@@ -49,8 +49,22 @@
   },
   "media": {
     "title": "Media Player",
-    "idle_subtitle": "MPRIS reserved slot",
-    "idle_body": "No active media player"
+    "idle_subtitle": "MPRIS",
+    "idle_body": "No active media player",
+    "listening_from": "Listening from",
+    "expand": "Open player",
+    "play": "Play",
+    "pause": "Pause",
+    "prev": "Previous",
+    "next": "Next",
+    "seek_back": "-10s",
+    "seek_forward": "+10s",
+    "options": "Options",
+    "shuffle": "Shuffle",
+    "repeat": "Repeat",
+    "lyrics": "Lyrics",
+    "switch_player": "Player",
+    "volume": "Volume"
   },
   "windows": {
     "unavailable": "Niri IPC unavailable",

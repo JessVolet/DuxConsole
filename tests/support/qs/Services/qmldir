@@ -1,0 +1,2 @@
+singleton LyricsService 1.0 LyricsService.qml
+LyricsSubscription 1.0 LyricsSubscription.qml

@@ -48,8 +48,8 @@
 - [ ] `services/StartupCheck.qml`: validación de dependencias opcionales (`dconsole` daemon, InputPlumber, `gpu-screen-recorder`).
 
 ## FASE 5 — Widgets y Pantallas Reales (`components/widgets/` + `screens/`)
-- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `WindowInfoCard.qml`, `WindowInfoCards.qml`, `MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `MediaLyricsPanel.qml`; [ ] `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
-- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowActionsModal.qml`, `MediaPlayerModal.qml`, `MediaPlayerPicker.qml`.
+- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `CarouselActionAnchor.qml`, `WindowActionsPanel.qml`, `WindowInfoCard.qml`, `WindowInfoCards.qml`, `MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `MediaLyricsPanel.qml`; [ ] `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
+- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowOptionsModal.qml`, `MediaPlayerModal.qml`, `MediaPlayerPicker.qml`.
 - [ ] Perilla de volumen multimedia controlada con stick derecho en `MediaPlayerExpanded.qml` (icono reservado).
 - [ ] Ruedas Orbitales (`screens/overlays/`): `OrbitalMenu.qml` (`SystemWheel` con hold `I.Guide` y `QuickWheel` con acorde `I.Guide + I.ActionSlide.R`).
 - [ ] Slides (`screens/slides/`):

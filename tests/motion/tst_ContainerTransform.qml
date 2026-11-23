@@ -75,4 +75,26 @@ TestCase {
         compare(morph.progress, 0)
         tokens.containerTransformDuration = 80
     }
+
+    Item { id: explicitDest; x: 140; y: 120; width: 320; height: 220 }
+    ContainerTransform {
+        id: explicitMorph
+        sourceItem: origin
+        targetItem: explicitDest
+        motionTokens: tokens
+    }
+
+    function test_explicitTargetItem() {
+        origin.x = 700; origin.y = 400
+        explicitMorph.expanded = true
+        wait(120)
+        compare(explicitMorph.x, 140)
+        compare(explicitMorph.y, 120)
+        compare(explicitMorph.width, 320)
+        compare(explicitMorph.height, 220)
+        explicitMorph.expanded = false
+        wait(120)
+        compare(explicitMorph.x, 700)
+        compare(explicitMorph.y, 400)
+    }
 }

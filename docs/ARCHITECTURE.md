@@ -162,6 +162,10 @@ control at the safe bottom-right edge, with a localized accessible percentage.
   no other player is substituted until the same key reconnects, another is
   selected, or Automatic clears the pin. Pins are session state, not disk state.
 
+### `components/widgets/CarouselActionAnchor.qml`, `WindowActionsPanel.qml` y `screens/modals/WindowOptionsModal.qml`
+- **Problema**: Las opciones de ventana usaban un diálogo centrado desconectado de la tarjeta seleccionada en `WindowCarousel`.
+- **Solución**: `CarouselActionAnchor` posiciona el botón `Y` siguiendo la geometría real de `WindowCarousel.selectedCardItem` vía `mapToItem`. Al abrir `WindowOptionsModal`, `TransformSurface` (`ContainerTransform`) transforma el propio botón `Y` en el menú `WindowActionsPanel` manteniendo su anclaje (`Y` → `B`), bloquea el ID de ventana objetivo al abrir y bloquea acciones mientras dura la transición.
+
 ### `components/widgets/MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `screens/modals/MediaPlayerModal.qml` y `MediaPlayerPicker.qml`
 - **Problema**: Mostrar un mini reproductor compacto con letras sincronizadas cuando existan (y carátula por defecto si faltan, cargan o no corresponden a la pista) y un reproductor expandido ControlFriendly con `LT`/`RT` visibles, transporte con SVG centralizados en `iconsconfig.json`, selector de reproductores y reserva para volumen por stick derecho.
 - **Solución**: `MediaPlayerCard` muestra carátula, metadatos y marquee de letra sincronizada (usando `MotionTokens`); con `X` empuja la capa `"media-player"` (`MediaPlayerModal` + `MediaPlayerExpanded`), donde `Select` alterna entre `MediaLyricsPanel` y carátula cuando hay letras válidas, `LT`/`RT` buscan `±10s` si `canSeek`, `LB`/`RB` cambian pista, la cruceta D-Pad recorre únicamente `Letras`, `Repetir` y `Aleatorio` disponibles, `Y` abre `MediaPlayerPicker` desde `playerButton`, el icono de volumen queda reservado para una futura perilla con stick derecho y `B` cierra y restaura el foco.

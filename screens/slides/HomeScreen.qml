@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.Common
-import qs.Widgets
 import "../../core/shell"
 import "../../core/interaction"
 import "../../components/primitives/buttons"
@@ -177,29 +176,14 @@ ScreenBase {
             anchors.bottomMargin: root.compactLayout ? Theme.spacingM : 0
             spacing: Theme.spacingS
 
-            Row {
+            SectionTitle {
                 id: carouselHeader
                 width: parent.width
-                spacing: Theme.spacingM
-
-                SectionTitle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: implicitWidth
-                    title: root.tr("home.windows_section", "Open windows")
-                    role: "chrome"
-                    titleSize: Theme.fontSizeLarge
-                    styleTokens: root.styleTokens
-                }
-
-                StyledText {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: String(windowCarousel.count)
-                    font.pixelSize: Theme.fontSizeSmall
-                    font.weight: Font.DemiBold
-                    color: root.styleTokens
-                        ? Qt.alpha(root.styleTokens.onSurfaceColor("chrome"), 0.7)
-                        : Theme.surfaceVariantText
-                }
+                title: root.tr("home.windows_section", "Open windows")
+                badgeText: String(windowCarousel.count)
+                role: "chrome"
+                titleSize: Theme.fontSizeLarge
+                styleTokens: root.styleTokens
             }
 
             WindowCarousel {

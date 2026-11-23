@@ -607,5 +607,17 @@
         "outline": "assets/InputIcons/Steam Deck/Vector/steamdeck_dpad_right_outline.svg"
       }
     }
+  },
+  "media": {
+    "prev": "assets/icons/media/skip_previous.svg",
+    "next": "assets/icons/media/skip_next.svg",
+    "play": "assets/icons/media/play_arrow.svg",
+    "pause": "assets/icons/media/pause.svg",
+    "shuffle": "assets/icons/media/shuffle.svg",
+    "repeat": "assets/icons/media/repeat.svg",
+    "repeat_one": "assets/icons/media/repeat_one.svg",
+    "lyrics": "assets/icons/media/lyrics.svg",
+    "player": "assets/icons/media/speaker_group.svg",
+    "volume": "assets/icons/media/volume_up.svg"
   }
 }

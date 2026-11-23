@@ -96,6 +96,22 @@ Item {
         position = Math.max(0, Math.min(length, position + deltaSeconds))
     }
 
+    function seekToRatio(ratio) {
+        if (!activePlayer || !canSeek || length <= 0)
+            return
+        const target = Math.max(0, Math.min(length, ratio * length))
+        activePlayer.seek(target - position)
+        position = target
+    }
+
+    function matchesTrack(lyricsTrack) {
+        if (!hasPlayer || title === "")
+            return false
+        if (!lyricsTrack || !lyricsTrack.title)
+            return true
+        return String(lyricsTrack.title).trim().toLowerCase() === title.trim().toLowerCase()
+    }
+
     function toggleShuffle() {
         if (activePlayer && shuffleSupported)
             activePlayer.shuffle = !activePlayer.shuffle

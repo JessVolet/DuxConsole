@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Effects
 import qs.Common
 import qs.Widgets
+import "SlantedGeometry.js" as SlantedGeometry
 
 Item {
     id: slantedImg
@@ -24,7 +25,7 @@ Item {
     readonly property bool supportsLayerMask: GraphicsInfo.api !== GraphicsInfo.Software
     readonly property bool hasImage: source.toString() !== "" && img.status === Image.Ready
     readonly property bool isLoading: source.toString() !== "" && img.status === Image.Loading
-    readonly property real _skewPad: Math.min(width * 0.25, Math.abs(Math.tan(skewAngle * Math.PI / 180)) * height)
+    readonly property real _skewPad: Math.min(width * 0.25, SlantedGeometry.horizontalShearOffset(height, skewAngle))
     readonly property real _innerX: skewAngle < 0 ? _skewPad : 0
     readonly property real _innerWidth: Math.max(1, width - _skewPad)
 

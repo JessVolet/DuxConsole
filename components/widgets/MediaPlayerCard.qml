@@ -26,13 +26,29 @@ SlantedSurface {
     signal expandRequested()
 
     readonly property var lyricsCtrl: LyricsService.controller
+    readonly property bool hasValidLyrics: {
+        if (!hasPlayer || !mediaService?.title)
+            return false
+        if (!lyricsCtrl || !lyricsCtrl.available || lyricsCtrl.pending)
+            return false
+        if (lyricsCtrl.state !== "ready")
+            return false
+        if (!mediaService.matchesTrack(lyricsCtrl.track))
+            return false
+        const hasSynced = Boolean(lyricsCtrl.synced && lyricsCtrl.lines && lyricsCtrl.lines.length > 0)
+        const hasPlain = Boolean(!lyricsCtrl.synced && lyricsCtrl.plainLines && lyricsCtrl.plainLines.length > 0)
+        return hasSynced || hasPlain
+    }
     readonly property string currentLyricLine: {
-        if (!hasPlayer || !lyricsCtrl?.available)
+        if (!hasValidLyrics)
             return ""
-        const idx = lyricsCtrl.activeIndex ?? -1
-        if (idx < 0 || !lyricsCtrl.lines || idx >= lyricsCtrl.lines.length)
-            return ""
-        return String(lyricsCtrl.lines[idx]?.x ?? "").trim()
+        if (lyricsCtrl.synced) {
+            const idx = lyricsCtrl.activeIndex ?? -1
+            if (idx < 0 || !lyricsCtrl.lines || idx >= lyricsCtrl.lines.length)
+                return ""
+            return String(lyricsCtrl.lines[idx]?.x ?? "").trim()
+        }
+        return String(lyricsCtrl.plainLines?.[0] ?? "").trim()
     }
 
     readonly property bool hasPlayer: Boolean(mediaService?.hasPlayer)
@@ -110,7 +126,10 @@ SlantedSurface {
 
         Row {
             anchors.fill: parent
-            anchors.margins: mediaCard.compact ? Theme.spacingS : Theme.spacingM
+            anchors.topMargin: mediaCard.compact ? Theme.spacingS : Theme.spacingM
+            anchors.bottomMargin: mediaCard.compact ? Theme.spacingS : Theme.spacingM
+            anchors.leftMargin: mediaCard.safeHorizontalInset + (mediaCard.compact ? Theme.spacingS : Theme.spacingM)
+            anchors.rightMargin: mediaCard.safeHorizontalInset + (mediaCard.compact ? Theme.spacingS : Theme.spacingM)
             spacing: Theme.spacingM
 
             SlantedImage {
@@ -173,17 +192,17 @@ SlantedSurface {
                         SequentialAnimation on x {
                             running: lyricSlot.visible && lyricText.overflow > 4 && (mediaCard.motionTokens?.animationsEnabled ?? true)
                             loops: Animation.Infinite
-                            PauseAnimation { duration: 700 }
+                            PauseAnimation { duration: mediaCard.motionTokens?.marqueePauseStartDuration ?? 0 }
                             NumberAnimation {
                                 to: -lyricText.overflow
-                                duration: Math.max(1200, Math.round(lyricText.overflow * 28))
-                                easing.type: Easing.InOutSine
+                                duration: mediaCard.motionTokens ? mediaCard.motionTokens.marqueeDurationFor(lyricText.overflow) : 0
+                                easing.type: mediaCard.motionTokens?.marqueeEasing ?? Easing.InOutSine
                             }
-                            PauseAnimation { duration: 900 }
+                            PauseAnimation { duration: mediaCard.motionTokens?.marqueePauseEndDuration ?? 0 }
                             NumberAnimation {
                                 to: 0
-                                duration: 600
-                                easing.type: Easing.InOutSine
+                                duration: mediaCard.motionTokens?.marqueeReturnDuration ?? 0
+                                easing.type: mediaCard.motionTokens?.marqueeEasing ?? Easing.InOutSine
                             }
                         }
                     }

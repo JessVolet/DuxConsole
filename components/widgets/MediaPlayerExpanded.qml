@@ -7,11 +7,12 @@ import Quickshell.Services.Mpris
 import qs.Common
 import qs.Widgets
 import qs.Services
-import qs.Modules.DDash.Media
 import "../../core/interaction"
 import "../primitives/buttons"
+import "../primitives/glyphs"
 import "../primitives/meters"
 import "../primitives/surfaces"
+import "../primitives/surfaces/SlantedGeometry.js" as SlantedGeometry
 import "../primitives/text"
 
 SlantedSurface {
@@ -28,17 +29,33 @@ SlantedSurface {
     property bool showLyrics: true
     property int focusedOptionIndex: 0
 
+    readonly property bool compactLayout: width < 720 || height < 440
+    readonly property real baseSkew: styleTokens ? styleTokens.skewAngle * 0.625 : -5
     readonly property var lyricsCtrl: LyricsService.controller
-    readonly property bool lyricsAvailable: Boolean(lyricsCtrl?.available)
     readonly property bool hasPlayer: Boolean(mediaService?.hasPlayer)
     readonly property bool isPlaying: Boolean(mediaService?.isPlaying)
+    readonly property bool canSeek: Boolean(mediaService?.canSeek)
+    readonly property bool hasValidLyrics: {
+        if (!hasPlayer || !mediaService?.title)
+            return false
+        if (!lyricsCtrl || !lyricsCtrl.available || lyricsCtrl.pending)
+            return false
+        if (lyricsCtrl.state !== "ready")
+            return false
+        if (!mediaService.matchesTrack(lyricsCtrl.track))
+            return false
+        const hasSynced = Boolean(lyricsCtrl.synced && lyricsCtrl.lines && lyricsCtrl.lines.length > 0)
+        const hasPlain = Boolean(!lyricsCtrl.synced && lyricsCtrl.plainLines && lyricsCtrl.plainLines.length > 0)
+        return hasSynced || hasPlain
+    }
+
     readonly property color accentColor: styleTokens ? styleTokens.accentColor : Theme.primary
     readonly property color fgColor: styleTokens ? styleTokens.onSurfaceColor("card") : (Theme.surfaceText ?? "#F2F4F8")
     readonly property color mutedFg: Qt.alpha(fgColor, 0.72)
 
     readonly property var availableOptions: {
         const opts = []
-        if (lyricsAvailable)
+        if (hasValidLyrics)
             opts.push("lyrics")
         if (mediaService?.shuffleSupported)
             opts.push("shuffle")
@@ -51,28 +68,26 @@ SlantedSurface {
         return opts
     }
 
+    onAvailableOptionsChanged: {
+        if (focusedOptionIndex >= availableOptions.length)
+            focusedOptionIndex = Math.max(0, availableOptions.length - 1)
+    }
+
     function tr(key, fallback) {
         return i18n ? i18n.t(key, fallback) : fallback
     }
 
-    function formatTime(seconds) {
-        const total = Math.max(0, Math.floor(seconds || 0))
-        const mins = Math.floor(total / 60)
-        const secs = total % 60
-        return mins + ":" + (secs < 10 ? "0" + secs : String(secs))
+    function mediaIcon(name) {
+        return iconsPadManager ? iconsPadManager.resolveMediaIcon(name) : ""
     }
 
     function optionIcon(optId) {
-        if (optId === "lyrics") return Qt.resolvedUrl("../../assets/icons/media/lyrics.svg")
-        if (optId === "shuffle") return Qt.resolvedUrl("../../assets/icons/media/shuffle.svg")
         if (optId === "repeat") {
             return (mediaService?.loopState ?? MprisLoopState.None) === MprisLoopState.Track
-                ? Qt.resolvedUrl("../../assets/icons/media/repeat_one.svg")
-                : Qt.resolvedUrl("../../assets/icons/media/repeat.svg")
+                ? mediaIcon("repeat_one")
+                : mediaIcon("repeat")
         }
-        if (optId === "player") return Qt.resolvedUrl("../../assets/icons/media/speaker_group.svg")
-        if (optId === "volume") return Qt.resolvedUrl("../../assets/icons/media/volume_up.svg")
-        return ""
+        return mediaIcon(optId)
     }
 
     function triggerOption(optId) {
@@ -89,12 +104,11 @@ SlantedSurface {
     }
 
     role: "card"
-    skewAngle: -5
-    radius: 24
+    skewAngle: SlantedGeometry.effectiveSkewAngle(baseSkew, width, height)
+    radius: compactLayout ? 16 : 24
     focused: modalZone.active
 
     backdrop: [
-        // Fondo difuminado basado en la carátula, recortado al paralelogramo inclinado
         Image {
             id: backdropArt
             anchors.fill: parent
@@ -113,20 +127,20 @@ SlantedSurface {
             anchors.fill: parent
             color: Qt.rgba(0.05, 0.06, 0.09, 0.68)
         },
-        // Espectro Cava real (solo activo mientras el reproductor está desplegado)
         Row {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.leftMargin: 24
-            anchors.rightMargin: 24
-            height: parent.height * 0.36
+            anchors.leftMargin: playerRoot.safeHorizontalInset + Theme.spacingM
+            anchors.rightMargin: playerRoot.safeHorizontalInset + Theme.spacingM
+            height: parent.height * 0.34
             spacing: 6
             visible: playerRoot.cavaBars.length > 0
 
             Repeater {
                 model: playerRoot.cavaBars.length
                 delegate: Item {
+                    id: cavaCol
                     required property int index
                     readonly property real level: playerRoot.cavaBars[index] ?? 0
                     readonly property int count: Math.max(1, playerRoot.cavaBars.length)
@@ -138,7 +152,7 @@ SlantedSurface {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
-                        height: Math.max(4, Math.round(parent.height * level))
+                        height: Math.max(4, Math.round(parent.height * cavaCol.level))
                         radius: 3
                         color: Qt.alpha(playerRoot.accentColor, 0.24)
 
@@ -171,20 +185,22 @@ SlantedSurface {
         layerManager: playerRoot.layerManager
         navigationManager: playerRoot.navigationManager
         defaultFocus: true
-        expandable: true
+        expandable: playerRoot.hasValidLyrics
         showFocusRing: false
-        subItemCount: 3
+        subItemCount: playerRoot.canSeek ? 3 : 0
         currentSubIndex: 1
         wrapSubItems: false
         actionHints: {
             const list = [
                 { action: "I.ActionSlide.L", labelKey: "media.prev", fallback: "Previous" },
                 { action: "I.ActionSlide.R", labelKey: "media.next", fallback: "Next" },
-                { action: "I.Action", labelKey: playerRoot.isPlaying ? "media.pause" : "media.play", fallback: playerRoot.isPlaying ? "Pause" : "Play" },
-                { action: "I.ActionOption.L", labelKey: "media.seek_back", fallback: "-10s" },
-                { action: "I.ActionOption.R", labelKey: "media.seek_forward", fallback: "+10s" }
+                { action: "I.Action", labelKey: playerRoot.isPlaying ? "media.pause" : "media.play", fallback: playerRoot.isPlaying ? "Pause" : "Play" }
             ]
-            if (playerRoot.lyricsAvailable) {
+            if (playerRoot.canSeek) {
+                list.push({ action: "I.ActionOption.L", labelKey: "media.seek_back", fallback: "-10s" })
+                list.push({ action: "I.ActionOption.R", labelKey: "media.seek_forward", fallback: "+10s" })
+            }
+            if (playerRoot.hasValidLyrics) {
                 list.push({
                     action: "I.Select",
                     labelKey: playerRoot.showLyrics ? "media.show_art" : "media.show_lyrics",
@@ -198,10 +214,12 @@ SlantedSurface {
         onSlideRightRequested: playerRoot.mediaService?.next()
         onSecondaryTriggered: playerRoot.mediaService?.togglePlaying()
         onExpandRequested: {
-            if (playerRoot.lyricsAvailable)
+            if (playerRoot.hasValidLyrics)
                 playerRoot.showLyrics = !playerRoot.showLyrics
         }
         onSubItemCycled: (newIndex, delta) => {
+            if (!playerRoot.canSeek)
+                return
             playerRoot.mediaService?.seekBy(delta * 10)
             modalZone.currentSubIndex = 1
         }
@@ -229,27 +247,38 @@ SlantedSurface {
             }
         }
 
-        RowLayout {
+        GridLayout {
             anchors.fill: parent
-            anchors.margins: Theme.spacingXL
-            spacing: Theme.spacingXL
+            anchors.topMargin: playerRoot.compactLayout ? Theme.spacingM : Theme.spacingXL
+            anchors.bottomMargin: playerRoot.compactLayout ? Theme.spacingM : Theme.spacingXL
+            anchors.leftMargin: playerRoot.safeHorizontalInset + Theme.spacingL
+            anchors.rightMargin: playerRoot.safeHorizontalInset + Theme.spacingL
+            columns: playerRoot.compactLayout ? 1 : 2
+            rowSpacing: Theme.spacingM
+            columnSpacing: Theme.spacingXL
 
-            // Columna izquierda: letras sincronizadas o carátula ampliada (alternable con Select)
+            // Columna izquierda: panel de letras inclinado o carátula ampliada (por defecto si no hay letras válidas)
             Item {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.preferredWidth: 1
+                Layout.fillHeight: !playerRoot.compactLayout
+                Layout.preferredHeight: playerRoot.compactLayout ? 150 : -1
+                Layout.preferredWidth: playerRoot.compactLayout ? -1 : 1
 
-                LyricsOverlay {
+                MediaLyricsPanel {
                     anchors.fill: parent
-                    visible: playerRoot.showLyrics && playerRoot.lyricsAvailable && playerRoot.hasPlayer
+                    visible: playerRoot.hasValidLyrics && playerRoot.showLyrics
+                    lyricsActive: visible
+                    skewAngle: playerRoot.skewAngle
+                    styleTokens: playerRoot.styleTokens
+                    motionTokens: playerRoot.motionTokens
                 }
 
                 SlantedImage {
                     anchors.centerIn: parent
-                    visible: !playerRoot.showLyrics || !playerRoot.lyricsAvailable || !playerRoot.hasPlayer
+                    visible: !playerRoot.hasValidLyrics || !playerRoot.showLyrics
                     width: Math.min(parent.width * 0.85, parent.height * 0.85, 320)
                     height: width
+                    skewAngle: playerRoot.skewAngle
                     styleTokens: playerRoot.styleTokens
                     motionTokens: playerRoot.motionTokens
                     source: playerRoot.mediaService?.artUrl ?? ""
@@ -260,12 +289,12 @@ SlantedSurface {
                 }
             }
 
-            // Columna derecha: fuente, metadatos, progreso, transporte y opciones fijas
+            // Columna derecha: fuente, metadatos, barra inclinada con LT/RT, transporte y opciones
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredWidth: 1.15
-                spacing: Theme.spacingM
+                Layout.preferredWidth: playerRoot.compactLayout ? -1 : 1.15
+                spacing: playerRoot.compactLayout ? Theme.spacingS : Theme.spacingM
 
                 Item { Layout.fillHeight: true }
 
@@ -291,7 +320,7 @@ SlantedSurface {
                         StyledText {
                             id: sourceLabel
                             anchors.centerIn: parent
-                            text: playerRoot.mediaService?.identity || "MPRIS"
+                            text: playerRoot.mediaService?.identity || playerRoot.tr("media.idle_subtitle", "MPRIS")
                             font.pixelSize: Theme.fontSizeSmall
                             font.weight: Font.DemiBold
                             color: playerRoot.fgColor
@@ -304,7 +333,7 @@ SlantedSurface {
                     styleTokens: playerRoot.styleTokens
                     horizontalAlignment: Text.AlignHCenter
                     text: playerRoot.mediaService?.title || playerRoot.tr("media.idle_body", "No active media player")
-                    font.pixelSize: Theme.fontSizeXXLarge
+                    font.pixelSize: playerRoot.compactLayout ? Theme.fontSizeXLarge : Theme.fontSizeXXLarge
                     maximumLineCount: 2
                     elide: Text.ElideRight
                 }
@@ -327,51 +356,74 @@ SlantedSurface {
                     elide: Text.ElideRight
                 }
 
-                // Barra de progreso y tiempos
-                Column {
+                // Barra de progreso inclinada con controles visibles LT / RT
+                RowLayout {
                     Layout.fillWidth: true
-                    spacing: 6
+                    spacing: Theme.spacingS
                     visible: playerRoot.hasPlayer
 
-                    ValueMeter {
-                        width: parent.width
-                        height: 8
-                        value: (playerRoot.mediaService?.progress ?? 0) * 100
-                        maximum: 100
+                    Item {
+                        Layout.alignment: Qt.AlignTop
+                        implicitWidth: ltGlyph.implicitWidth
+                        implicitHeight: ltGlyph.implicitHeight
+                        opacity: playerRoot.canSeek ? 1.0 : 0.38
+
+                        InputGlyph {
+                            id: ltGlyph
+                            iconsPadManager: playerRoot.iconsPadManager
+                            styleTokens: playerRoot.styleTokens
+                            action: "I.ActionOption.L"
+                        }
+
+                        TapHandler {
+                            enabled: playerRoot.canSeek
+                            onTapped: playerRoot.mediaService?.seekBy(-10)
+                        }
+                    }
+
+                    MediaProgressBar {
+                        Layout.fillWidth: true
+                        position: playerRoot.mediaService?.position ?? 0
+                        length: playerRoot.mediaService?.length ?? 0
+                        progress: playerRoot.mediaService?.progress ?? 0
+                        canSeek: playerRoot.canSeek
+                        hasPlayer: playerRoot.hasPlayer
+                        skewAngle: playerRoot.skewAngle
                         styleTokens: playerRoot.styleTokens
                         motionTokens: playerRoot.motionTokens
+                        onSeekRequested: ratio => playerRoot.mediaService?.seekToRatio(ratio)
                     }
 
                     Item {
-                        width: parent.width
-                        height: 18
+                        Layout.alignment: Qt.AlignTop
+                        implicitWidth: rtGlyph.implicitWidth
+                        implicitHeight: rtGlyph.implicitHeight
+                        opacity: playerRoot.canSeek ? 1.0 : 0.38
 
-                        StyledText {
-                            anchors.left: parent.left
-                            text: playerRoot.formatTime(playerRoot.mediaService?.position ?? 0)
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: playerRoot.mutedFg
+                        InputGlyph {
+                            id: rtGlyph
+                            iconsPadManager: playerRoot.iconsPadManager
+                            styleTokens: playerRoot.styleTokens
+                            action: "I.ActionOption.R"
                         }
 
-                        StyledText {
-                            anchors.right: parent.right
-                            text: playerRoot.formatTime(playerRoot.mediaService?.length ?? 0)
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: playerRoot.mutedFg
+                        TapHandler {
+                            enabled: playerRoot.canSeek
+                            onTapped: playerRoot.mediaService?.seekBy(10)
                         }
                     }
                 }
 
-                // Transporte principal: icono + texto + glifo de mando
+                // Transporte principal: icono centralizado + texto + glifo de mando
                 Row {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: Theme.spacingM
 
                     ActionPill {
                         text: playerRoot.tr("media.prev", "Previous")
-                        implicitHeight: 50
+                        implicitHeight: 48
                         glyphAction: "I.ActionSlide.L"
-                        iconSource: Qt.resolvedUrl("../../assets/icons/media/skip_previous.svg")
+                        iconSource: playerRoot.mediaIcon("prev")
                         iconSize: 20
                         iconsPadManager: playerRoot.iconsPadManager
                         styleTokens: playerRoot.styleTokens
@@ -383,12 +435,10 @@ SlantedSurface {
                         text: playerRoot.isPlaying
                             ? playerRoot.tr("media.pause", "Pause")
                             : playerRoot.tr("media.play", "Play")
-                        implicitHeight: 54
+                        implicitHeight: 52
                         primary: true
                         glyphAction: "I.Action"
-                        iconSource: playerRoot.isPlaying
-                            ? Qt.resolvedUrl("../../assets/icons/media/pause.svg")
-                            : Qt.resolvedUrl("../../assets/icons/media/play_arrow.svg")
+                        iconSource: playerRoot.isPlaying ? playerRoot.mediaIcon("pause") : playerRoot.mediaIcon("play")
                         iconSize: 22
                         iconsPadManager: playerRoot.iconsPadManager
                         styleTokens: playerRoot.styleTokens
@@ -398,9 +448,9 @@ SlantedSurface {
 
                     ActionPill {
                         text: playerRoot.tr("media.next", "Next")
-                        implicitHeight: 50
+                        implicitHeight: 48
                         glyphAction: "I.ActionSlide.R"
-                        iconSource: Qt.resolvedUrl("../../assets/icons/media/skip_next.svg")
+                        iconSource: playerRoot.mediaIcon("next")
                         iconSize: 20
                         iconsPadManager: playerRoot.iconsPadManager
                         styleTokens: playerRoot.styleTokens

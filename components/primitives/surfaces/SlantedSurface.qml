@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import qs.Common
+import "SlantedGeometry.js" as SlantedGeometry
 
 Item {
     id: surface
@@ -24,6 +25,7 @@ Item {
     default property alias content: contentContainer.data
 
     readonly property real _shearX: Math.tan(skewAngle * Math.PI / 180)
+    readonly property real safeHorizontalInset: SlantedGeometry.safeHorizontalInset(height, skewAngle, radius, 0)
     readonly property int _animDuration: motionTokens ? motionTokens.durationFast : 120
     readonly property int _animEasing: motionTokens ? motionTokens.easingSnappy : Easing.OutCubic
 

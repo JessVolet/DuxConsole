@@ -17,6 +17,7 @@ ScreenBase {
     property string ipcErrorNotice: ""
     readonly property bool compactLayout: width < 900 || height < 520
     readonly property real heroScale: Math.max(0.48, Math.min(0.75, width / 1920, height / 870))
+    readonly property bool dashboardActive: root.layerManager ? root.layerManager.isLayerActive("dashboard") : true
     readonly property var selectedWindow: windowCarousel.selectedWindow
 
     screenActionHints: windowCarousel.hasWindows ? [
@@ -118,9 +119,9 @@ ScreenBase {
                     iconsPadManager: root.iconsPadManager
                     styleTokens: root.styleTokens
                     primary: true
-                    enabled: Boolean(root.selectedWindow)
+                    enabled: Boolean(root.selectedWindow) && root.dashboardActive
                     onClicked: {
-                        if (root.selectedWindow)
+                        if (root.selectedWindow && root.dashboardActive)
                             root.focusAndClose(root.selectedWindow.id)
                     }
                 }
@@ -131,9 +132,9 @@ ScreenBase {
                     glyphAction: "I.Options"
                     iconsPadManager: root.iconsPadManager
                     styleTokens: root.styleTokens
-                    enabled: Boolean(root.selectedWindow)
+                    enabled: Boolean(root.selectedWindow) && root.dashboardActive
                     onClicked: {
-                        if (root.selectedWindow)
+                        if (root.selectedWindow && root.dashboardActive)
                             root.openWindowOptions(root.selectedWindow.id)
                     }
                 }

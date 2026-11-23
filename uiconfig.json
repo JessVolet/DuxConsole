@@ -10,7 +10,11 @@
     "wheelCloseMs": 180,
     "wheelOvershoot": 0.8,
     "sheetEntranceMs": 250,
-    "noticeMs": 2600
+    "noticeMs": 2600,
+    "marqueePauseStartMs": 700,
+    "marqueePauseEndMs": 900,
+    "marqueeMsPerPx": 28,
+    "marqueeReturnMs": 600
   },
   "theme": {
     "mode": "hybrid",

@@ -16,11 +16,19 @@ Item {
     property int wheelCloseMs: 180
     property real wheelOvershoot: 0.8
     property int sheetEntranceMs: 250
+    property int marqueePauseStartMs: 700
+    property int marqueePauseEndMs: 900
+    property int marqueeMsPerPx: 28
+    property int marqueeReturnMs: 600
 
     function scaled(baseMs) {
         if (!animationsEnabled || suppressAnimations)
             return 0
         return Math.max(0, Math.round(baseMs / Math.max(0.1, speedScale)))
+    }
+
+    function marqueeDurationFor(overflowPx) {
+        return scaled(Math.max(1200, Math.round(Math.max(0, overflowPx) * marqueeMsPerPx)))
     }
 
     readonly property int durationFast: scaled(120)
@@ -32,12 +40,16 @@ Item {
     readonly property int sheetEntranceDuration: scaled(sheetEntranceMs)
     readonly property int fadeInDuration: scaled(fadeInMs)
     readonly property int fadeOutDuration: scaled(fadeOutMs)
+    readonly property int marqueePauseStartDuration: scaled(marqueePauseStartMs)
+    readonly property int marqueePauseEndDuration: scaled(marqueePauseEndMs)
+    readonly property int marqueeReturnDuration: scaled(marqueeReturnMs)
 
     readonly property int easingSnappy: Easing.OutCubic
     readonly property int easingSmooth: Easing.InOutCubic
     readonly property int easingSpring: Easing.OutBack
     readonly property int fadeInEasing: Easing.OutCubic
     readonly property int fadeOutEasing: Easing.InCubic
+    readonly property int marqueeEasing: Easing.InOutSine
 
     FileView {
         id: uiConfigFile
@@ -69,6 +81,14 @@ Item {
                         motion.noticeMs = Math.max(0, cfg.animations.noticeMs)
                     if (typeof cfg.animations.fadeOutMs === "number")
                         motion.fadeOutMs = cfg.animations.fadeOutMs
+                    if (typeof cfg.animations.marqueePauseStartMs === "number")
+                        motion.marqueePauseStartMs = Math.max(0, cfg.animations.marqueePauseStartMs)
+                    if (typeof cfg.animations.marqueePauseEndMs === "number")
+                        motion.marqueePauseEndMs = Math.max(0, cfg.animations.marqueePauseEndMs)
+                    if (typeof cfg.animations.marqueeMsPerPx === "number")
+                        motion.marqueeMsPerPx = Math.max(1, cfg.animations.marqueeMsPerPx)
+                    if (typeof cfg.animations.marqueeReturnMs === "number")
+                        motion.marqueeReturnMs = Math.max(0, cfg.animations.marqueeReturnMs)
                 }
             } catch (e) {
                 console.warn("DuxConsole [MotionTokens]: Error en uiconfig.json ->", e)

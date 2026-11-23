@@ -89,4 +89,11 @@ Item {
             showBackdrop: showBackdrop
         }
     }
+
+    function resolveMediaIcon(name) {
+        if (!name)
+            return ""
+        const relPath = iconsConfig?.media?.[name] ?? ""
+        return relPath ? Qt.resolvedUrl("../../" + relPath).toString() : ""
+    }
 }

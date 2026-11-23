@@ -21,6 +21,7 @@ Item {
     property string fallbackText: ""
     default property alias overlayContent: overlayContainer.data
 
+    readonly property bool supportsLayerMask: GraphicsInfo.api !== GraphicsInfo.Software
     readonly property bool hasImage: source.toString() !== "" && img.status === Image.Ready
     readonly property bool isLoading: source.toString() !== "" && img.status === Image.Loading
 
@@ -45,7 +46,7 @@ Item {
         skewAngle: slantedImg.skewAngle
         radius: slantedImg.radius
         visible: false
-        layer.enabled: true
+        layer.enabled: slantedImg.supportsLayerMask
     }
 
     // Imagen recta (sin shear) recortada con MultiEffect contra la máscara inclinada y redondeada
@@ -53,7 +54,9 @@ Item {
         id: maskedContent
         anchors.fill: parent
         visible: slantedImg.hasImage
-        layer.enabled: slantedImg.hasImage
+        // Keep artwork visible when the software renderer cannot apply the shader mask.
+        clip: !slantedImg.supportsLayerMask
+        layer.enabled: slantedImg.hasImage && slantedImg.supportsLayerMask
         layer.effect: MultiEffect {
             maskEnabled: true
             maskSource: maskShape

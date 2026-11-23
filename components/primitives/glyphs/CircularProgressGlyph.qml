@@ -4,7 +4,7 @@ import qs.Common
 Item {
     id: indicator
 
-    property string state: "idle"          // "idle" | "charging" | "completed"
+    property string progressState: "idle"          // "idle" | "charging" | "completed"
     property real progress: 0.0            // 0.0 .. 1.0
     property var styleTokens: null
     property var motionTokens: null
@@ -14,9 +14,9 @@ Item {
     property real ringSize: 34
 
     readonly property real clampedProgress: {
-        if (state === "completed")
+        if (progressState === "completed")
             return 1.0
-        if (state === "idle")
+        if (progressState === "idle")
             return 0.0
         return Math.max(0.0, Math.min(1.0, progress))
     }
@@ -34,7 +34,7 @@ Item {
     }
 
     onAnimatedProgressChanged: ringCanvas.requestPaint()
-    onStateChanged: ringCanvas.requestPaint()
+    onProgressStateChanged: ringCanvas.requestPaint()
     onRingColorChanged: ringCanvas.requestPaint()
 
     implicitWidth: ringSize

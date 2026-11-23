@@ -80,97 +80,109 @@ Item {
         columnSpacing: Theme.spacingXL
         rowSpacing: Theme.spacingM
 
-        Column {
+        AudioPanel {
+            id: knobPanel
             Layout.row: 0
             Layout.column: 0
-            Layout.columnSpan: 2
             Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.minimumHeight: 360
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            spacing: Theme.spacingM
+            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
+            Layout.preferredHeight: 470
+            Layout.alignment: Qt.AlignTop
+            styleTokens: controls.styleTokens
 
-            AngularVolumeKnob {
-                id: knob
-                width: Math.min(340, controls.width * 0.22)
-                height: width
-                value: controls.focusedTarget?.volume ?? 0
-                maximum: controls.focusedTarget?.maxVolume ?? 1
-                muted: controls.focusedTarget?.muted ?? false
-                targetKey: controls.focusedTarget?.key ?? ""
-                caption: controls.focusedTarget?.title ?? ""
-                label: controls.tr("audio.volume", "Volume")
-                mutedText: controls.tr("audio.muted", "Muted")
-                inputConfig: controls.inputManager?.config?.analog?.right ?? null
-                enabled: controls.visible && controls.focusedTarget !== null && Boolean(controls.focusedTarget.canSetVolume)
-                styleTokens: controls.styleTokens
-                onValueRequested: value => controls.audioService?.setVolume(targetKey, value)
-                onMuteToggleRequested: {
-                    if (controls.focusedTarget)
-                        controls.audioService?.setMuted(targetKey, !controls.focusedTarget.muted);
-                }
-            }
+            Column {
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: Theme.spacingM
 
-            SectionTitle {
-                width: Math.min(controls.width * 0.5, 520)
-                title: controls.focusedTarget?.title ?? controls.tr("audio.select_target", "Select an audio target")
-                subtitle: controls.audioService?.error ? controls.tr("audio.operation_failed", "Audio operation failed") : controls.tr("audio.knob_hint", "Right stick: volume · R3: mute")
-                role: "card"
-                styleTokens: controls.styleTokens
-            }
-
-            Row {
-                spacing: Theme.spacingS
-
-                ActionPill {
-                    glyphAction: "I.PressStick.R"
-                    iconsPadManager: controls.iconsPadManager
+                AngularVolumeKnob {
+                    id: knob
+                    width: Math.min(340, controls.width * 0.22)
+                    height: width
+                    value: controls.focusedTarget?.volume ?? 0
+                    maximum: controls.focusedTarget?.maxVolume ?? 1
+                    muted: controls.focusedTarget?.muted ?? false
+                    targetKey: controls.focusedTarget?.key ?? ""
+                    caption: controls.focusedTarget?.title ?? ""
+                    label: controls.tr("audio.volume", "Volume")
+                    mutedText: controls.tr("audio.muted", "Muted")
+                    inputConfig: controls.inputManager?.config?.analog?.right ?? null
+                    enabled: controls.visible && controls.focusedTarget !== null && Boolean(controls.focusedTarget.canSetVolume)
                     styleTokens: controls.styleTokens
-                    text: knob.muted ? controls.tr("audio.unmute", "Unmute") : controls.tr("audio.mute", "Mute")
-                    enabled: knob.enabled
-                    primary: knob.muted
-                    onClicked: knob.mute()
+                    onValueRequested: value => controls.audioService?.setVolume(targetKey, value)
+                    onMuteToggleRequested: {
+                        if (controls.focusedTarget)
+                            controls.audioService?.setMuted(targetKey, !controls.focusedTarget.muted);
+                    }
                 }
 
-                ActionPill {
-                    glyphAction: "I.ActionOption.L"
-                    iconsPadManager: controls.iconsPadManager
+                SectionTitle {
+                    width: parent.width
+                    title: controls.focusedTarget?.title ?? controls.tr("audio.select_target", "Select an audio target")
+                    subtitle: controls.audioService?.error ? controls.tr("audio.operation_failed", "Audio operation failed") : controls.tr("audio.knob_hint", "Right stick: volume · R3: mute")
+                    role: "card"
                     styleTokens: controls.styleTokens
-                    text: controls.tr("media.prev", "Previous")
-                    enabled: controls.focusedWidget !== null
-                    onClicked: controls.browse(-1)
                 }
 
-                ActionPill {
-                    glyphAction: "I.ActionOption.R"
-                    iconsPadManager: controls.iconsPadManager
-                    styleTokens: controls.styleTokens
-                    text: controls.tr("media.next", "Next")
-                    enabled: controls.focusedWidget !== null
-                    onClicked: controls.browse(1)
+                Row {
+                    spacing: Theme.spacingS
+
+                    ActionPill {
+                        glyphAction: "I.PressStick.R"
+                        iconsPadManager: controls.iconsPadManager
+                        styleTokens: controls.styleTokens
+                        text: knob.muted ? controls.tr("audio.unmute", "Unmute") : controls.tr("audio.mute", "Mute")
+                        enabled: knob.enabled
+                        primary: knob.muted
+                        onClicked: knob.mute()
+                    }
+
+                    ActionPill {
+                        glyphAction: "I.ActionOption.L"
+                        iconsPadManager: controls.iconsPadManager
+                        styleTokens: controls.styleTokens
+                        text: controls.tr("media.prev", "Previous")
+                        enabled: controls.focusedWidget !== null
+                        onClicked: controls.browse(-1)
+                    }
+
+                    ActionPill {
+                        glyphAction: "I.ActionOption.R"
+                        iconsPadManager: controls.iconsPadManager
+                        styleTokens: controls.styleTokens
+                        text: controls.tr("media.next", "Next")
+                        enabled: controls.focusedWidget !== null
+                        onClicked: controls.browse(1)
+                    }
                 }
             }
         }
 
-        AppVolumeMixer {
-            id: apps
+        AudioPanel {
+            id: mixerPanel
             Layout.row: 0
             Layout.column: 2
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.minimumWidth: 280
-            Layout.preferredWidth: Math.max(280, controls.width * 0.34)
-            audioService: controls.audioService
-            layerManager: controls.layerManager
-            navigationManager: controls.navigationManager
-            iconsPadManager: controls.iconsPadManager
+            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
             styleTokens: controls.styleTokens
-            motionTokens: controls.motionTokens
-            i18n: controls.i18n
-            defaultFocus: true
+
+            AppVolumeMixer {
+                id: apps
+                anchors.fill: parent
+                audioService: controls.audioService
+                layerManager: controls.layerManager
+                navigationManager: controls.navigationManager
+                iconsPadManager: controls.iconsPadManager
+                styleTokens: controls.styleTokens
+                motionTokens: controls.motionTokens
+                i18n: controls.i18n
+                defaultFocus: true
+            }
         }
 
-        MediaPlayerCard {
+        AudioNowPlaying {
             id: mediaCard
             Layout.row: 1
             Layout.column: 0
@@ -190,38 +202,50 @@ Item {
             onExpandRequested: controls.mediaExpandRequested()
         }
 
-        AudioOutputSelector {
-            id: outputs
+        AudioPanel {
+            id: outputsPanel
             Layout.row: 1
             Layout.column: 1
             Layout.fillWidth: true
-            Layout.preferredHeight: 210
-            Layout.minimumWidth: 320
-            Layout.preferredWidth: Math.max(320, controls.width * 0.34)
-            audioService: controls.audioService
-            layerManager: controls.layerManager
-            navigationManager: controls.navigationManager
-            iconsPadManager: controls.iconsPadManager
+            Layout.minimumWidth: 300
+            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
+            Layout.preferredHeight: 242
             styleTokens: controls.styleTokens
-            motionTokens: controls.motionTokens
-            i18n: controls.i18n
+
+            AudioOutputSelector {
+                id: outputs
+                anchors.fill: parent
+                audioService: controls.audioService
+                layerManager: controls.layerManager
+                navigationManager: controls.navigationManager
+                iconsPadManager: controls.iconsPadManager
+                styleTokens: controls.styleTokens
+                motionTokens: controls.motionTokens
+                i18n: controls.i18n
+            }
         }
 
-        AudioInputSelector {
-            id: inputs
+        AudioPanel {
+            id: inputsPanel
             Layout.row: 1
             Layout.column: 2
             Layout.fillWidth: true
-            Layout.preferredHeight: 210
-            Layout.minimumWidth: 280
-            Layout.preferredWidth: Math.max(280, controls.width * 0.34)
-            audioService: controls.audioService
-            layerManager: controls.layerManager
-            navigationManager: controls.navigationManager
-            iconsPadManager: controls.iconsPadManager
+            Layout.minimumWidth: 300
+            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
+            Layout.preferredHeight: 242
             styleTokens: controls.styleTokens
-            motionTokens: controls.motionTokens
-            i18n: controls.i18n
+
+            AudioInputSelector {
+                id: inputs
+                anchors.fill: parent
+                audioService: controls.audioService
+                layerManager: controls.layerManager
+                navigationManager: controls.navigationManager
+                iconsPadManager: controls.iconsPadManager
+                styleTokens: controls.styleTokens
+                motionTokens: controls.motionTokens
+                i18n: controls.i18n
+            }
         }
     }
 

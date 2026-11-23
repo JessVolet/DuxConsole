@@ -16,23 +16,33 @@
 - `AngularVolumeKnob`: reusable widget that composes the primitive with the
   angular input controller. Primitives never import core/interaction.
 - `AudioControls`: composition of the three widgets, one knob, the active
-  output/input summary, the application mixer, a media card and the action
-  pills, mounted by `screens/slides/AudioScreen.qml` under the existing Sound
-  tab. `AudioScreen` also mounts the existing `MediaPlayerModal` with
+  output/input summary, the application mixer, a now-playing card and the
+  action pills, mounted by `screens/slides/AudioScreen.qml` under the existing
+  Sound tab. `AudioScreen` also mounts the existing `MediaPlayerModal` with
   `ContainerTransform`, anchored to that card.
+- `AudioPanel`: translucent section surface (rounded, token colors) used only
+  as a background around the knob stage, mixer and device selectors.
+- `AudioNowPlaying`: stretched now-playing card for the Sound tab, separate
+  from Home's `MediaPlayerCard` so each screen can change independently.
+- `AudioWheel`: stable-item wheel for the vertical mixer. Every app keeps one
+  delegate and animates its offset; wrapping never recreates a card at the
+  other end.
 
 ## Sound tab layout
 
 The composition follows the reference layout without new behavior:
 
 - Header: screen title plus the active output and input names with their volume.
+- Sections use `AudioPanel` translucent backgrounds with equal columns, so the
+  knob, mixer, now-playing card, outputs and inputs read as separate cards.
 - Left stage: the absolute-angle knob with the selected target name inside the
   circle, the target title with the knob hint, and Mute/Previous/Next pills.
   Previous/Next are the mouse twin of LT/RT and call the focused carousel's
   `cycleSubItem`; no second browsing state exists.
 - Right: the application mixer, reused unchanged and still the default focus.
-  It is a wheel: the selected row stays in the middle and entries wrap on both
-  sides (`CarouselView.cyclic`), so the first and last app still have neighbors.
+  It uses `AudioWheel`: the selected row stays in the middle and every app keeps
+  its own delegate, so crossing the first/last app animates the same card
+  across instead of recreating it (no teleport).
 - Bottom row: media card (left), output devices (center), input devices (right).
   A group with a single entry (one microphone) is centered explicitly instead
   of relying on a zero-length `PathView` path, which kept the item at x=0.

@@ -48,6 +48,14 @@
     "windows_section": "Active Windows"
   },
   "media": {
+    "players": "Players",
+    "choose_player": "Select player",
+    "automatic": "Automatic",
+    "automatic_hint": "Prefer a playing player",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "toggle_pin": "Pin / unpin",
+    "pinned_unavailable": "Pinned player disconnected",
     "title": "Media Player",
     "idle_subtitle": "MPRIS",
     "idle_body": "No active media player",

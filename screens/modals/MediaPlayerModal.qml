@@ -17,13 +17,14 @@ Item {
     property string layerName: "media-player"
 
     readonly property bool isOpen: layerManager ? layerManager.isLayerActive(layerName) : false
+    readonly property bool isPresent: layerManager ? layerManager.stack.indexOf(layerName) >= 0 : false
     readonly property int fadeDuration: motionTokens
-        ? (isOpen ? motionTokens.fadeInDuration : motionTokens.fadeOutDuration)
+        ? (isPresent ? motionTokens.fadeInDuration : motionTokens.fadeOutDuration)
         : 160
 
     anchors.fill: parent
-    visible: isOpen || opacity > 0.01
-    opacity: isOpen ? 1 : 0
+    visible: isPresent || opacity > 0.01
+    opacity: isPresent ? 1 : 0
     z: 100
 
     Behavior on opacity {
@@ -40,10 +41,12 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+        enabled: modal.isOpen
         onClicked: modal.layerManager?.pop()
     }
 
     MediaPlayerExpanded {
+        enabled: modal.isOpen
         anchors.centerIn: parent
         width: Math.min(parent.width * 0.88, 980)
         height: Math.min(parent.height * 0.82, 560)
@@ -56,5 +59,21 @@ Item {
         motionTokens: modal.motionTokens
         i18n: modal.i18n
         layerName: modal.layerName
+        pickerVisible: playerPicker.visible
+        onPlayersRequested: source => {
+            playerPicker.sourceItem = source
+            modal.layerManager?.push(playerPicker.layerName)
+        }
+    }
+
+    MediaPlayerPicker {
+        id: playerPicker
+        mediaService: modal.mediaService
+        layerManager: modal.layerManager
+        navigationManager: modal.navigationManager
+        iconsPadManager: modal.iconsPadManager
+        styleTokens: modal.styleTokens
+        motionTokens: modal.motionTokens
+        i18n: modal.i18n
     }
 }

@@ -5,22 +5,19 @@ Item {
     id: service
     visible: false
 
-    property string preferredIdentity: ""
+    MediaPlayerSelection { id: selection; players: service.players }
+    readonly property string selectedPlayerKey: selection.selectedKey
+    readonly property string pinnedPlayerKey: selection.pinnedKey
+    readonly property bool pinnedUnavailable: selection.pinnedUnavailable
+    function playerKey(player) { return selection.key(player) }
+    function selectPlayer(player) { selection.select(player) }
+    function togglePlayerPin(player) { selection.togglePin(player) }
+    function useAutomaticPlayer() { selection.automatic() }
 
     readonly property var players: Mpris.players.values ?? []
     readonly property int playerCount: players.length
 
-    readonly property var activePlayer: {
-        if (!players.length)
-            return null
-        if (preferredIdentity !== "") {
-            const preferred = players.find(p => p && p.identity === preferredIdentity)
-            if (preferred)
-                return preferred
-        }
-        const playing = players.find(p => p && p.isPlaying)
-        return playing ?? players[0] ?? null
-    }
+    readonly property var activePlayer: selection.activePlayer
 
     readonly property bool hasPlayer: activePlayer !== null
     readonly property string identity: activePlayer?.identity ?? ""
@@ -140,6 +137,6 @@ Item {
         const idx = players.indexOf(activePlayer)
         const nextPlayer = players[(idx + 1) % players.length]
         if (nextPlayer)
-            preferredIdentity = nextPlayer.identity ?? ""
+            selectPlayer(nextPlayer)
     }
 }

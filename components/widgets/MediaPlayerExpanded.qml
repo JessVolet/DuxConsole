@@ -25,6 +25,8 @@ SlantedSurface {
     property var i18n: null
     property string layerName: "media-player"
     property var cavaBars: []
+    property bool pickerVisible: false
+    signal playersRequested(Item source)
 
     property bool showLyrics: true
     property int focusedOptionIndex: 0
@@ -61,8 +63,7 @@ SlantedSurface {
             opts.push("shuffle")
         if (mediaService?.loopSupported)
             opts.push("repeat")
-        if ((mediaService?.playerCount ?? 0) > 1)
-            opts.push("player")
+        opts.push("player")
         if (mediaService?.volumeSupported)
             opts.push("volume")
         return opts
@@ -90,7 +91,7 @@ SlantedSurface {
         return mediaIcon(optId)
     }
 
-    function triggerOption(optId) {
+    function triggerOption(optId, source) {
         if (optId === "lyrics")
             showLyrics = !showLyrics
         else if (optId === "shuffle")
@@ -98,7 +99,7 @@ SlantedSurface {
         else if (optId === "repeat")
             mediaService?.cycleLoop()
         else if (optId === "player")
-            mediaService?.cyclePlayer()
+            playersRequested(source ?? playerRoot)
         else if (optId === "volume")
             mediaService?.adjustVolume(0.1)
     }
@@ -192,6 +193,7 @@ SlantedSurface {
         wrapSubItems: true
         actionHints: {
             const list = [
+                { action: "I.Options", labelKey: "media.players", fallback: "Players" },
                 { action: "I.ActionSlide.L", labelKey: "media.prev", fallback: "Previous" },
                 { action: "I.ActionSlide.R", labelKey: "media.next", fallback: "Next" },
                 { action: "I.Action", labelKey: playerRoot.isPlaying ? "media.pause" : "media.play", fallback: playerRoot.isPlaying ? "Pause" : "Play" }
@@ -213,6 +215,7 @@ SlantedSurface {
         onSlideLeftRequested: playerRoot.mediaService?.previous()
         onSlideRightRequested: playerRoot.mediaService?.next()
         onSecondaryTriggered: playerRoot.mediaService?.togglePlaying()
+        onOptionsTriggered: playerRoot.playersRequested(optionRepeater.itemAt(playerRoot.availableOptions.indexOf("player")))
         onExpandRequested: {
             if (playerRoot.hasValidLyrics)
                 playerRoot.showLyrics = !playerRoot.showLyrics
@@ -227,7 +230,7 @@ SlantedSurface {
             if (playerRoot.availableOptions.length > 0) {
                 const opt = playerRoot.availableOptions[playerRoot.focusedOptionIndex]
                 if (opt)
-                    playerRoot.triggerOption(opt)
+                    playerRoot.triggerOption(opt, optionRepeater.itemAt(playerRoot.focusedOptionIndex))
             } else {
                 playerRoot.mediaService?.togglePlaying()
             }
@@ -268,7 +271,6 @@ SlantedSurface {
                     anchors.fill: parent
                     visible: playerRoot.hasValidLyrics && playerRoot.showLyrics
                     lyricsActive: visible
-                    skewAngle: playerRoot.skewAngle
                     styleTokens: playerRoot.styleTokens
                     motionTokens: playerRoot.motionTokens
                 }
@@ -467,6 +469,7 @@ SlantedSurface {
                     visible: playerRoot.availableOptions.length > 0
 
                     Repeater {
+                        id: optionRepeater
                         model: playerRoot.availableOptions
                         delegate: ActionPill {
                             id: optPill
@@ -474,6 +477,9 @@ SlantedSurface {
                             required property string modelData
 
                             highlighted: playerRoot.focusedOptionIndex === index
+                            opacity: modelData === "player" && playerRoot.pickerVisible ? 0 : 1
+                            glyphAction: modelData === "player" ? "I.Options" : ""
+                            iconsPadManager: playerRoot.iconsPadManager
                             iconSource: playerRoot.optionIcon(modelData)
                             iconSize: 18
                             styleTokens: playerRoot.styleTokens
@@ -496,7 +502,7 @@ SlantedSurface {
                             }
                             onClicked: {
                                 playerRoot.focusedOptionIndex = index
-                                playerRoot.triggerOption(modelData)
+                                playerRoot.triggerOption(modelData, optPill)
                             }
                         }
                     }

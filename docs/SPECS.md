@@ -2,6 +2,12 @@
 
 ## Anchored container transform
 
+The expanded media player uses `I.Options` to open a player selector through
+`TransformSurface`. Selection is keyed by MPRIS `dbusName`; pinned players do
+not silently fall back on disconnection. Pin state lasts for the plugin session.
+Lyrics use a rectangular contained panel inside the slanted player, keeping
+the text upright and avoiding a mismatch between panel and content shear.
+
 Reusable transition contract: [CONTAINER_TRANSFORM.md](CONTAINER_TRANSFORM.md).
 Global configuration controls direction, size, shape, radius, padding, anchor,
 duration and curve. Geometry is isolated in `core/motion`; UI is composed by

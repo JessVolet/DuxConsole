@@ -48,6 +48,14 @@
     "windows_section": "Ventanas abiertas"
   },
   "media": {
+    "players": "Reproductores",
+    "choose_player": "Elegir reproductor",
+    "automatic": "Automático",
+    "automatic_hint": "Priorizar el reproductor en reproducción",
+    "pin": "Fijar",
+    "unpin": "Desfijar",
+    "toggle_pin": "Fijar / desfijar",
+    "pinned_unavailable": "El reproductor fijado está desconectado",
     "title": "Reproductor",
     "idle_subtitle": "MPRIS",
     "idle_body": "Sin reproducción activa",

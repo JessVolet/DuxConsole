@@ -24,6 +24,8 @@
 - [x] `components/primitives/surfaces/`: `SlantedSurface.qml` y `SlantedImage.qml` (`FocusCard.qml` basada en `SlantedSurface`).
 - [x] `core/motion/ContainerTransform.qml` + `ContainerGeometry.js` and reusable `TransformSurface`: anchored, reversible container transition with global tokens and bounded geometry.
 - [ ] Adopt `TransformSurface` in existing media/options modals, retaining consumer-owned input, layers and focus restoration.
+- [x] Expanded media player: Y opens a `TransformSurface` player picker, with manual/automatic selection, session pinning, inert background and focus return.
+- [x] Rectangular lyrics panel with native synchronized lines and no shader mask or text shear.
 - [ ] `core/motion/SlideTransition.qml` (transición direccional izquierda/derecha en `SlideManager.qml`).
 
 ## FASE 3 — Sistema de Diseño: Primitives y Chrome (`components/`)

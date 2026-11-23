@@ -138,7 +138,25 @@ flowchart TD
 
 ### `components/primitives/surfaces/SlantedGeometry.js`, `components/primitives/meters/MediaProgressBar.qml` y `components/widgets/MediaLyricsPanel.qml`
 - **Problema**: Las superficies inclinadas necesitan márgenes seguros y máscaras consistentes sin duplicar cálculos de `shear` ni recortar bordes o letras.
-- **Solución**: `SlantedGeometry.js` centraliza `horizontalShearOffset`, `safeHorizontalInset` y `effectiveSkewAngle`. `MediaProgressBar` encapsula la pista, relleno, thumb y tiempos inclinados. `MediaLyricsPanel` envuelve `LyricsOverlay` dentro de una máscara inclinada real con una excepción localizada y documentada al contrato recto de `SlantedSurface` (`contentSkewAngle`).
+- **Solución**: `SlantedGeometry.js` centraliza `horizontalShearOffset`, `safeHorizontalInset` y `effectiveSkewAngle`. `MediaProgressBar` encapsula la pista, relleno, thumb y tiempos inclinados. `MediaLyricsPanel` presenta líneas nativas de `LyricsService.controller` en una superficie rectangular contenida, con texto recto, seguimiento sincronizado y desplazamiento manual de letras no sincronizadas; no requiere máscaras shader ni shear del texto.
+
+### Media player selection and pinning
+
+- `services/MediaPlayerSelection.qml` owns automatic/manual/pinned selection by
+  MPRIS `dbusName`, not the display identity. `MediaService` supplies live players
+  and delegates selection to this policy.
+- `components/widgets/MediaPlayerPicker.qml` composes `TransformSurface`, a
+  modal FocusZone and `MediaPlayerChoice` rows. Y (`I.Options`) opens from the
+  player option in `MediaPlayerExpanded`; A selects, X toggles pinning and B pops
+  back to the expanded player with its exact FocusZone restored.
+- `MediaPlayerModal` keeps the expanded player mounted under the selector but
+  disables its pointer controls. Picker details become interactive only after
+  the container transformation completes. The source chip is hidden until the
+  return animation finishes.
+- Manual selection holds while that player exists. Automatic prefers a playing
+  player. Pinning additionally retains the key when the player disappears:
+  no other player is substituted until the same key reconnects, another is
+  selected, or Automatic clears the pin. Pins are session state, not disk state.
 
 ### `components/widgets/MediaPlayerCard.qml`, `MediaPlayerExpanded.qml` y `screens/modals/MediaPlayerModal.qml`
 - **Problema**: Mostrar un mini reproductor compacto con letras sincronizadas cuando existan (y carátula por defecto si faltan, cargan o no corresponden a la pista) y un reproductor expandido ControlFriendly con `LT`/`RT` visibles, transporte con SVG centralizados en `iconsconfig.json` y opciones accesibles por D-Pad.

@@ -15,8 +15,31 @@
   volume owner, including MPRIS, without importing the audio adapter.
 - `AngularVolumeKnob`: reusable widget that composes the primitive with the
   angular input controller. Primitives never import core/interaction.
-- `AudioControls`: optional composition of all three widgets and one knob,
-  mounted by `screens/slides/AudioScreen.qml` under the existing Sound tab.
+- `AudioControls`: composition of the three widgets, one knob, the active
+  output/input summary, the application mixer, a media card and the action
+  pills, mounted by `screens/slides/AudioScreen.qml` under the existing Sound
+  tab. `AudioScreen` also mounts the existing `MediaPlayerModal` with
+  `ContainerTransform`, anchored to that card.
+
+## Sound tab layout
+
+The composition follows the reference layout without new behavior:
+
+- Header: screen title plus the active output and input names with their volume.
+- Left stage: the absolute-angle knob with the selected target name inside the
+  circle, the target title with the knob hint, and Mute/Previous/Next pills.
+  Previous/Next are the mouse twin of LT/RT and call the focused carousel's
+  `cycleSubItem`; no second browsing state exists.
+- Right: the application mixer, reused unchanged and still the default focus.
+- Bottom row: media card (left), output devices (center), input devices (right).
+  Opening the card pushes the existing `media-player` layer through
+  `mediaExpandRequested`; the screen owns that modal so widgets never import
+  `screens/modals`.
+- The media card adds a `sound-media` zone. While it or the media modal holds
+  focus there is no audio target, so the knob stays disabled and the stick is
+  ignored, matching the "authorized target" rule.
+- Labels reuse existing catalog terms (`nav.sound`, `audio.*`, `media.prev/next`);
+  no translation catalog was edited.
 
 Each carousel publishes `selectedKey`, `selectedTarget` and `focusZone`.
 Requests are `volumeRequested(key, value)`, `muteRequested(key, muted)`,

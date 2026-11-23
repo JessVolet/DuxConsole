@@ -12,6 +12,7 @@ Item {
     property bool muted: false
     property string targetKey: ""
     property string label: ""
+    property string caption: ""
     property string mutedText: ""
     property var styleTokens: null
     signal valueRequested(real value)
@@ -62,7 +63,28 @@ Item {
                 rotation: -135 + 270 * knob.fraction
                 Rectangle { anchors.horizontalCenter: parent.horizontalCenter; y: 18; width: 4; height: parent.height * 0.18; radius: 2; color: knob.foreground }
             }
-            Text { anchors.centerIn: parent; text: knob.muted && knob.mutedText ? knob.mutedText : Math.round(knob.value * 100) + "%"; color: knob.foreground; font.pixelSize: Theme.fontSizeLarge; font.bold: true }
+            Column {
+                anchors.centerIn: parent
+                spacing: 2
+                width: parent.width * 0.62
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    visible: knob.caption !== ""
+                    text: knob.caption
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
+                    color: Qt.alpha(knob.foreground, 0.72)
+                    font.pixelSize: Theme.fontSizeSmall
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: knob.muted && knob.mutedText ? knob.mutedText : Math.round(knob.value * 100) + "%"
+                    color: knob.foreground
+                    font.pixelSize: Theme.fontSizeLarge
+                    font.bold: true
+                }
+            }
         }
         handle: Item {}
     }

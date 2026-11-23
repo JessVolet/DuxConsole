@@ -10,19 +10,35 @@ import "../primitives/surfaces/SlantedGeometry.js" as SlantedGeometry
 // Excepción localizada al contrato recto de SlantedSurface:
 // aplica una inclinación sutil configurable únicamente al contenido visual
 // de letras (sin controles ni geometría de foco) dentro de una máscara inclinada real.
-SlantedSurface {
+Item {
     id: panel
 
+    property var styleTokens: null
+    property var motionTokens: null
     property bool lyricsActive: false
-    property real contentSkewAngle: skewAngle * 0.35
+    property real skewAngle: styleTokens ? styleTokens.skewAngle : -8
+    property real contentSkewAngle: skewAngle * 0.45
+    property real radius: 18
 
     readonly property bool supportsLayerMask: GraphicsInfo.api !== GraphicsInfo.Software
-    readonly property real contentShearX: Math.tan(contentSkewAngle * Math.PI / 180)
-    readonly property real safeInset: SlantedGeometry.safeHorizontalInset(height, skewAngle, radius, Theme.spacingM)
+    readonly property real _skewPad: Math.min(width * 0.2, SlantedGeometry.horizontalShearOffset(height, skewAngle))
+    readonly property real _innerX: skewAngle < 0 ? _skewPad : 0
+    readonly property real _innerWidth: Math.max(1, width - _skewPad)
+    readonly property real _contentShearX: Math.tan(contentSkewAngle * Math.PI / 180)
 
-    role: "card"
-    radius: 18
-    borderWidth: 1
+    SlantedSurface {
+        x: panel._innerX
+        y: 0
+        width: panel._innerWidth
+        height: panel.height
+        styleTokens: panel.styleTokens
+        motionTokens: panel.motionTokens
+        role: "card"
+        surfaceOpacity: 0.65
+        skewAngle: panel.skewAngle
+        radius: panel.radius
+        borderWidth: 1
+    }
 
     Item {
         id: maskWrapper
@@ -31,7 +47,10 @@ SlantedSurface {
         layer.enabled: panel.supportsLayerMask
 
         SlantedSurface {
-            anchors.fill: parent
+            x: panel._innerX
+            y: 0
+            width: panel._innerWidth
+            height: panel.height
             skewAngle: panel.skewAngle
             radius: panel.radius
         }
@@ -50,18 +69,17 @@ SlantedSurface {
 
         Item {
             id: skewedLyricsViewport
-            anchors.fill: parent
-            anchors.leftMargin: panel.safeInset
-            anchors.rightMargin: panel.safeInset
-            anchors.topMargin: Theme.spacingM
-            anchors.bottomMargin: Theme.spacingM
+            x: panel._innerX + Theme.spacingM
+            y: Theme.spacingM
+            width: Math.max(1, panel._innerWidth - Theme.spacingM * 2)
+            height: Math.max(1, panel.height - Theme.spacingM * 2)
 
             transform: Matrix4x4 {
                 matrix: Qt.matrix4x4(
-                    1, panel.contentShearX, 0, 0,
-                    0, 1,                   0, 0,
-                    0, 0,                   1, 0,
-                    0, 0,                   0, 1
+                    1, panel._contentShearX, 0, 0,
+                    0, 1,                    0, 0,
+                    0, 0,                    1, 0,
+                    0, 0,                    0, 1
                 )
             }
 
@@ -70,5 +88,19 @@ SlantedSurface {
                 visible: panel.lyricsActive
             }
         }
+    }
+
+    SlantedSurface {
+        x: panel._innerX
+        y: 0
+        width: panel._innerWidth
+        height: panel.height
+        styleTokens: panel.styleTokens
+        motionTokens: panel.motionTokens
+        role: "card"
+        borderOnly: true
+        skewAngle: panel.skewAngle
+        radius: panel.radius
+        borderWidth: 1
     }
 }

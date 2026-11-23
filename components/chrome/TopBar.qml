@@ -184,7 +184,7 @@ Item {
                         required property var modelData
                         readonly property bool isCurrent: index === bar.currentIndex
 
-                        implicitWidth: tabLabel.implicitWidth + Theme.spacingL * 1.5
+                        implicitWidth: tabLabel.implicitWidth + Theme.spacingL * (bar.fixtureTime ? 1.75 : 1.5)
                         height: 34
                         radius: height / 2
                         color: isCurrent ? bar.accentColor : "transparent"

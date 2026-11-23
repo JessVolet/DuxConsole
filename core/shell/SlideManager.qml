@@ -81,11 +81,11 @@ Item {
             if ("motionTokens" in item)
                 item.motionTokens = manager.motionTokens
             if ("windowManager" in item)
-                item.windowManager = manager.windowManager
+                item.windowManager = Qt.binding(() => manager.windowManager)
             if ("windowIconProvider" in item)
-                item.windowIconProvider = manager.windowIconProvider
+                item.windowIconProvider = Qt.binding(() => manager.windowIconProvider)
             if ("mockSession" in item)
-                item.mockSession = manager.mockSession
+                item.mockSession = Qt.binding(() => manager.mockSession)
             if ("registry" in item)
                 item.registry = manager.registry
             if ("currentSlideIndex" in item)

@@ -71,8 +71,9 @@ ScreenBase {
 
     SectionTitle {
         x: parent.width * 0.03
+        y: Theme.spacingXL + Theme.spacingXS
         width: parent.width - x
-        titleSize: Theme.fontSizeXXLarge
+        titleSize: Theme.fontSizeXXLarge + Theme.spacingS
         title: screen.title
         styleTokens: screen.styleTokens
     }

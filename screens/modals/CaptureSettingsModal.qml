@@ -22,6 +22,7 @@ FixtureModalFrame {
     }
 
     visible: layerManager?.stack.includes(layerName) ?? false
+    accessibilityActive: layerManager?.topLayer === layerName
     preferredWidth: 460
     preferredHeight: 260
     accessibleLabel: tr("mockup.capture.settings", "Settings")

@@ -24,6 +24,7 @@ FocusZone {
     defaultFocus: entries.length <= 1
     showFocusRing: false
     Accessible.role: Accessible.Dialog
+    Accessible.ignored: !visible
     Accessible.name: selectedEntry?.title ?? ""
 
     MouseArea {

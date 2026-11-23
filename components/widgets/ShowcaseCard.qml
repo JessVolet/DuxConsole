@@ -18,9 +18,11 @@ SlantedImage {
     Accessible.role: Accessible.Button
     Accessible.name: title
     Accessible.description: subtitle
-    Accessible.ignored: !interactive
+    Accessible.ignored: !interactive || !enabled || !visible
+    Accessible.focused: focused && !Accessible.ignored
+    Accessible.selected: selected
     Accessible.onPressAction: {
-        if (interactive)
+        if (!Accessible.ignored)
             picked(itemData?.id)
     }
 

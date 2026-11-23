@@ -19,6 +19,16 @@ SlantedSurface {
     signal seekRequested(real position)
     signal expandRequested()
 
+    Accessible.role: Accessible.Button
+    Accessible.name: track?.title ?? ""
+    Accessible.description: tr("hints.expand", "Expand")
+    Accessible.ignored: !interactive || !visible || expanded || !track
+    Accessible.focused: focused && !Accessible.ignored
+    Accessible.onPressAction: {
+        if (!Accessible.ignored)
+            expandRequested()
+    }
+
     readonly property color foreground: styleTokens?.onSurfaceColor(role) ?? Theme.surfaceText
     readonly property color accent: styleTokens?.accentColor ?? Theme.primary
 
@@ -103,6 +113,7 @@ SlantedSurface {
         ValueMeter {
             width: parent.width
             visible: player.expanded && Boolean(player.track)
+            enabled: player.interactive
             styleTokens: player.styleTokens
             motionTokens: player.motionTokens
             maximum: player.track?.duration ?? 1

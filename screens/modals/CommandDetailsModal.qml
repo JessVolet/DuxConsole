@@ -25,6 +25,7 @@ Item {
     anchors.fill: parent
     visible: command !== null && layerManager?.topLayer === "modal"
     Accessible.role: Accessible.Dialog
+    Accessible.ignored: !visible
     Accessible.name: command?.title ?? ""
 
     MouseArea {
@@ -83,7 +84,8 @@ Item {
                         motionTokens: modal.motionTokens
                         Accessible.role: Accessible.Button
                         Accessible.name: label
-                        Accessible.ignored: choice.inert
+                        Accessible.ignored: !visible || choice.inert
+                        Accessible.focused: choice.active && !Accessible.ignored
                         Accessible.onPressAction: {
                             if (choice.requestZoneFocus())
                                 choice.activate()
@@ -119,7 +121,8 @@ Item {
                     motionTokens: modal.motionTokens
                     Accessible.role: Accessible.Button
                     Accessible.name: label
-                    Accessible.ignored: cancel.inert
+                    Accessible.ignored: !visible || cancel.inert
+                    Accessible.focused: cancel.active && !Accessible.ignored
                     Accessible.onPressAction: {
                         if (cancel.requestZoneFocus())
                             cancel.activate()

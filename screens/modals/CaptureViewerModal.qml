@@ -18,6 +18,7 @@ FixtureModalFrame {
     signal entryRequested(int index)
 
     visible: layerManager?.stack.includes(layerName) ?? false
+    accessibilityActive: layerManager?.topLayer === layerName
     preferredWidth: width - Theme.spacingXL * 2
     preferredHeight: height - Theme.spacingXL * 2
     accessibleLabel: i18n?.t("mockup.capture.viewer", "Capture viewer") ?? "Capture viewer"

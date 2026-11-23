@@ -16,6 +16,7 @@ Rectangle {
     visible: opacity > 0
     opacity: message.length > 0 ? 1 : 0
     Accessible.role: Accessible.AlertMessage
+    Accessible.ignored: !visible || !message.length
     Accessible.name: message
 
     Behavior on opacity {

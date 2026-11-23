@@ -192,6 +192,7 @@ Item {
                         Accessible.role: Accessible.Button
                         Accessible.name: tabLabel.text
                         Accessible.selected: isCurrent
+                        Accessible.ignored: !visible || !bar.tabControlsEnabled
                         Accessible.onPressAction: {
                             if (bar.tabControlsEnabled)
                                 bar.slideRequested(tab.modelData.id)
@@ -290,6 +291,7 @@ Item {
                 radius: height / 2
                 color: bar.fixtureTime ? bar.accentColor : Qt.alpha(bar.accentColor, 0.16)
                 Accessible.name: bar.resolvedProfile
+                Accessible.ignored: !visible || (bar.fixtureTime !== "" && !bar.tabControlsEnabled)
 
                 StyledText {
                     id: profileLabel

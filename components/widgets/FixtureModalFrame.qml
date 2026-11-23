@@ -9,6 +9,7 @@ Item {
     property real preferredWidth: 520
     property real preferredHeight: 350
     property string accessibleLabel: ""
+    property bool accessibilityActive: visible
     property int entranceDuration: 0
     property int entranceEasing: Easing.OutCubic
     property real panelProgress: 1
@@ -43,6 +44,7 @@ Item {
     z: 40
     Accessible.role: Accessible.Dialog
     Accessible.name: accessibleLabel
+    Accessible.ignored: !visible || !accessibilityActive
 
     Rectangle {
         anchors.fill: parent

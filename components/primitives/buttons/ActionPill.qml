@@ -18,6 +18,8 @@ AbstractButton {
     implicitWidth: labels.implicitWidth + Theme.spacingM * 2
     hoverEnabled: true
     focusPolicy: Qt.NoFocus
+    Accessible.ignored: !enabled || !visible
+    Accessible.focused: highlighted && !Accessible.ignored
 
     background: Rectangle {
         radius: height / 2

@@ -112,7 +112,6 @@ FocusZone {
             subtitle: itemData?.subtitle ?? ""
             iconName: itemData?.icon ?? ""
             source: itemData?.art ?? ""
-            interactive: !shelf.inert
             onPicked: itemId => carousel.cardClicked(itemId)
         }
     }

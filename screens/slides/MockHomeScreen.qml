@@ -131,6 +131,7 @@ ScreenBase {
         height: Math.max(62, 74 * root.scaleFactor)
         styleTokens: root.styleTokens
         achievement: root.session?.achievement ?? null
+        accessibilityActive: root.layerManager?.topLayer === "dashboard"
         recentLabel: root.tr("mockup.home.recent_achievement", "Recent achievement")
         progressLabel: root.tr("mockup.home.achievement_progress", "Achievement progress")
         unavailableLabel: root.tr("mockup.home.no_achievement", "No recent achievements")
@@ -185,6 +186,7 @@ ScreenBase {
             motionTokens: root.motionTokens
             iconsPadManager: root.iconsPadManager
             interactive: !mediaZone.inert
+            focused: mediaZone.active
             onPlayRequested: {
                 if (mediaZone.requestZoneFocus())
                     mediaZone.activate()

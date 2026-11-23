@@ -35,7 +35,7 @@ Row {
             enabled: shortcuts.controlsEnabled
             Accessible.role: Accessible.Button
             Accessible.name: shortcuts.i18n?.t(modelData.label) ?? modelData.label
-            Accessible.ignored: !shortcuts.controlsEnabled
+            Accessible.ignored: !visible || !shortcuts.controlsEnabled
             Accessible.onPressAction: {
                 if (shortcuts.controlsEnabled)
                     shortcuts.actionRequested(modelData.intent)
@@ -59,6 +59,7 @@ Row {
         radius: height / 2
         color: shortcuts.styleTokens?.surfaceColor("chrome") ?? Theme.surfaceContainerHigh
         Accessible.role: Accessible.StaticText
+        Accessible.ignored: !visible
         Accessible.name: recordingLabel.text
 
         StyledText {

@@ -21,7 +21,9 @@ Rectangle {
 
     Accessible.role: Accessible.Button
     Accessible.name: label
-    Accessible.ignored: !interactive
+    Accessible.ignored: !interactive || !visible
+    Accessible.focused: focused && !Accessible.ignored
+    Accessible.selected: selected
     Accessible.onPressAction: {
         if (interactive)
             triggered()

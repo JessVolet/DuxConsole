@@ -64,6 +64,8 @@ Item {
                 motionTokens: mixer.motionTokens
 
                 Accessible.role: Accessible.Button
+                Accessible.ignored: !visible || !mixer.interactive
+                Accessible.focused: channel.focused && !Accessible.ignored
                 Accessible.name: title.text + ", " + summary.text
                 Accessible.onPressAction: {
                     if (mixer.interactive)
@@ -111,6 +113,7 @@ Item {
 
                     ValueMeter {
                         visible: channel.selected && channel.height >= 60
+                        enabled: mixer.interactive
                         width: parent.width
                         styleTokens: mixer.styleTokens
                         motionTokens: mixer.motionTokens

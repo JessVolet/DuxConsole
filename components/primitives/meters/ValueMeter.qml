@@ -24,6 +24,7 @@ Item {
     implicitWidth: radial ? 220 : 160
     implicitHeight: radial ? 220 : Theme.spacingS
     Accessible.role: Accessible.ProgressBar
+    Accessible.ignored: !visible || !enabled
     Accessible.name: label
     Accessible.description: Math.round(value) + unit
 

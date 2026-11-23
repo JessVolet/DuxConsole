@@ -56,11 +56,16 @@ Grid {
                 anchors.fill: parent
                 itemData: cell.modelData
                 selected: true
+                accessibilitySelected: cell.active
                 focused: cell.active
                 interactive: !cell.inert
                 styleTokens: grid.styleTokens
                 motionTokens: grid.motionTokens
                 optionsLabel: grid.optionsLabel
+                onActivationRequested: {
+                    if (cell.requestZoneFocus())
+                        cell.activate()
+                }
                 onOptionsRequested: {
                     if (cell.requestZoneFocus())
                         cell.triggerOptions()

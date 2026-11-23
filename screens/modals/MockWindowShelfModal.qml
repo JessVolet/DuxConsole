@@ -23,6 +23,7 @@ FixtureModalFrame {
     preferredHeight: height
     accessibleLabel: header
     visible: layerManager?.stack.includes("mock-windows") ?? false
+    accessibilityActive: layerManager?.topLayer === "mock-windows"
 
     DisplayTitle {
         id: modalTitle

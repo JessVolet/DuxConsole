@@ -128,7 +128,7 @@ FocusZone {
             motionTokens: shelf.motionTokens
             details: shelf.detailsFor(itemData)
             optionsLabel: shelf.tr("mockup.home.options", "Options")
-            interactive: !shelf.inert && shelf.enabled
+            onActivationRequested: deck.cardClicked(itemData?.id)
             onOptionsRequested: {
                 if (shelf.requestZoneFocus() && itemData)
                     shelf.optionsRequested(itemData.id)

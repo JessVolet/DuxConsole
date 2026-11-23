@@ -46,8 +46,10 @@ Flow {
 
             Accessible.role: Accessible.Button
             Accessible.name: label
+            Accessible.ignored: !visible || !strip.interactive || control.disabled
+            Accessible.focused: control.focused && !Accessible.ignored
             Accessible.onPressAction: {
-                if (strip.interactive && !control.disabled)
+                if (!control.Accessible.ignored)
                     strip.invoked(control.index)
             }
 

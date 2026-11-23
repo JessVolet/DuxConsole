@@ -190,6 +190,12 @@ Item {
                 id: cardLoader
                 anchors.fill: parent
                 sourceComponent: carousel.cardDelegate
+                Binding {
+                    target: cardLoader.item
+                    property: "interactive"
+                    value: carousel.interactive && slot.shown && !slot.retiring
+                    when: cardLoader.item !== null && ("interactive" in cardLoader.item)
+                }
 
                 Binding {
                     target: cardLoader.item

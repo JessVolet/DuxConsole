@@ -14,6 +14,8 @@ SlantedSurface {
 
     role: "chrome"
     implicitWidth: 480
+    property bool accessibilityActive: true
+
     implicitHeight: 74
 
     Row {
@@ -73,6 +75,7 @@ SlantedSurface {
                 to: Math.max(1, digest.achievement?.total ?? 0)
                 value: Math.max(0, Math.min(to, digest.achievement?.progress ?? 0))
                 Accessible.name: digest.progressLabel
+                Accessible.ignored: !visible || !digest.accessibilityActive
                 visible: digest.achievement !== null
             }
         }

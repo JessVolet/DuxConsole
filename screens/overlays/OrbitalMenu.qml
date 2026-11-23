@@ -166,7 +166,8 @@ Item {
         id: preview
         visible: opacity > 0 && menu.activeCommand !== null
         opacity: menu.ringVisible ? 1 : 0
-        Accessible.ignored: !menu.ringVisible
+        enabled: menu.ringActive
+        Accessible.ignored: !enabled || !visible
         Behavior on opacity {
             NumberAnimation {
                 duration: menu.ringVisible ? (menu.motionTokens?.fadeInDuration ?? 0)

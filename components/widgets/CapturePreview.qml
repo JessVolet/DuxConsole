@@ -26,6 +26,16 @@ Item {
     readonly property color foreground: styleTokens?.onSurfaceColor("card") ?? Theme.surfaceText
     readonly property string title: entry?.title ?? tr(entry?.titleKey, "")
 
+    Accessible.role: Accessible.Button
+    Accessible.name: title
+    Accessible.description: tr("mockup.capture.viewer", "Capture viewer")
+    Accessible.ignored: !interactive || !visible || expanded || !entry || video
+    Accessible.focused: focused && !Accessible.ignored
+    Accessible.onPressAction: {
+        if (!Accessible.ignored)
+            activated()
+    }
+
     function tr(key, fallback) {
         return i18n?.t(key, fallback) ?? fallback
     }
@@ -98,6 +108,7 @@ Item {
             visible: preview.video && !preview.playing && (!preview.expanded || preview.canPlay)
             enabled: preview.interactive
             Accessible.name: preview.tr("mockup.media.play", "Play")
+            Accessible.focused: preview.focused && !Accessible.ignored
             Accessible.ignored: !visible || !enabled
             onClicked: preview.activated()
 

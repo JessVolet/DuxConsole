@@ -18,6 +18,7 @@ FixtureModalFrame {
     signal seekRequested(real position)
 
     visible: layerManager?.stack.includes(layerName) ?? false
+    accessibilityActive: layerManager?.topLayer === layerName
     entranceDuration: motionTokens?.sheetEntranceDuration ?? 0
     entranceEasing: motionTokens?.easingSnappy ?? Easing.OutCubic
     preferredWidth: 580

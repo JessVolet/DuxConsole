@@ -60,6 +60,7 @@ Item {
             id: card
 
             property var itemData: null
+            property bool interactive: false
 
             styleTokens: gallery.styleTokens
             motionTokens: gallery.motionTokens
@@ -82,9 +83,11 @@ Item {
 
             Accessible.role: Accessible.Button
             Accessible.name: caption.text
-            Accessible.ignored: !gallery.interactive
+            Accessible.ignored: !card.interactive || !enabled || !visible
+            Accessible.focused: focused && !Accessible.ignored
+            Accessible.selected: selected
             Accessible.onPressAction: {
-                if (gallery.interactive)
+                if (!Accessible.ignored)
                     gallery.entryRequested(gallery.entries.findIndex(entry => entry.id === card.itemData?.id))
             }
 

@@ -11,8 +11,21 @@ SlantedSurface {
     property string details: ""
     property string optionsLabel: ""
     property bool interactive: enabled
+    property bool accessibilitySelected: selected
 
     signal optionsRequested()
+    signal activationRequested()
+
+    Accessible.role: Accessible.Button
+    Accessible.name: cardTitle
+    Accessible.description: card.details
+    Accessible.ignored: !interactive || !enabled || !visible
+    Accessible.focused: focused && !Accessible.ignored
+    Accessible.selected: accessibilitySelected
+    Accessible.onPressAction: {
+        if (!Accessible.ignored)
+            activationRequested()
+    }
 
     function optionsContain(localPoint) {
         return card.selected && options.contains(options.mapFromItem(card, localPoint))
@@ -76,7 +89,7 @@ SlantedSurface {
             text: card.optionsLabel
             primary: true
             styleTokens: card.styleTokens
-            enabled: card.interactive
+            enabled: card.interactive && card.selected
             onClicked: card.optionsRequested()
         }
     }

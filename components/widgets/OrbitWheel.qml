@@ -119,6 +119,7 @@ Item {
             iconName: wheel.originIcon
             label: wheel.closeLabel
             selected: true
+            Accessible.selected: false
             interactive: wheel.interactive
             styleTokens: wheel.styleTokens
             motionTokens: wheel.motionTokens

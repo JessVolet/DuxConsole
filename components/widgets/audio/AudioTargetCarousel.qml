@@ -97,7 +97,9 @@ Item {
             selectedWidth: widget.orientation === Qt.Vertical ? Math.max(290, widget.width * 0.80) : 210
             cardHeight: widget.orientation === Qt.Vertical ? 66 : 104
             selectedHeight: widget.orientation === Qt.Vertical ? 90 : 130
-            spacing: Theme.spacingS
+            // The mixer's selected card is 24px taller; the vertical gap must
+            // cover that growth or its ring overlaps both neighbours.
+            spacing: widget.orientation === Qt.Vertical ? Theme.spacingXL : Theme.spacingS
             motionTokens: widget.motionTokens
             focused: zone.active
             delegate: AudioTargetCard {

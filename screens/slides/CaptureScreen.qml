@@ -82,8 +82,8 @@ ScreenBase {
         id: actionZone
 
         x: parent.width * 0.028
-        y: parent.height * 0.15
-        width: Math.max(180, Math.min(parent.width * 0.20, 255))
+        y: parent.height * 0.17
+        width: Math.max(180, Math.min(parent.width * 0.20, 270))
         height: buttons.implicitHeight
         zoneId: "mock-capture-actions"
         layerManager: screen.layerManager
@@ -127,9 +127,10 @@ ScreenBase {
         id: previewZone
 
         anchors.right: parent.right
-        y: parent.height * 0.10
-        width: Math.min(parent.width * 0.50, height * 16 / 9)
-        height: Math.min(parent.height * 0.53, parent.width * 0.50 * 9 / 16)
+        anchors.rightMargin: parent.width * 0.03
+        y: parent.height * 0.116
+        width: Math.min(780, parent.width * 0.50, parent.height * 0.56 * 16 / 9)
+        height: width * 9 / 16
         zoneId: "mock-capture-preview"
         layerManager: screen.layerManager
         navigationManager: screen.navigationManager
@@ -164,6 +165,9 @@ ScreenBase {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.leftMargin: parent.width * 0.03
+        anchors.rightMargin: parent.width * 0.03
+        anchors.bottomMargin: -Math.min(Theme.spacingXL * 2, parent.height * 0.055)
         height: parent.height * 0.25
         zoneId: "mock-capture-gallery"
         layerManager: screen.layerManager

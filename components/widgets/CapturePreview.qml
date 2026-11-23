@@ -1,7 +1,9 @@
 import QtQuick
 import QtMultimedia
+import QtQuick.Controls
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets as DCommon
 import "../primitives/meters"
 import "../primitives/surfaces"
 
@@ -86,20 +88,38 @@ Item {
             font.weight: Font.Medium
         }
 
-        ControlStrip {
+        RoundButton {
+            id: previewPlay
             anchors.centerIn: parent
-            width: implicitWidth
+            width: Math.min(64, parent.height * 0.22)
+            height: width
+            radius: width / 2
+            focusPolicy: Qt.NoFocus
             visible: preview.video && !preview.playing && (!preview.expanded || preview.canPlay)
-            styleTokens: preview.styleTokens
-            motionTokens: preview.motionTokens
-            iconsPadManager: preview.iconsPadManager
-            interactive: preview.interactive
-            entries: [{label: preview.tr("mockup.media.play", "Play"), glyph: "I.Accept"}]
-            onInvoked: preview.activated()
+            enabled: preview.interactive
+            Accessible.name: preview.tr("mockup.media.play", "Play")
+            Accessible.ignored: !visible || !enabled
+            onClicked: preview.activated()
+
+            background: Rectangle {
+                radius: previewPlay.radius
+                color: preview.styleTokens?.scrimColor(0.65) ?? Theme.surface
+                border.color: preview.foreground
+                border.width: (previewPlay.hovered || preview.focused) ? 4 : 3
+            }
+
+            contentItem: Item {
+                DCommon.DIcon {
+                    anchors.centerIn: parent
+                    name: "play_arrow"
+                    size: Math.round(previewPlay.width * 0.58)
+                    color: preview.foreground
+                }
+            }
         }
 
         TapHandler {
-            enabled: preview.interactive && Boolean(preview.entry) && !preview.expanded
+            enabled: preview.interactive && Boolean(preview.entry) && !preview.expanded && !preview.video
             onTapped: preview.activated()
         }
     }

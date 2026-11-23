@@ -20,6 +20,7 @@ Item {
     property real selectedWidth: 330
     property real selectedHeight: 222
     property real spacing: 36
+    property bool centerContent: false
     property real skewAngle: -8
     readonly property int count: entries.length
     readonly property var placements: Layout.placements(entries, selectedId, visibleBudget, leadingCount)
@@ -79,7 +80,8 @@ Item {
     function slotX(placement) {
         const widened = placement.offset > 0 ? selectedWidth - cardWidth : 0
         const leftPadding = skewAngle < 0 ? skewPadding : 0
-        return (leftPadding + placement.slot * (cardWidth + spacing) + widened) * layoutScale
+        const offset = centerContent ? Math.max(0, (width - naturalWidth * layoutScale) / 2) : 0
+        return offset + (leftPadding + placement.slot * (cardWidth + spacing) + widened) * layoutScale
     }
 
     onPlacementsChanged: if (slots) sync()

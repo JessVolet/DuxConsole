@@ -95,7 +95,7 @@ ScreenBase {
     FocusZone {
         id: controlsZone
 
-        x: parent.width * 0.01
+        x: parent.width * 0.039
         y: parent.height * 0.59
         width: parent.width * 0.56
         height: Math.min(112, parent.height * 0.20)
@@ -140,7 +140,7 @@ ScreenBase {
 
         x: parent.width * 0.80
         width: parent.width * 0.20
-        y: parent.height * 0.12
+        y: parent.height * 0.09
         height: parent.height * 0.60
         zoneId: "mock-audio-mixer"
         layerManager: screen.layerManager
@@ -183,7 +183,9 @@ ScreenBase {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: Theme.spacingM
+        anchors.leftMargin: parent.width * 0.027
+        anchors.rightMargin: parent.width * 0.033
+        anchors.bottomMargin: Theme.spacingM + Theme.spacingS
         height: Math.min(170, parent.height * 0.22)
         spacing: Theme.spacingXL
 
@@ -253,6 +255,7 @@ ScreenBase {
                 devices: screen.audioState?.outputs ?? []
                 selectedId: screen.audioState?.selectedOutput ?? ""
                 currentIndex: outputZone.currentSubIndex
+                leadingItems: 0
                 focused: outputZone.active
                 interactive: !outputZone.inert
                 title: screen.tr("mockup.audio.speakers", "Speakers")

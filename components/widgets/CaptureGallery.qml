@@ -47,11 +47,13 @@ Item {
         focused: gallery.focused
         motionTokens: gallery.motionTokens
         visibleBudget: width >= 1000 ? 5 : 3
+        centerContent: true
+        skewAngle: -11
         leadingCount: Math.floor(visibleBudget / 2)
         cardWidth: Math.min(285, width / 4.9)
         selectedWidth: Math.min(330, width / 3.7)
-        cardHeight: Math.max(0, gallery.height - heading.height) * 0.72
-        selectedHeight: Math.max(0, gallery.height - heading.height) * 0.92
+        cardHeight: Math.min(142, Math.max(0, gallery.height - heading.height) * 0.72)
+        selectedHeight: Math.min(156, Math.max(0, gallery.height - heading.height) * 0.92)
         spacing: Theme.spacingXL
 
         cardDelegate: SlantedImage {
@@ -62,6 +64,7 @@ Item {
             styleTokens: gallery.styleTokens
             motionTokens: gallery.motionTokens
             source: card.itemData?.artwork ?? ""
+            skewAngle: carousel.skewAngle
             fallbackText: gallery.tr("mockup.capture.unavailable", "Preview unavailable")
 
             StyledText {

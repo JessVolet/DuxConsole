@@ -12,6 +12,7 @@ Item {
     property var devices: []
     property string selectedId: ""
     property int currentIndex: 0
+    property int leadingItems: 1
     property string title: ""
     property bool focused: false
     property bool interactive: true
@@ -32,7 +33,7 @@ Item {
         anchors.fill: parent
         anchors.bottomMargin: Theme.spacingXL
         visibleBudget: 3
-        leadingCount: 1
+        leadingCount: strip.leadingItems
         cardWidth: width * 0.25
         cardHeight: Math.max(0, strip.height - Theme.spacingXL) * 0.65
         selectedWidth: width * 0.53

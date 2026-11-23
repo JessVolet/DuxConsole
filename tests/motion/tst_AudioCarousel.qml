@@ -51,23 +51,6 @@ TestCase {
         fuzzyCompare(center.x, view.width / 2, 1)
         fuzzyCompare(center.y, view.height / 2, 1)
     }
-    function test_cyclicWrapKeepsSelection() {
-        const view = findChild(widget, "audio-target-carousel")
-        widget.cyclic = true
-        widget.model = [entry("a"), entry("b"), entry("c")]
-        widget.focusZone.currentSubIndex = 0
-        wait(20)
-        compare(view.wrapIndex(view._viewIndex), 0)
-        widget.focusZone.cycleSubItem(-1)
-        wait(100)
-        compare(widget.selectedKey, "c")
-        compare(view.selectedIndex, 2)
-        compare(view.wrapIndex(view._viewIndex), 2)
-        compare(view.itemDataAt(view.selectedIndex).key, "c")
-        widget.cyclic = false
-        widget.model = []
-        widget.focusZone.currentSubIndex = 0
-    }
     function test_externalKeyMovesVisualIndex() {
         const view = findChild(widget, "audio-target-carousel")
         widget.model = [entry("a"), entry("b"), entry("c")]

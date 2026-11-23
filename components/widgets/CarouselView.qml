@@ -16,9 +16,6 @@ Item {
     property int leftCount: -1
     property int rightCount: -1
     property bool alignLeft: false
-    // Cyclic keeps the selection in the middle with entries wrapped on both
-    // sides; only enabled where the model is a wheel (the vertical mixer).
-    property bool cyclic: false
     // Lets a consumer supply the single-entry data reactively; the loader only
     // renders once, so a plain itemDataAt(0) call would not refresh.
     property var singleItemData: null
@@ -57,9 +54,6 @@ Item {
         ? ((currentIndex % count) + count) % count
         : -1
     readonly property var selectedItem: count === 1 ? singleItem.item : view.currentItem
-    readonly property int viewCount: cyclic ? count * 3 : count
-    property int _viewIndex: 0
-    property int _lastSelected: -1
     readonly property int pathIntervals: Math.max(0, visibleItemCount - 1)
     readonly property real unscaledStep: (vertical ? cardHeight : cardWidth) + spacing
     readonly property real unscaledShift: unscaledExpansion / 2
@@ -96,63 +90,17 @@ Item {
         Qt.callLater(snapToSelected)
     }
 
-    function wrapIndex(index) {
-        return count > 0 ? ((index % count) + count) % count : -1
-    }
-
-    function resetCycle() {
-        if (!cyclic || count <= 0 || selectedIndex < 0)
-            return
-        _snapping = true
-        _viewIndex = count + selectedIndex
-        Qt.callLater(() => { _snapping = false })
-    }
-
-    // Keeping the view index inside the middle copy makes the entry data at
-    // both positions identical, so the reset is invisible.
-    function normalizeCycle() {
-        if (!cyclic || count <= 0)
-            return
-        if (_viewIndex >= count && _viewIndex < count * 2)
-            return
-        resetCycle()
-    }
-
-    function stepCycle(previous, next) {
-        if (!cyclic || count <= 1 || previous < 0 || next < 0)
-            return resetCycle()
-        const forward = ((next - previous) % count + count) % count
-        _viewIndex += forward <= count / 2 ? 1 : -1
-        cycleTimer.restart()
-    }
-
     function snapToSelected() {
         _snapScheduled = false
         if (count <= 0 || selectedIndex < 0)
             return
         _snapping = true
-        view.positionViewAtIndex(cyclic ? _viewIndex : selectedIndex, PathView.SnapPosition)
+        view.positionViewAtIndex(selectedIndex, PathView.SnapPosition)
         Qt.callLater(() => { _snapping = false })
     }
 
     onWidthChanged: scheduleSnap()
     onHeightChanged: scheduleSnap()
-    onCountChanged: {
-        _lastSelected = selectedIndex
-        resetCycle()
-    }
-    onSelectedIndexChanged: {
-        const previous = _lastSelected
-        _lastSelected = selectedIndex
-        stepCycle(previous, selectedIndex)
-    }
-    Component.onCompleted: resetCycle()
-
-    Timer {
-        id: cycleTimer
-        interval: Math.max(0, carousel.moveDuration) + 16
-        onTriggered: carousel.normalizeCycle()
-    }
 
     implicitHeight: resolvedSelectedHeight + 16 * layoutScale
     clip: true
@@ -163,7 +111,7 @@ Item {
         // A single item on a zero-length path keeps the offset it had at width
         // zero, so that case uses the centered loader below instead.
         visible: carousel.count > 1
-        model: carousel.cyclic ? carousel.viewCount : carousel.model
+        model: carousel.model
         pathItemCount: carousel.visibleItemCount
         cacheItemCount: carousel.cachedItemCount
         preferredHighlightBegin: carousel.highlightPosition
@@ -182,7 +130,7 @@ Item {
         Binding {
             target: view
             property: "currentIndex"
-            value: carousel.cyclic ? carousel._viewIndex : carousel.selectedIndex
+            value: carousel.selectedIndex
             when: carousel.count > 0 && carousel.selectedIndex >= 0
         }
 
@@ -190,13 +138,8 @@ Item {
             id: slot
             required property int index
 
-            // After a cyclic reset the delegate is recreated before PathView
-            // marks it current; the view index keeps its selected size so the
-            // card does not shrink and grow again with no movement.
             readonly property bool selected: PathView.isCurrentItem
-                || (carousel.cyclic && slot.index === carousel._viewIndex)
             readonly property bool inPath: PathView.onPath
-            readonly property int itemIndex: carousel.cyclic ? carousel.wrapIndex(slot.index) : slot.index
             readonly property real sideDistance: carousel.vertical ? y + height / 2 - carousel.highlightY : x + width / 2 - carousel.highlightX
             property real translateX: selected || Math.abs(sideDistance) < 1
                 ? 0
@@ -254,7 +197,7 @@ Item {
                 Binding {
                     target: itemLoader.item
                     property: "index"
-                    value: slot.itemIndex
+                    value: slot.index
                     when: itemLoader.item !== null && ("index" in itemLoader.item)
                 }
                 Binding {
@@ -272,7 +215,7 @@ Item {
                 Binding {
                     target: itemLoader.item
                     property: "itemData"
-                    value: carousel.itemDataAt(slot.itemIndex)
+                    value: carousel.itemDataAt(slot.index)
                     when: itemLoader.item !== null && ("itemData" in itemLoader.item)
                 }
             }

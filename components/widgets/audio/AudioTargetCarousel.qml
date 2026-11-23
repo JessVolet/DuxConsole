@@ -13,7 +13,6 @@ Item {
     property string zoneId: ""
     property string layerName: "dashboard"
     property int orientation: Qt.Horizontal
-    property bool cyclic: false
     property bool wheel: false
     property bool defaultFocus: false
     property var layerManager: null
@@ -93,9 +92,8 @@ Item {
             visible: !widget.wheel
             enabled: !widget.wheel
             orientation: widget.orientation
-            cyclic: widget.cyclic
             singleItemData: widget.selectedTarget
-            model: stableModel
+            model: widget.wheel ? null : stableModel
             currentIndex: zone.currentSubIndex
             maxVisibleItems: widget.orientation === Qt.Vertical ? 5 : 3
             cardWidth: widget.orientation === Qt.Vertical ? Math.max(250, widget.width * 0.66) : 140
@@ -126,7 +124,7 @@ Item {
             visible: widget.wheel
             enabled: widget.wheel
             objectName: "audio-target-wheel"
-            model: stableModel
+            model: widget.wheel ? stableModel : null
             currentIndex: zone.currentSubIndex
             cardWidth: Math.max(250, widget.width * 0.66)
             selectedWidth: Math.max(290, widget.width * 0.80)

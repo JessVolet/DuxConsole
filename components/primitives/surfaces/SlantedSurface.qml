@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import qs.Common
 
 Item {
@@ -19,6 +20,7 @@ Item {
     property int borderWidth: !disabled && focused
         ? focusedBorderWidth
         : (!disabled && selected ? selectedBorderWidth : 1)
+    property alias backdrop: backdropContainer.data
     default property alias content: contentContainer.data
 
     readonly property real _shearX: Math.tan(skewAngle * Math.PI / 180)
@@ -70,6 +72,25 @@ Item {
                 0, 0,               1, 0,
                 0, 0,               0, 1
             )
+        }
+
+        Rectangle {
+            id: bgMask
+            anchors.fill: parent
+            radius: surface.radius
+            visible: false
+            layer.enabled: true
+        }
+
+        Item {
+            id: backdropContainer
+            anchors.fill: parent
+            visible: children.length > 0
+            layer.enabled: children.length > 0
+            layer.effect: MultiEffect {
+                maskEnabled: true
+                maskSource: bgMask
+            }
         }
     }
 

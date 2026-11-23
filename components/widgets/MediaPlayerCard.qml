@@ -60,83 +60,83 @@ SlantedSurface {
     }
 
     role: "card"
-    clip: true
     focused: mediaZone.active
     implicitWidth: 360
     implicitHeight: compact ? 84 : 104
 
-    // Fondo difuminado del art
-    Image {
-        anchors.fill: parent
-        source: mediaCard.mediaService?.artUrl ?? ""
-        fillMode: Image.PreserveAspectCrop
-        visible: status === Image.Ready && mediaCard.hasPlayer
-        opacity: 0.28
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            blurEnabled: true
-            blur: 0.72
-            blurMax: 32
-        }
-    }
+    backdrop: [
+        // Fondo difuminado del art recortado al paralelogramo inclinado
+        Image {
+            anchors.fill: parent
+            source: mediaCard.mediaService?.artUrl ?? ""
+            fillMode: Image.PreserveAspectCrop
+            visible: status === Image.Ready && mediaCard.hasPlayer
+            opacity: 0.30
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: 0.72
+                blurMax: 32
+            }
+        },
+        // Canva de espectro animado en el fondo de la tarjeta
+        Row {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
+            height: parent.height * 0.72
+            spacing: 4
+            visible: mediaCard.hasPlayer
 
-    // Canva de espectro animado en el fondo de la tarjeta
-    Row {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 12
-        anchors.rightMargin: 12
-        height: parent.height * 0.72
-        spacing: 4
-        visible: mediaCard.hasPlayer
+            Repeater {
+                model: 16
+                delegate: Item {
+                    id: canvaCol
+                    required property int index
+                    property real level: 0.18 + ((index * 37) % 60) / 100.0
 
-        Repeater {
-            model: 16
-            delegate: Item {
-                id: canvaCol
-                required property int index
-                property real level: 0.18 + ((index * 37) % 60) / 100.0
-
-                width: Math.max(4, (parent.width - 15 * 4) / 16)
-                height: parent.height
-
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    height: mediaCard.isPlaying
-                        ? Math.max(6, Math.round(parent.height * canvaCol.level))
-                        : 6
-                    radius: 2
-                    color: Qt.alpha(mediaCard.accentColor, 0.22)
+                    width: Math.max(4, (parent.width - 15 * 4) / 16)
+                    height: parent.height
 
                     Rectangle {
-                        anchors.top: parent.top
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        height: 2
-                        radius: 1
-                        color: Qt.alpha(mediaCard.accentColor, 0.55)
-                    }
+                        anchors.bottom: parent.bottom
+                        height: mediaCard.isPlaying
+                            ? Math.max(6, Math.round(parent.height * canvaCol.level))
+                            : 6
+                        radius: 2
+                        color: Qt.alpha(mediaCard.accentColor, 0.22)
 
-                    Behavior on height {
-                        NumberAnimation {
-                            duration: mediaCard.motionTokens?.durationFast ?? 120
-                            easing.type: Easing.OutQuad
+                        Rectangle {
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 2
+                            radius: 1
+                            color: Qt.alpha(mediaCard.accentColor, 0.55)
+                        }
+
+                        Behavior on height {
+                            NumberAnimation {
+                                duration: mediaCard.motionTokens?.durationFast ?? 120
+                                easing.type: Easing.OutQuad
+                            }
                         }
                     }
-                }
 
-                Timer {
-                    interval: 170 + (canvaCol.index % 5) * 45
-                    repeat: true
-                    running: mediaCard.isPlaying && (mediaCard.motionTokens?.animationsEnabled ?? true)
-                    onTriggered: canvaCol.level = 0.15 + Math.random() * 0.80
+                    Timer {
+                        interval: 170 + (canvaCol.index % 5) * 45
+                        repeat: true
+                        running: mediaCard.isPlaying && (mediaCard.motionTokens?.animationsEnabled ?? true)
+                        onTriggered: canvaCol.level = 0.15 + Math.random() * 0.80
+                    }
                 }
             }
         }
-    }
+    ]
 
     FocusZone {
         id: mediaZone

@@ -14,6 +14,8 @@ Column {
     property string missingLabel: ""
     property string missingDescription: ""
     property real previewHeight: width * 0.52
+    property bool showInsignia: false
+    readonly property real insigniaSize: Math.min(94, previewHeight * 0.28)
 
     spacing: Theme.spacingM
 
@@ -62,10 +64,36 @@ Column {
 
     readonly property bool previewHasArt: preview.hasImage
 
-    SectionTitle {
+    Item {
         width: detail.width
-        styleTokens: detail.styleTokens
-        title: detail.entry?.title ?? ""
-        subtitle: detail.entry?.description ?? detail.entry?.subtitle ?? ""
+        height: caption.implicitHeight + (detail.showInsignia ? Theme.spacingXL : 0)
+
+        SlantedSurface {
+            visible: detail.showInsignia
+            width: detail.insigniaSize
+            height: width
+            x: Theme.spacingS
+            y: -height * 0.66
+            role: "selectedCard"
+            styleTokens: detail.styleTokens
+
+            DCommon.DIcon {
+                anchors.centerIn: parent
+                name: detail.entry?.icon ?? ""
+                size: Math.round(detail.insigniaSize * 0.38)
+                color: detail.styleTokens?.accentColor ?? Theme.primary
+            }
+        }
+
+        SectionTitle {
+            id: caption
+            x: detail.showInsignia ? detail.insigniaSize + Theme.spacingXL : 0
+            y: detail.showInsignia ? Theme.spacingXL : 0
+            width: parent.width - x
+            titleSize: detail.showInsignia ? Theme.fontSizeXLarge : Theme.fontSizeMedium
+            styleTokens: detail.styleTokens
+            title: detail.entry?.title ?? ""
+            subtitle: detail.entry?.description ?? detail.entry?.subtitle ?? ""
+        }
     }
 }

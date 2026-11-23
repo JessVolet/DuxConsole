@@ -91,8 +91,10 @@ ScreenBase {
         anchors.right: parent.right
         anchors.rightMargin: parent.width * 0.03
         anchors.bottom: filters.top
-        anchors.bottomMargin: Theme.spacingS
-        height: parent.height * 0.29
+        height: parent.height * 0.275
+        featuredWidth: Math.min(460, width * 0.30)
+        featuredHeight: Math.min(234, height * 0.94)
+        cardSkew: -11
         zoneId: "mock-launcher-shelf"
         layerManager: screen.layerManager
         navigationManager: screen.navigationManager
@@ -118,6 +120,7 @@ ScreenBase {
         anchors.left: parent.left
         anchors.leftMargin: parent.width * 0.03
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: -Theme.spacingS
         width: implicitWidth
         height: implicitHeight
         zoneId: "mock-launcher-filters"

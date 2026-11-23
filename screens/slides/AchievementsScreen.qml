@@ -95,8 +95,9 @@ ScreenBase {
         anchors.right: parent.right
         anchors.rightMargin: parent.width * 0.03
         y: parent.height * 0.09
-        width: parent.width * 0.41
-        previewHeight: Math.min(width * 0.52, parent.height * 0.45)
+        width: Math.min(680, parent.width * 0.41)
+        previewHeight: Math.min(width * 9 / 16, parent.height * 0.45)
+        showInsignia: true
         visible: !!screen.selectedEntry
         entry: screen.selectedEntry
         missingLabel: screen.tr("mockCollection.missingArt", "Not found")
@@ -108,11 +109,20 @@ ScreenBase {
     CollectionShelf {
         id: shelf
         anchors.left: parent.left
-        anchors.leftMargin: parent.width * 0.03
+        anchors.leftMargin: parent.width * 0.085
         anchors.bottom: filters.top
-        anchors.bottomMargin: Theme.spacingS
+        anchors.bottomMargin: screen.entries.length > 2 ? -Theme.spacingS : Theme.spacingS
         width: parent.width * 0.83
-        height: parent.height * 0.25
+        height: parent.height * 0.21
+        featuredWidth: Math.min(340, width * 0.30)
+        featuredHeight: Math.min(165, height * 0.94)
+        sideWidthLimit: 235
+        aspectRatio: 1.56
+        sideHeightLimit: 152
+        leadingItems: 1
+        cardGap: Theme.spacingL * 4
+        cardSkew: -11
+        badgeLayout: true
         zoneId: "mock-achievements-shelf"
         layerManager: screen.layerManager
         navigationManager: screen.navigationManager

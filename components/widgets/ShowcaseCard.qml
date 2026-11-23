@@ -12,6 +12,7 @@ SlantedImage {
     property string subtitle: ""
     property string iconName: ""
     property bool interactive: true
+    property bool badgeLayout: false
     signal picked(var itemId)
 
     Accessible.role: Accessible.Button
@@ -24,12 +25,12 @@ SlantedImage {
     }
 
     DCommon.DIcon {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -caption.height / 3
+        id: badge
+        x: card.badgeLayout ? Theme.spacingL : (parent.width - width) / 2
+        y: card.badgeLayout ? Theme.spacingM : (parent.height - height) / 2 - caption.height / 3
         visible: !card.hasImage && card.iconName !== ""
         name: card.iconName
-        size: Math.min(42, card.height / 3)
+        size: card.badgeLayout ? Math.min(28, card.height / 4) : Math.min(42, card.height / 3)
         color: card.styleTokens?.accentColor ?? Theme.primary
     }
 
@@ -37,8 +38,8 @@ SlantedImage {
         id: caption
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.margins: Theme.spacingM
+        y: card.badgeLayout ? badge.y + badge.height + Theme.spacingS : parent.height - height - Theme.spacingM
+        anchors.margins: Theme.spacingL
         spacing: Theme.spacingXS
 
         StyledText {

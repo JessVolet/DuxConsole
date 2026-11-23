@@ -15,7 +15,7 @@ Text {
         auto_awesome: "✦", bedtime: "☾", bolt: "ϟ", group: "♟", light_mode: "☀",
         mic_off: "⊘", monitor: "▱", nightlight: "☾", play_pause: "⏯",
         queue_music: "♬", replay_30: "↺", skip_next: "⏭", skip_previous: "⏮",
-        speed: "◴", tune: "≋"
+        speed: "◴", tune: "≋", sensors: "◌", collections_bookmark: "▣", explore: "✧", live_tv: "▶", multitrack_audio: "♫", landscape: "▵"
     })
 
     font.pixelSize: Theme.iconSize

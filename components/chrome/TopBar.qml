@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Services.UPower
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import "../primitives/glyphs"
 
 Item {

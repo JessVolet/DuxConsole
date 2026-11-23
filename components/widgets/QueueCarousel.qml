@@ -28,7 +28,7 @@ Item {
     readonly property real naturalWidth: selectedWidth + Math.max(0, placements.length - 1) * (cardWidth + spacing) + skewPadding
     readonly property real naturalHeight: Math.max(cardHeight, selectedHeight)
     readonly property real layoutScale: Math.max(0, Math.min(1, width / Math.max(1, naturalWidth), height / Math.max(1, naturalHeight)))
-    readonly property int moveDuration: motionTokens?.durationNormal ?? 0
+    property int moveDuration: motionTokens?.durationNormal ?? 0
     readonly property int fadeInDuration: motionTokens?.fadeInDuration ?? 0
     readonly property int fadeOutDuration: motionTokens?.fadeOutDuration ?? 0
     property var slots: new Map()
@@ -140,12 +140,17 @@ Item {
                 reveal()
             }
 
+            function finishReveal() {
+                teleporting = false
+                if (!retiring)
+                    shown = true
+            }
+
             function reveal() {
-                Qt.callLater(() => {
-                    teleporting = false
-                    if (!retiring)
-                        shown = true
-                })
+                if (carousel.moveDuration === 0 && carousel.fadeInDuration === 0)
+                    finishReveal()
+                else
+                    Qt.callLater(finishReveal)
             }
 
             Timer {

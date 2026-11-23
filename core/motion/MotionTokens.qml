@@ -11,6 +11,7 @@ Item {
     property int fadeInMs: 180
     property int fadeOutMs: 140
     property int noticeMs: 2600
+    property int homeCarouselMs: 350
 
     function scaled(baseMs) {
         if (!animationsEnabled || suppressAnimations)
@@ -21,6 +22,7 @@ Item {
     readonly property int durationFast: scaled(120)
     readonly property int durationNormal: scaled(220)
     readonly property int durationMorph: scaled(280)
+    readonly property int homeCarouselDuration: scaled(homeCarouselMs)
     readonly property int fadeInDuration: scaled(fadeInMs)
     readonly property int fadeOutDuration: scaled(fadeOutMs)
 
@@ -44,6 +46,8 @@ Item {
                         motion.animationsEnabled = cfg.animations.enabled
                     if (typeof cfg.animations.speed === "number")
                         motion.speedScale = cfg.animations.speed
+                    if (typeof cfg.animations.homeCarouselMs === "number")
+                        motion.homeCarouselMs = Math.max(0, cfg.animations.homeCarouselMs)
                     if (typeof cfg.animations.fadeInMs === "number")
                         motion.fadeInMs = cfg.animations.fadeInMs
                     if (typeof cfg.animations.noticeMs === "number")

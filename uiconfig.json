@@ -5,6 +5,7 @@
     "speed": 1.0,
     "fadeInMs": 180,
     "fadeOutMs": 140,
+    "homeCarouselMs": 350,
     "noticeMs": 2600
   },
   "theme": {

@@ -125,7 +125,7 @@ ScreenBase {
         id: achievementDigest
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.topMargin: Theme.spacingXL * 2
+        anchors.topMargin: Theme.spacingXL * 2 + Theme.spacingM
         anchors.rightMargin: root.width * 0.018
         width: parent.width * 0.265
         height: Math.max(62, 74 * root.scaleFactor)
@@ -142,6 +142,7 @@ ScreenBase {
         width: parent.width * 0.69
         height: Math.min(parent.height * 0.34, Math.max(170, 258 * root.scaleFactor))
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: -Math.min(Theme.spacingL, parent.height * 0.018)
         entries: root.entries
         selectedId: root.mockSession?.selectedWindowId
         defaultFocus: true

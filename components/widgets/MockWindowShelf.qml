@@ -101,7 +101,7 @@ FocusZone {
         anchors.topMargin: Theme.spacingM
         anchors.bottom: parent.bottom
         anchors.left: parent.left
-        anchors.leftMargin: Math.min(Theme.spacingXL * 3, shelf.width * 0.06)
+        anchors.leftMargin: Math.min(Theme.spacingXL * 4.5, shelf.width * 0.085)
         anchors.right: parent.right
         visible: shelf.entries.length > 0
         entries: shelf.entries
@@ -109,6 +109,7 @@ FocusZone {
         focused: shelf.active
         interactive: !shelf.inert && shelf.enabled
         motionTokens: shelf.motionTokens
+        moveDuration: motionTokens?.homeCarouselDuration ?? motionTokens?.durationNormal ?? 0
         skewAngle: shelf.styleTokens?.skewAngle ?? -8
         spacing: Theme.spacingXL * 2.35
         visibleBudget: width < 600 ? 3 : (width < 850 ? 4 : 5)

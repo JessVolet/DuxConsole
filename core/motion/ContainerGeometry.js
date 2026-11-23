@@ -4,7 +4,19 @@ function clamp(value, low, high) {
     return Math.max(low, Math.min(high, value))
 }
 
-function destination(source, bounds, size, horizontal, vertical) {
+function clampRect(rect, bounds) {
+    const width = clamp(rect.width, 0, bounds.width)
+    const height = clamp(rect.height, 0, bounds.height)
+    const maxX = Math.max(bounds.x, bounds.x + bounds.width - width)
+    const maxY = Math.max(bounds.y, bounds.y + bounds.height - height)
+    return Qt.rect(clamp(rect.x, bounds.x, maxX),
+                   clamp(rect.y, bounds.y, maxY),
+                   width, height)
+}
+
+function destination(source, bounds, size, horizontal, vertical, explicitTarget) {
+    if (explicitTarget && explicitTarget.width > 0 && explicitTarget.height > 0)
+        return clampRect(explicitTarget, bounds)
     const width = clamp(size.width, 0, bounds.width)
     const height = clamp(size.height, 0, bounds.height)
     const left = horizontal === "left" || (horizontal === "auto"
@@ -15,6 +27,5 @@ function destination(source, bounds, size, horizontal, vertical) {
         : (left ? source.x + source.width - width : source.x)
     const y = vertical === "center" ? source.y + (source.height - height) / 2
         : (up ? source.y + source.height - height : source.y)
-    return Qt.rect(clamp(x, bounds.x, bounds.x + bounds.width - width),
-                   clamp(y, bounds.y, bounds.y + bounds.height - height), width, height)
+    return clampRect(Qt.rect(x, y, width, height), bounds)
 }

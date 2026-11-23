@@ -41,7 +41,7 @@ Item {
                     return
                 }
 
-                if (!msg || !bridge.inputManager)
+                if (!msg || !bridge.inputManager || !bridge.overlayActive)
                     return
 
                 if (msg.type === "button" && typeof msg.code === "string") {

@@ -79,6 +79,8 @@ PanelWindow {
     InputManager {
         id: inputManager
         onTriggered: (action, payload) => {
+            if (!overlay.active)
+                return
             if (action === "I.Refuse") {
                 if (!layerManager.pop())
                     overlay.closeRequested()

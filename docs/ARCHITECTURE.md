@@ -120,6 +120,18 @@ flowchart TD
 - **Problema**: Niri IPC y Quickshell Wayland no exponen capturas de píxeles por ID de ventana sin screencasting PipeWire permanente.
 - **Solución**: Servicio visual que resuelve iconos XDG vía `Quickshell.iconPath(appId, true)` con fallback localizado. Lo instancia `ConsoleOverlay.qml` y lo inyecta a través de `SlideManager` para no invertir dependencias desde `components/widgets/` hacia `services/`.
 
+### `services/MediaService.qml` y `services/CavaService.qml`
+- **Problema**: `MediaPlayerCard` y el reproductor expandido necesitan datos MPRIS reales, cambio entre reproductores, búsqueda por posición (`seek`) y espectro de audio sin mantener procesos pesados cuando el modal está cerrado.
+- **Solución**: `MediaService.qml` envuelve `Quickshell.Services.Mpris` (`Mpris.players.values`), expone metadatos, capacidades (`canSeek`, `shuffleSupported`, `loopSupported`, `volumeSupported`), `matchesTrack()` para validar letras contra la pista actual y acciones de transporte. `CavaService.qml` ejecuta `/usr/bin/cava` en modo `raw` únicamente mientras `MediaPlayerModal` está abierto y en reproducción.
+
+### `components/primitives/surfaces/SlantedGeometry.js`, `components/primitives/meters/MediaProgressBar.qml` y `components/widgets/MediaLyricsPanel.qml`
+- **Problema**: Las superficies inclinadas necesitan márgenes seguros y máscaras consistentes sin duplicar cálculos de `shear` ni recortar bordes o letras.
+- **Solución**: `SlantedGeometry.js` centraliza `horizontalShearOffset`, `safeHorizontalInset` y `effectiveSkewAngle`. `MediaProgressBar` encapsula la pista, relleno, thumb y tiempos inclinados. `MediaLyricsPanel` envuelve `LyricsOverlay` dentro de una máscara inclinada real con una excepción localizada y documentada al contrato recto de `SlantedSurface` (`contentSkewAngle`).
+
+### `components/widgets/MediaPlayerCard.qml`, `MediaPlayerExpanded.qml` y `screens/modals/MediaPlayerModal.qml`
+- **Problema**: Mostrar un mini reproductor compacto con letras sincronizadas cuando existan (y carátula por defecto si faltan, cargan o no corresponden a la pista) y un reproductor expandido ControlFriendly con `LT`/`RT` visibles, transporte con SVG centralizados en `iconsconfig.json` y opciones accesibles por D-Pad.
+- **Solución**: `MediaPlayerCard` muestra carátula, metadatos y marquee de letra sincronizada (usando `MotionTokens`); con `X` empuja la capa `"media-player"` (`MediaPlayerModal` + `MediaPlayerExpanded`), donde `Select` alterna entre `MediaLyricsPanel` y carátula cuando hay letras válidas, `LT`/`RT` buscan `±10s` si `canSeek`, `LB`/`RB` cambian pista y `B` restaura el foco.
+
 ### `components/widgets/WindowCarousel.qml`, `MediaPlayerCard.qml` y `screens/slides/HomeScreen.qml`
 - **Problema**: Se requiere un prototipo inicial de `Inicio` separado del laboratorio `TestScreen.qml`.
 - **Solución**: `HomeScreen.qml` presenta tarjetas independientes para título, descripción y monitor de la ventana seleccionada, un `WindowCarousel` centrado abajo en modo `iconOnly` y `MediaPlayerCard` abajo a la derecha. El carrusel mantiene modo rico para otras pantallas, `selectedWindowId` estable y micro-navegación LT/RT; la tarjeta seleccionada recibe borde de foco más ancho sin dibujar un `FocusRing` sobre toda la zona.

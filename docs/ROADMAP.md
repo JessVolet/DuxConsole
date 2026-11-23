@@ -30,7 +30,7 @@
 - [x] `components/primitives/glyphs/InputGlyph.qml`, `components/primitives/glyphs/CircularProgressGlyph.qml` y `components/primitives/text/TestText.qml`.
 - [x] `components/primitives/buttons/`: `ActionButton.qml`, `FocusCard.qml` (`PillButton.qml`, `ToggleChip.qml` pendientes).
 - [x] `components/widgets/CarouselView.qml` (escala al ancho disponible, muestra hasta seis y mantiene hasta dos en caché para fades de entrada/salida al rotar modelos mayores).
-- [ ] `components/primitives/sliders/`: `ConsoleSlider.qml`, `VolumeSlider.qml`, `ProgressBar.qml`.
+- [x] `components/primitives/sliders/`: `MediaProgressBar.qml` (`ConsoleSlider.qml`, `VolumeSlider.qml` pendientes).
 - [ ] `components/primitives/text/`: `MetricLabel.qml`; [x] `DisplayTitle.qml`, `SectionTitle.qml`, `StatusMessage.qml`, `TestText.qml`.
 - [ ] `components/primitives/glyphs/`: `StatusBadge.qml`, `AvatarBadge.qml`.
 - [x] `components/chrome/`: `TopBar.qml` (identidad + tabs dinámicas + estado), `FooterBar.qml` + `ActionHints.qml` (tarjetas individuales abajo a la derecha), `ErrorBanner.qml`, `ModalPanel.qml`; [ ] `StatusBar.qml` dedicado si se desacopla.
@@ -39,12 +39,13 @@
 ## FASE 4 — Servicios del Sistema (`services/` — Integración DMS)
 - [x] `services/WindowManager.qml`: adaptador reactivo Niri IPC (`$NIRI_SOCKET` `EventStream` + cola de comandos `FocusWindow`, `MoveWindowToMonitor`, `MoveWindowToWorkspace`, `FullscreenWindow` y `CloseWindow`); no expone PID ni termina procesos.
 - [x] `services/WindowIconProvider.qml`: resolución de iconos XDG inyectada desde el Composition Root.
+- [x] `services/MediaService.qml` y `services/CavaService.qml`: adaptador MPRIS real (`Quickshell.Services.Mpris`) y espectro Cava bajo demanda para el reproductor expandido.
 - [ ] `services/SystemServices.qml`: wrapper limpio sobre `qs.Services` (`AudioService`, `BrightnessService`, `BluetoothService`, `NightModeService`, `PowerProfileWatcher`, `MprisController`).
 - [ ] `services/StartupCheck.qml`: validación de dependencias opcionales (`dconsole` daemon, InputPlumber, `gpu-screen-recorder`).
 
 ## FASE 5 — Widgets y Pantallas Reales (`components/widgets/` + `screens/`)
-- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `WindowInfoCard.qml`, `WindowInfoCards.qml`, `MediaPlayerCard.qml` (slot reservado); [ ] `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
-- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowActionsModal.qml`.
+- [x] Widgets (`components/widgets/`): `CarouselView.qml`, `WindowCarousel.qml`, `WindowInfoCard.qml`, `WindowInfoCards.qml`, `MediaPlayerCard.qml`, `MediaPlayerExpanded.qml`, `MediaLyricsPanel.qml`; [ ] `AudioMixerRow.qml`, `DeviceSelectorCard.qml`, `CaptureControls.qml`, `DiscordStatusCard.qml`, `AchievementCard.qml`.
+- [ ] Modales (`screens/modals/`): `WindowGridModal.qml`, `DeviceGridModal.qml`, `ConfirmDialog.qml`; [x] `ItemOptionsModal.qml`, `WindowActionsModal.qml`, `MediaPlayerModal.qml`.
 - [ ] Ruedas Orbitales (`screens/overlays/`): `OrbitalMenu.qml` (`SystemWheel` con hold `I.Guide` y `QuickWheel` con acorde `I.Guide + I.ActionSlide.R`).
 - [ ] Slides (`screens/slides/`):
   - [x] `HomeScreen.qml` (título/descripción de ventana seleccionada, carrusel `iconOnly` centrado abajo y `MediaPlayerCard` abajo a la derecha).

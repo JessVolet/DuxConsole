@@ -162,8 +162,8 @@ Item {
         Rectangle {
             id: navPill
             Layout.alignment: Qt.AlignVCenter
-            width: navTabsRow.implicitWidth + Theme.spacingM * 1.5
-            height: 52
+            implicitWidth: navTabsRow.implicitWidth + Theme.spacingM * 1.5
+            implicitHeight: 52
             radius: height / 2
             color: bar.pillBg
             border.width: 1

@@ -116,6 +116,7 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 iconsPadManager: bar.iconsPadManager
                 styleTokens: bar.styleTokens
+                visible: !bar.fixtureTime
                 action: "I.Guide"
             }
 
@@ -233,7 +234,7 @@ Item {
         id: statusPill
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        width: statusRow.implicitWidth + Theme.spacingL * 2
+        width: statusRow.implicitWidth + (bar.fixtureTime ? Theme.spacingM : Theme.spacingL) * 2
         height: 48
         radius: height / 2
         color: bar.pillBg
@@ -243,10 +244,11 @@ Item {
         RowLayout {
             id: statusRow
             anchors.centerIn: parent
-            spacing: Theme.spacingM
+            spacing: bar.fixtureTime ? Theme.spacingS : Theme.spacingM
 
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
+                visible: !bar.fixtureTime
                 text: "🎮 " + bar.gamepadBatteryText
                 font.pixelSize: Theme.fontSizeSmall
                 font.weight: Font.Medium
@@ -255,6 +257,7 @@ Item {
 
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
+                visible: !bar.fixtureTime
                 text: "🔋 " + bar.deviceBatteryText
                 font.pixelSize: Theme.fontSizeSmall
                 font.weight: Font.Medium
@@ -282,15 +285,16 @@ Item {
 
             Rectangle {
                 Layout.alignment: Qt.AlignVCenter
-                implicitWidth: profileLabel.implicitWidth + Theme.spacingM * 2
-                implicitHeight: 28
+                implicitWidth: bar.fixtureTime ? 36 : profileLabel.implicitWidth + Theme.spacingM * 2
+                implicitHeight: bar.fixtureTime ? 36 : 28
                 radius: height / 2
-                color: Qt.alpha(bar.accentColor, 0.16)
+                color: bar.fixtureTime ? bar.accentColor : Qt.alpha(bar.accentColor, 0.16)
+                Accessible.name: bar.resolvedProfile
 
                 StyledText {
                     id: profileLabel
                     anchors.centerIn: parent
-                    text: bar.resolvedProfile
+                    text: bar.fixtureTime ? bar.resolvedProfile.slice(0, 1) : bar.resolvedProfile
                     font.pixelSize: Theme.fontSizeSmall
                     font.weight: Font.DemiBold
                     color: bar.fgColor

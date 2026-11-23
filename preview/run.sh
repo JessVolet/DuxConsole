@@ -2,7 +2,12 @@
 set -euo pipefail
 
 plugin_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-if [[ -n "${DUX_PREVIEW_CONTROLLER:-}" ]]; then
+shell_entry=MockPreview.qml
+if [[ "${1:-}" == --reuse ]]; then
+    shell_entry=ReusePreview.qml
+    shift
+fi
+if [[ "$shell_entry" == MockPreview.qml && -n "${DUX_PREVIEW_CONTROLLER:-}" ]]; then
     if [[ ! "$DUX_PREVIEW_CONTROLLER" =~ ^/dev/input/event[0-9]+$ ]] ||
        [[ ! -c "$DUX_PREVIEW_CONTROLLER" || ! -r "$DUX_PREVIEW_CONTROLLER" ]]; then
         printf 'Preview controller must be a readable /dev/input/eventN character device.\n' >&2
@@ -26,7 +31,7 @@ cp -a -- "$plugin_root/preview/compat/." "$stage/"
 for entry in core components screens services fixtures locales assets uiconfig.json iconsconfig.json inputconfig.json; do
     cp -a -- "$plugin_root/$entry" "$stage/"
 done
-cp -- "$plugin_root/MockPreview.qml" "$stage/shell.qml"
+cp -- "$plugin_root/$shell_entry" "$stage/shell.qml"
 while IFS= read -r -d '' qml_file; do
     file=${qml_file##*/}
     printf '%s 1.0 %s\n' "${file%.qml}" "$file" >> "${qml_file%/*}/qmldir"

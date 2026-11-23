@@ -37,6 +37,8 @@ qs kill -p /path/printed/by/preview/shell.qml
 
 For optional Linux controller input, run `DUX_PREVIEW_CONTROLLER=/dev/input/eventN ./preview/run.sh` with the controller's readable evdev node. The launcher checks for a corresponding joystick interface and requires `evtest` and `stdbuf`. `services/FixtureGamepad.qml` reads the selected device without a grab, and `FixtureEvdev.js` converts evdev hats and triggers to button transitions. The preview passes those transitions to the existing `InputManager` configuration and releases held inputs when the reader exits. The preview requires no production dconsole socket.
 
+The independent carousel example runs with `./preview/run.sh --reuse`. `ReusePreview.qml` uses a plain `FloatingWindow`, loads library fixtures and directly imports `QueueCarousel` and `ShowcaseCard`. It consumes existing localization and input contracts without mounting ConsoleOverlay, ScreenBase, a wheel or a backend. Use the keys mapped to LT/RT in `inputconfig.json` to cycle, click a card to select it, and press the configured Refuse key to close. The example uses the distinct `duxConsoleReuse` IPC target for capture and verification.
+
 ## Host lifecycle
 
 Model dashboard visibility separately from host visibility. In fixture mode the host is visible while the dashboard or a wheel is open. A wheel can open from the backdrop without making the dashboard visible. Release exclusive keyboard focus when both are closed; keep the host hidden and preserve return focus for the next open. The fixture entry point mounts mock service objects instead of the production Niri and dconsole clients. Keep the existing IPC target and production composition available when fixture mode is disabled.

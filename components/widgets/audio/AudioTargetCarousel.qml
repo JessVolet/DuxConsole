@@ -82,8 +82,8 @@ Item {
             model: stableModel
             currentIndex: zone.currentSubIndex
             maxVisibleItems: widget.orientation === Qt.Vertical ? 5 : 3
-            cardWidth: widget.orientation === Qt.Vertical ? 250 : 140
-            selectedWidth: widget.orientation === Qt.Vertical ? 290 : 210
+            cardWidth: widget.orientation === Qt.Vertical ? Math.max(250, widget.width * 0.66) : 140
+            selectedWidth: widget.orientation === Qt.Vertical ? Math.max(290, widget.width * 0.80) : 210
             cardHeight: widget.orientation === Qt.Vertical ? 66 : 104
             selectedHeight: widget.orientation === Qt.Vertical ? 90 : 130
             spacing: Theme.spacingS

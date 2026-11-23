@@ -59,6 +59,8 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.leftMargin: Theme.spacingXL
+        anchors.rightMargin: Theme.spacingXL
         title: controls.tr("nav.sound", "Sound")
         subtitle: controls.summary
         titleSize: Theme.fontSizeLarge
@@ -72,6 +74,8 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.leftMargin: Theme.spacingXL
+        anchors.rightMargin: Theme.spacingXL
         columns: 3
         columnSpacing: Theme.spacingXL
         rowSpacing: Theme.spacingM
@@ -155,7 +159,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumWidth: 280
-            Layout.preferredWidth: Math.max(280, controls.width * 0.28)
+            Layout.preferredWidth: Math.max(280, controls.width * 0.34)
             audioService: controls.audioService
             layerManager: controls.layerManager
             navigationManager: controls.navigationManager
@@ -171,6 +175,7 @@ Item {
             Layout.row: 1
             Layout.column: 0
             Layout.fillWidth: true
+            Layout.preferredWidth: Math.max(300, controls.width * 0.30)
             Layout.preferredHeight: 132
             Layout.alignment: Qt.AlignVCenter
             hiddenVisual: controls.mediaTransformActive
@@ -191,6 +196,7 @@ Item {
             Layout.column: 1
             Layout.fillWidth: true
             Layout.preferredHeight: 210
+            Layout.minimumWidth: 320
             Layout.preferredWidth: Math.max(320, controls.width * 0.34)
             audioService: controls.audioService
             layerManager: controls.layerManager
@@ -207,7 +213,8 @@ Item {
             Layout.column: 2
             Layout.fillWidth: true
             Layout.preferredHeight: 210
-            Layout.preferredWidth: Math.max(280, controls.width * 0.28)
+            Layout.minimumWidth: 280
+            Layout.preferredWidth: Math.max(280, controls.width * 0.34)
             audioService: controls.audioService
             layerManager: controls.layerManager
             navigationManager: controls.navigationManager

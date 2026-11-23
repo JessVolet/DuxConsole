@@ -6,4 +6,5 @@ AudioTargetCarousel {
     title: tr("audio.apps", "Application volume")
     zoneId: "audio-app-mixer"
     orientation: Qt.Vertical
+    cyclic: true
 }

@@ -31,7 +31,11 @@ The composition follows the reference layout without new behavior:
   Previous/Next are the mouse twin of LT/RT and call the focused carousel's
   `cycleSubItem`; no second browsing state exists.
 - Right: the application mixer, reused unchanged and still the default focus.
+  It is a wheel: the selected row stays in the middle and entries wrap on both
+  sides (`CarouselView.cyclic`), so the first and last app still have neighbors.
 - Bottom row: media card (left), output devices (center), input devices (right).
+  A group with a single entry (one microphone) is centered explicitly instead
+  of relying on a zero-length `PathView` path, which kept the item at x=0.
   Opening the card pushes the existing `media-player` layer through
   `mediaExpandRequested`; the screen owns that modal so widgets never import
   `screens/modals`.

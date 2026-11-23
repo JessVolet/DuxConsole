@@ -16,6 +16,9 @@ Item {
     property int leftCount: -1
     property int rightCount: -1
     property bool alignLeft: false
+    // Cyclic keeps the selection in the middle with entries wrapped on both
+    // sides; only enabled where the model is a wheel (the vertical mixer).
+    property bool cyclic: false
     property int maxCachedItems: 2
     property real cardWidth: 180
     property real cardHeight: 120
@@ -50,7 +53,10 @@ Item {
     readonly property int selectedIndex: count > 0
         ? ((currentIndex % count) + count) % count
         : -1
-    readonly property Item selectedItem: view.currentItem
+    readonly property Item selectedItem: count === 1 ? singleItem.item : view.currentItem
+    readonly property int viewCount: cyclic ? count * 3 : count
+    property int _viewIndex: 0
+    property int _lastSelected: -1
     readonly property int pathIntervals: Math.max(0, visibleItemCount - 1)
     readonly property real unscaledStep: (vertical ? cardHeight : cardWidth) + spacing
     readonly property real unscaledShift: unscaledExpansion / 2
@@ -87,15 +93,62 @@ Item {
         Qt.callLater(snapToSelected)
     }
 
+    function wrapIndex(index) {
+        return count > 0 ? ((index % count) + count) % count : -1
+    }
+
+    function resetCycle() {
+        if (!cyclic || count <= 0 || selectedIndex < 0)
+            return
+        _snapping = true
+        _viewIndex = count + selectedIndex
+        Qt.callLater(() => { _snapping = false })
+    }
+
+    // Keeping the view index inside the middle copy makes the entry data at
+    // both positions identical, so the reset is invisible.
+    function normalizeCycle() {
+        if (!cyclic || count <= 0)
+            return
+        if (_viewIndex >= count && _viewIndex < count * 2)
+            return
+        resetCycle()
+    }
+
+    function stepCycle(previous, next) {
+        if (!cyclic || count <= 1 || previous < 0 || next < 0)
+            return resetCycle()
+        const forward = ((next - previous) % count + count) % count
+        _viewIndex += forward <= count / 2 ? 1 : -1
+        cycleTimer.restart()
+    }
+
     function snapToSelected() {
         _snapScheduled = false
         if (count <= 0 || selectedIndex < 0)
             return
-        if (view.currentIndex === selectedIndex)
-            return
         _snapping = true
-        view.positionViewAtIndex(selectedIndex, PathView.SnapPosition)
+        view.positionViewAtIndex(cyclic ? _viewIndex : selectedIndex, PathView.SnapPosition)
         Qt.callLater(() => { _snapping = false })
+    }
+
+    onWidthChanged: scheduleSnap()
+    onHeightChanged: scheduleSnap()
+    onCountChanged: {
+        _lastSelected = selectedIndex
+        resetCycle()
+    }
+    onSelectedIndexChanged: {
+        const previous = _lastSelected
+        _lastSelected = selectedIndex
+        stepCycle(previous, selectedIndex)
+    }
+    Component.onCompleted: resetCycle()
+
+    Timer {
+        id: cycleTimer
+        interval: Math.max(0, carousel.moveDuration) + 16
+        onTriggered: carousel.normalizeCycle()
     }
 
     implicitHeight: resolvedSelectedHeight + 16 * layoutScale
@@ -104,8 +157,10 @@ Item {
     PathView {
         id: view
         anchors.fill: parent
-        visible: carousel.count > 0
-        model: carousel.model
+        // A single item on a zero-length path keeps the offset it had at width
+        // zero, so that case uses the centered loader below instead.
+        visible: carousel.count > 1
+        model: carousel.cyclic ? carousel.viewCount : carousel.model
         pathItemCount: carousel.visibleItemCount
         cacheItemCount: carousel.cachedItemCount
         preferredHighlightBegin: carousel.highlightPosition
@@ -124,7 +179,7 @@ Item {
         Binding {
             target: view
             property: "currentIndex"
-            value: carousel.selectedIndex
+            value: carousel.cyclic ? carousel._viewIndex : carousel.selectedIndex
             when: carousel.count > 0 && carousel.selectedIndex >= 0
         }
 
@@ -134,6 +189,7 @@ Item {
 
             readonly property bool selected: PathView.isCurrentItem
             readonly property bool inPath: PathView.onPath
+            readonly property int itemIndex: carousel.cyclic ? carousel.wrapIndex(slot.index) : slot.index
             readonly property real sideDistance: carousel.vertical ? y + height / 2 - carousel.highlightY : x + width / 2 - carousel.highlightX
             property real translateX: selected || Math.abs(sideDistance) < 1
                 ? 0
@@ -191,7 +247,7 @@ Item {
                 Binding {
                     target: itemLoader.item
                     property: "index"
-                    value: slot.index
+                    value: slot.itemIndex
                     when: itemLoader.item !== null && ("index" in itemLoader.item)
                 }
                 Binding {
@@ -209,7 +265,7 @@ Item {
                 Binding {
                     target: itemLoader.item
                     property: "itemData"
-                    value: carousel.itemDataAt(slot.index)
+                    value: carousel.itemDataAt(slot.itemIndex)
                     when: itemLoader.item !== null && ("itemData" in itemLoader.item)
                 }
             }
@@ -222,6 +278,40 @@ Item {
                 x: carousel.vertical ? carousel.pathStartX : carousel.pathStartX + carousel.pathSpan
                 y: carousel.vertical ? carousel.pathStartY + carousel.pathSpan : carousel.pathStartY
             }
+        }
+    }
+
+    Loader {
+        id: singleItem
+        anchors.centerIn: parent
+        width: carousel.resolvedSelectedWidth
+        height: carousel.resolvedSelectedHeight
+        visible: carousel.count === 1
+        sourceComponent: carousel.delegate
+
+        Binding {
+            target: singleItem.item
+            property: "index"
+            value: 0
+            when: singleItem.item !== null && ("index" in singleItem.item)
+        }
+        Binding {
+            target: singleItem.item
+            property: "selected"
+            value: true
+            when: singleItem.item !== null && ("selected" in singleItem.item)
+        }
+        Binding {
+            target: singleItem.item
+            property: "focused"
+            value: carousel.focused
+            when: singleItem.item !== null && ("focused" in singleItem.item)
+        }
+        Binding {
+            target: singleItem.item
+            property: "itemData"
+            value: carousel.itemDataAt(0)
+            when: singleItem.item !== null && ("itemData" in singleItem.item)
         }
     }
 

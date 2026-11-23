@@ -13,6 +13,7 @@ Item {
     property string zoneId: ""
     property string layerName: "dashboard"
     property int orientation: Qt.Horizontal
+    property bool cyclic: false
     property bool defaultFocus: false
     property var layerManager: null
     property var navigationManager: null
@@ -79,6 +80,7 @@ Item {
             objectName: "audio-target-carousel"
             anchors.fill: parent
             orientation: widget.orientation
+            cyclic: widget.cyclic
             model: stableModel
             currentIndex: zone.currentSubIndex
             maxVisibleItems: widget.orientation === Qt.Vertical ? 5 : 3

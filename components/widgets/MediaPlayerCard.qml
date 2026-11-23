@@ -78,63 +78,6 @@ SlantedSurface {
                 blur: 0.72
                 blurMax: 32
             }
-        },
-        // Canva de espectro animado en el fondo de la tarjeta
-        Row {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.leftMargin: 12
-            anchors.rightMargin: 12
-            height: parent.height * 0.72
-            spacing: 4
-            visible: mediaCard.hasPlayer
-
-            Repeater {
-                model: 16
-                delegate: Item {
-                    id: canvaCol
-                    required property int index
-                    property real level: 0.18 + ((index * 37) % 60) / 100.0
-
-                    width: Math.max(4, (parent.width - 15 * 4) / 16)
-                    height: parent.height
-
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        height: mediaCard.isPlaying
-                            ? Math.max(6, Math.round(parent.height * canvaCol.level))
-                            : 6
-                        radius: 2
-                        color: Qt.alpha(mediaCard.accentColor, 0.22)
-
-                        Rectangle {
-                            anchors.top: parent.top
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            height: 2
-                            radius: 1
-                            color: Qt.alpha(mediaCard.accentColor, 0.55)
-                        }
-
-                        Behavior on height {
-                            NumberAnimation {
-                                duration: mediaCard.motionTokens?.durationFast ?? 120
-                                easing.type: Easing.OutQuad
-                            }
-                        }
-                    }
-
-                    Timer {
-                        interval: 170 + (canvaCol.index % 5) * 45
-                        repeat: true
-                        running: mediaCard.isPlaying && (mediaCard.motionTokens?.animationsEnabled ?? true)
-                        onTriggered: canvaCol.level = 0.15 + Math.random() * 0.80
-                    }
-                }
-            }
         }
     ]
 
@@ -209,87 +152,40 @@ SlantedSurface {
                     elide: Text.ElideRight
                 }
 
-                // Fila inferior: barritas + letra en vivo (solo si hay letra activa)
-                Row {
+                // Letra en vivo (solo visible si hay letra activa)
+                Item {
+                    id: lyricSlot
                     width: parent.width
-                    spacing: Theme.spacingS
                     height: 18
-                    visible: mediaCard.hasPlayer
+                    clip: true
+                    visible: mediaCard.hasPlayer && mediaCard.currentLyricLine !== ""
 
-                    Row {
-                        id: miniBars
+                    StyledText {
+                        id: lyricText
                         anchors.verticalCenter: parent.verticalCenter
-                        spacing: 3
-                        height: 14
+                        text: mediaCard.currentLyricLine
+                        font.pixelSize: Theme.fontSizeSmall
+                        font.weight: Font.Medium
+                        color: mediaCard.styleTokens?.onSurfaceColor("card") ?? (Theme.surfaceText ?? "#F2F4F8")
 
-                        Repeater {
-                            model: [0.35, 0.75, 0.45, 0.95, 0.60, 0.30, 0.70]
-                            delegate: Rectangle {
-                                id: barRect
-                                required property int index
-                                required property real modelData
+                        readonly property real overflow: Math.max(0, implicitWidth - lyricSlot.width)
 
-                                property real phase: modelData
-                                anchors.bottom: parent.bottom
-                                width: 4
-                                radius: 2
-                                height: mediaCard.isPlaying
-                                    ? Math.max(4, Math.round(14 * phase))
-                                    : 4
-                                color: mediaCard.accentColor
+                        onTextChanged: x = 0
 
-                                Timer {
-                                    interval: 180 + barRect.index * 45
-                                    repeat: true
-                                    running: mediaCard.isPlaying && (mediaCard.motionTokens?.animationsEnabled ?? true)
-                                    onTriggered: barRect.phase = 0.25 + Math.random() * 0.75
-                                }
-
-                                Behavior on height {
-                                    NumberAnimation {
-                                        duration: mediaCard.motionTokens?.durationFast ?? 120
-                                        easing.type: Easing.OutQuad
-                                    }
-                                }
+                        SequentialAnimation on x {
+                            running: lyricSlot.visible && lyricText.overflow > 4 && (mediaCard.motionTokens?.animationsEnabled ?? true)
+                            loops: Animation.Infinite
+                            PauseAnimation { duration: 700 }
+                            NumberAnimation {
+                                to: -lyricText.overflow
+                                duration: Math.max(1200, Math.round(lyricText.overflow * 28))
+                                easing.type: Easing.InOutSine
                             }
-                        }
-                    }
-
-                    Item {
-                        id: lyricSlot
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: Math.max(0, parent.width - miniBars.width - Theme.spacingS)
-                        height: parent.height
-                        clip: true
-                        visible: mediaCard.currentLyricLine !== ""
-
-                        StyledText {
-                            id: lyricText
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: mediaCard.currentLyricLine
-                            font.pixelSize: Theme.fontSizeSmall
-                            font.weight: Font.Medium
-                            color: mediaCard.styleTokens?.onSurfaceColor("card") ?? (Theme.surfaceText ?? "#F2F4F8")
-
-                            readonly property real overflow: Math.max(0, implicitWidth - lyricSlot.width)
-
-                            onTextChanged: x = 0
-
-                            SequentialAnimation on x {
-                                running: lyricSlot.visible && lyricText.overflow > 4 && (mediaCard.motionTokens?.animationsEnabled ?? true)
-                                loops: Animation.Infinite
-                                PauseAnimation { duration: 700 }
-                                NumberAnimation {
-                                    to: -lyricText.overflow
-                                    duration: Math.max(1200, Math.round(lyricText.overflow * 28))
-                                    easing.type: Easing.InOutSine
-                                }
-                                PauseAnimation { duration: 900 }
-                                NumberAnimation {
-                                    to: 0
-                                    duration: 600
-                                    easing.type: Easing.InOutSine
-                                }
+                            PauseAnimation { duration: 900 }
+                            NumberAnimation {
+                                to: 0
+                                duration: 600
+                                easing.type: Easing.InOutSine
                             }
                         }
                     }

@@ -23,6 +23,7 @@ SlantedSurface {
     property var iconsPadManager: null
     property var i18n: null
     property string layerName: "media-player"
+    property var cavaBars: []
 
     property bool showLyrics: true
     property int focusedOptionIndex: 0
@@ -111,6 +112,54 @@ SlantedSurface {
         Rectangle {
             anchors.fill: parent
             color: Qt.rgba(0.05, 0.06, 0.09, 0.68)
+        },
+        // Espectro Cava real (solo activo mientras el reproductor está desplegado)
+        Row {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 24
+            anchors.rightMargin: 24
+            height: parent.height * 0.36
+            spacing: 6
+            visible: playerRoot.cavaBars.length > 0
+
+            Repeater {
+                model: playerRoot.cavaBars.length
+                delegate: Item {
+                    required property int index
+                    readonly property real level: playerRoot.cavaBars[index] ?? 0
+                    readonly property int count: Math.max(1, playerRoot.cavaBars.length)
+
+                    width: Math.max(6, (parent.width - (count - 1) * 6) / count)
+                    height: parent.height
+
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        height: Math.max(4, Math.round(parent.height * level))
+                        radius: 3
+                        color: Qt.alpha(playerRoot.accentColor, 0.24)
+
+                        Rectangle {
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 2
+                            radius: 1
+                            color: Qt.alpha(playerRoot.accentColor, 0.65)
+                        }
+
+                        Behavior on height {
+                            NumberAnimation {
+                                duration: playerRoot.motionTokens ? Math.min(60, playerRoot.motionTokens.durationFast) : 0
+                                easing.type: Easing.OutQuad
+                            }
+                        }
+                    }
+                }
+            }
         }
     ]
 

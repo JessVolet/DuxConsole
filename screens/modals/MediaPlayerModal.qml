@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import "../../components/widgets"
+import "../../services"
 
 Item {
     id: modal
@@ -32,6 +33,11 @@ Item {
         }
     }
 
+    CavaService {
+        id: cavaService
+        active: modal.isOpen && Boolean(modal.mediaService?.isPlaying)
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: modal.layerManager?.pop()
@@ -42,6 +48,7 @@ Item {
         width: Math.min(parent.width * 0.88, 980)
         height: Math.min(parent.height * 0.82, 560)
         mediaService: modal.mediaService
+        cavaBars: cavaService.bars
         layerManager: modal.layerManager
         navigationManager: modal.navigationManager
         iconsPadManager: modal.iconsPadManager

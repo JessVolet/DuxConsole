@@ -59,10 +59,10 @@ SlantedSurface {
         const opts = []
         if (hasValidLyrics)
             opts.push("lyrics")
-        if (mediaService?.shuffleSupported)
-            opts.push("shuffle")
         if (mediaService?.loopSupported)
             opts.push("repeat")
+        if (mediaService?.shuffleSupported)
+            opts.push("shuffle")
         opts.push("player")
         if (mediaService?.volumeSupported)
             opts.push("volume")
@@ -80,6 +80,12 @@ SlantedSurface {
 
     function mediaIcon(name) {
         return iconsPadManager ? iconsPadManager.resolveMediaIcon(name) : ""
+    }
+    readonly property var inlineOptions: availableOptions.filter(option => option !== "player" && option !== "volume")
+    function optionSource(option) {
+        if (option === "player") return playerButton
+        if (option === "volume") return volumeButton
+        return optionRepeater.itemAt(inlineOptions.indexOf(option))
     }
 
     function optionIcon(optId) {
@@ -215,7 +221,7 @@ SlantedSurface {
         onSlideLeftRequested: playerRoot.mediaService?.previous()
         onSlideRightRequested: playerRoot.mediaService?.next()
         onSecondaryTriggered: playerRoot.mediaService?.togglePlaying()
-        onOptionsTriggered: playerRoot.playersRequested(optionRepeater.itemAt(playerRoot.availableOptions.indexOf("player")))
+        onOptionsTriggered: playerRoot.playersRequested(playerButton)
         onExpandRequested: {
             if (playerRoot.hasValidLyrics)
                 playerRoot.showLyrics = !playerRoot.showLyrics
@@ -230,7 +236,7 @@ SlantedSurface {
             if (playerRoot.availableOptions.length > 0) {
                 const opt = playerRoot.availableOptions[playerRoot.focusedOptionIndex]
                 if (opt)
-                    playerRoot.triggerOption(opt, optionRepeater.itemAt(playerRoot.focusedOptionIndex))
+                    playerRoot.triggerOption(opt, playerRoot.optionSource(opt))
             } else {
                 playerRoot.mediaService?.togglePlaying()
             }
@@ -253,7 +259,7 @@ SlantedSurface {
         GridLayout {
             anchors.fill: parent
             anchors.topMargin: playerRoot.compactLayout ? Theme.spacingM : Theme.spacingXL
-            anchors.bottomMargin: playerRoot.compactLayout ? Theme.spacingM : Theme.spacingXL
+            anchors.bottomMargin: (playerRoot.compactLayout ? Theme.spacingM : Theme.spacingXL) + (volumeButton.visible ? volumeButton.height : 0)
             anchors.leftMargin: playerRoot.safeHorizontalInset + Theme.spacingL
             anchors.rightMargin: playerRoot.safeHorizontalInset + Theme.spacingL
             columns: playerRoot.compactLayout ? 1 : 2
@@ -303,30 +309,25 @@ SlantedSurface {
                 Row {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: Theme.spacingS
-                    visible: playerRoot.hasPlayer
 
                     StyledText {
+                        visible: playerRoot.hasPlayer
                         anchors.verticalCenter: parent.verticalCenter
                         text: playerRoot.tr("media.listening_from", "Listening from")
                         font.pixelSize: Theme.fontSizeSmall
                         color: playerRoot.mutedFg
                     }
 
-                    Rectangle {
+                    ActionPill {
+                        id: playerButton
                         anchors.verticalCenter: parent.verticalCenter
-                        implicitWidth: sourceLabel.implicitWidth + Theme.spacingM * 2
-                        height: 26
-                        radius: height / 2
-                        color: Qt.rgba(1, 1, 1, 0.14)
-
-                        StyledText {
-                            id: sourceLabel
-                            anchors.centerIn: parent
-                            text: playerRoot.mediaService?.identity || playerRoot.tr("media.idle_subtitle", "MPRIS")
-                            font.pixelSize: Theme.fontSizeSmall
-                            font.weight: Font.DemiBold
-                            color: playerRoot.fgColor
-                        }
+                        text: playerRoot.mediaService?.identity || playerRoot.tr("media.switch_player", "Player")
+                        glyphAction: "I.Options"
+                        iconsPadManager: playerRoot.iconsPadManager
+                        styleTokens: playerRoot.styleTokens
+                        highlighted: playerRoot.availableOptions[playerRoot.focusedOptionIndex] === "player"
+                        opacity: playerRoot.pickerVisible ? 0 : 1
+                        onClicked: playerRoot.playersRequested(playerButton)
                     }
                 }
 
@@ -418,11 +419,13 @@ SlantedSurface {
 
                 // Transporte principal: icono centralizado + texto + glifo de mando
                 Row {
+                    id: transportRow
                     Layout.alignment: Qt.AlignHCenter
                     spacing: Theme.spacingM
 
                     ActionPill {
                         text: playerRoot.tr("media.prev", "Previous")
+                        width: (transportRow.parent.width - transportRow.spacing * 2) / 3
                         implicitHeight: 48
                         glyphAction: "I.ActionSlide.L"
                         iconSource: playerRoot.mediaIcon("prev")
@@ -437,7 +440,8 @@ SlantedSurface {
                         text: playerRoot.isPlaying
                             ? playerRoot.tr("media.pause", "Pause")
                             : playerRoot.tr("media.play", "Play")
-                        implicitHeight: 52
+                        implicitHeight: 48
+                        width: (transportRow.parent.width - transportRow.spacing * 2) / 3
                         primary: true
                         glyphAction: "I.Action"
                         iconSource: playerRoot.isPlaying ? playerRoot.mediaIcon("pause") : playerRoot.mediaIcon("play")
@@ -450,6 +454,7 @@ SlantedSurface {
 
                     ActionPill {
                         text: playerRoot.tr("media.next", "Next")
+                        width: (transportRow.parent.width - transportRow.spacing * 2) / 3
                         implicitHeight: 48
                         glyphAction: "I.ActionSlide.R"
                         iconSource: playerRoot.mediaIcon("next")
@@ -462,24 +467,22 @@ SlantedSurface {
                 }
 
                 // Opciones siempre visibles, navegables con D-Pad + A
-                Flow {
-                    Layout.fillWidth: true
+                Row {
+                    id: optionRow
                     Layout.alignment: Qt.AlignHCenter
                     spacing: Theme.spacingS
                     visible: playerRoot.availableOptions.length > 0
 
                     Repeater {
                         id: optionRepeater
-                        model: playerRoot.availableOptions
+                        model: playerRoot.inlineOptions
                         delegate: ActionPill {
                             id: optPill
                             required property int index
                             required property string modelData
 
-                            highlighted: playerRoot.focusedOptionIndex === index
-                            opacity: modelData === "player" && playerRoot.pickerVisible ? 0 : 1
-                            glyphAction: modelData === "player" ? "I.Options" : ""
-                            iconsPadManager: playerRoot.iconsPadManager
+                            width: (optionRow.parent.width - optionRow.spacing * 2) / 3
+                            highlighted: playerRoot.availableOptions[playerRoot.focusedOptionIndex] === modelData
                             iconSource: playerRoot.optionIcon(modelData)
                             iconSize: 18
                             styleTokens: playerRoot.styleTokens
@@ -496,12 +499,10 @@ SlantedSurface {
                                     const ls = playerRoot.mediaService?.loopState ?? MprisLoopState.None
                                     return playerRoot.tr("media.repeat", "Repeat") + (ls === MprisLoopState.Track ? " (1)" : (ls === MprisLoopState.Playlist ? " (∞)" : ""))
                                 }
-                                if (modelData === "player") return playerRoot.mediaService?.identity || playerRoot.tr("media.switch_player", "Player")
-                                if (modelData === "volume") return playerRoot.tr("media.volume", "Volume") + " " + Math.round((playerRoot.mediaService?.volume ?? 0) * 100) + "%"
                                 return modelData
                             }
                             onClicked: {
-                                playerRoot.focusedOptionIndex = index
+                                playerRoot.focusedOptionIndex = playerRoot.availableOptions.indexOf(modelData)
                                 playerRoot.triggerOption(modelData, optPill)
                             }
                         }
@@ -509,6 +510,24 @@ SlantedSurface {
                 }
 
                 Item { Layout.fillHeight: true }
+            }
+        }
+
+        ActionPill {
+            id: volumeButton
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: playerRoot.safeHorizontalInset + Theme.spacingL
+            anchors.bottomMargin: Theme.spacingL
+            visible: Boolean(playerRoot.mediaService?.volumeSupported)
+            width: implicitHeight
+            iconSource: playerRoot.mediaIcon("volume")
+            styleTokens: playerRoot.styleTokens
+            highlighted: playerRoot.availableOptions[playerRoot.focusedOptionIndex] === "volume"
+            Accessible.name: playerRoot.tr("media.volume", "Volume") + " " + Math.round((playerRoot.mediaService?.volume ?? 0) * 100) + "%"
+            onClicked: {
+                playerRoot.focusedOptionIndex = playerRoot.availableOptions.indexOf("volume")
+                playerRoot.triggerOption("volume", volumeButton)
             }
         }
     }

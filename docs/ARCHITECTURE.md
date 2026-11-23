@@ -142,6 +142,10 @@ flowchart TD
 
 ### Media player selection and pinning
 
+The expanded player centers equal-width transport and secondary action rows.
+The Y player selector lives beside the source label; volume is an icon-only
+control at the safe bottom-right edge, with a localized accessible percentage.
+
 - `services/MediaPlayerSelection.qml` owns automatic/manual/pinned selection by
   MPRIS `dbusName`, not the display identity. `MediaService` supplies live players
   and delegates selection to this policy.

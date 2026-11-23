@@ -49,3 +49,48 @@ core/                  ──▶ (NUNCA importa components/, screens/ ni service
   2. Revisar diagnósticos con `qmlls` (`0` errores de sintaxis y `0` warnings locales).
 - Mantener `docs/ROADMAP.md` y `docs/ARCHITECTURE.md` actualizados cuando se complete o agregue un módulo.
 - Al terminar cada modificación, realizar un commit convencional en git a nombre de `JoseV. <contact@jessvega.me>`.
+
+---
+
+## 6. Review findings and implementation contracts
+
+- Read this file, `docs/SPECS.md`, `docs/ARCHITECTURE.md` and
+  `docs/ROADMAP.md` before changing code. Inspect the working tree and preserve
+  other agents' edits and untracked files. Keep commits limited to one purpose.
+- Write new code, identifiers and necessary comments in English. Prefer clear
+  names and short functions; comments explain constraints or intent rather
+  than narrating the code. Avoid unrelated style rewrites during bug fixes.
+- Screen composition may instantiate existing controls and modal components;
+  reusable control visuals belong in primitives, widget composition in widgets,
+  and backend operations in injected services. Widgets must not import screens.
+  Primitive drawing with QtQuick shapes is valid; do not move it into screens.
+- Reuse Theme/StyleTokens for shared visual values and MotionTokens for motion.
+  Local geometry ratios and algorithmic tolerances may be named constants;
+  they are not a reason to create a second theme/configuration system.
+- Every action glyph must describe the actual dispatched action: audio target
+  browsing uses `I.ActionOption.L/R`, mute uses `I.PressStick.R`. A mouse button
+  must not advertise LB/RB or X when those buttons execute different actions.
+- A public selection key, its displayed carousel index and its action target
+  must stay synchronized after external selection, model updates and removal.
+  Use guarded updates with one selection authority; test their agreement.
+- Bound option lists to the available panel viewport. Provide scrolling and
+  reveal the focused row when content exceeds it. Clamping only the outer
+  surface height does not constrain its children. Test long workspace lists.
+- Measure transform content at a stable destination width independent of the
+  animated surface width. Never feed animated child implicit size back into
+  the geometry driving that same animation. Coalesce geometry notifications
+  where needed and avoid identical writes or reentrant updates. `Qt.callLater`
+  alone does not prove convergence or fix a cyclic dependency.
+- Preserve the approved controls: Home's window shortcuts are intentional;
+  the expanded player's D-pad options are only available Lyrics/Repeat/Shuffle.
+  Y opens its player selector. Its volume icon remains reserved for a future
+  right-stick knob. Do not broaden these exceptions to other screens.
+- Test rapid reversal, model changes and focus return for transition changes.
+  Passing offscreen tests does not prove live responsiveness or performance;
+  report measured evidence separately from manual acceptance and hypotheses.
+- Distinguish local qmlls diagnostics from unavailable external `qs.*` imports.
+  Fix local unused imports and fixture warnings; do not claim zero diagnostics
+  when they remain. Report sandbox restrictions separately from test failures.
+- Keep documentation internally consistent, including configured deadzones and
+  completed versus pending modules. Hardware checks must state what was tested;
+  synthetic tests do not establish physical hotplug acceptance.

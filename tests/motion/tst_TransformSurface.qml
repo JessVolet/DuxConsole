@@ -12,6 +12,7 @@ TestCase {
     QtObject {
         id: style
         property real skewAngle: -8
+        property color errorColor: "#B00020"
         property color accentColor: "white"
         function surfaceColor(role, opacity) { return "black" }
         function borderColor(role) { return "white" }

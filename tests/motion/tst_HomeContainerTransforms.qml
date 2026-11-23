@@ -35,6 +35,7 @@ TestCase {
     QtObject {
         id: styleTokens
         property real skewAngle: -8
+        property color errorColor: "#B00020"
         property color accentColor: "#A855F7"
         property string iconColorMode: "dms"
         property string iconStyle: "filled"

@@ -6,6 +6,7 @@ QtObject {
     readonly property color surfaceContainerHigh: "black"
     readonly property color outlineVariant: "gray"
     readonly property color primary: "white"
+    readonly property color error: "#B00020"
     readonly property color surfaceText: "white"
     readonly property color surfaceVariantText: "gray"
     readonly property int spacingXS: 4

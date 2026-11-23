@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.Common
 import "../primitives/buttons"
 
 Item {

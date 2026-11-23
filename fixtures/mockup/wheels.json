@@ -264,6 +264,16 @@
       "side": "right",
       "category": "media",
       "command": "media-toggle"
+    },
+    "wheel-volume": {
+      "side": "right",
+      "category": "audio",
+      "command": "volume-level"
+    },
+    "wheel-brightness": {
+      "side": "left",
+      "category": "display",
+      "command": "brightness-level"
     }
   },
   "companions": [

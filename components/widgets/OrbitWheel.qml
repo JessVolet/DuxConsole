@@ -34,8 +34,10 @@ Item {
     opacity: opened ? 1 : 0
     visible: opacity > 0
 
-    function angle(index, count) {
-        return (count < 2 ? 42 : 8 + (76 * index) / (count - 1)) * Math.PI / 180
+    function angle(index, count, inner) {
+        const start = inner ? 12 : 4
+        const span = inner ? 64 : 80
+        return (count < 2 ? 12 : start + span * index / (count - 1)) * Math.PI / 180
     }
 
     Behavior on opacity {
@@ -104,7 +106,7 @@ Item {
                 id: category
                 required property int index
                 required property var modelData
-                readonly property real angle: wheel.angle(index, wheel.categories.length)
+                readonly property real angle: wheel.angle(index, wheel.categories.length, true)
 
                 x: wheel.originX + wheel.sideSign * Math.cos(angle) * 185 * wheel.layoutScale - width / 2
                 y: wheel.originY + Math.sin(angle) * 185 * wheel.layoutScale - height / 2
@@ -128,7 +130,7 @@ Item {
                 id: command
                 required property int index
                 required property var modelData
-                readonly property real angle: wheel.angle(index, wheel.commands.length)
+                readonly property real angle: wheel.angle(index, wheel.commands.length, false)
 
                 x: wheel.originX + wheel.sideSign * Math.cos(angle) * 319 * wheel.layoutScale - width / 2
                 y: wheel.originY + Math.sin(angle) * 319 * wheel.layoutScale - height / 2

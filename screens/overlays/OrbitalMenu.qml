@@ -165,16 +165,19 @@ Item {
     CommandPreview {
         id: preview
         visible: menu.ringVisible && menu.activeCommand !== null
-        x: menu.side === "right" ? parent.width * 0.04 : parent.width - width - parent.width * 0.04
-        y: Theme.spacingL
+        x: menu.side === "right" ? Theme.spacingXL : parent.width - width - Theme.spacingXL
+        y: Theme.spacingXL
         width: Math.max(0, Math.min(620, parent.width - wheel.outerRadius - Theme.spacingXL * 3))
         height: implicitHeight
         command: menu.activeCommand
         telemetry: menu.telemetry
         positionLabel: menu.activeCategory
             ? menu.activeCategory.label + " · " + (menu.commandIndex + 1) + " / " + menu.commands.length : ""
-        currentValue: menu.mockSession?.wheelValue?.(menu.activeCommand?.id) ?? ""
-        choices: (menu.activeCommand?.choices ?? []).map(choice => menu.tr("mockWheel.choices." + choice, choice.toString()))
+        meterOnLeft: menu.side === "left"
+        level: menu.mockSession?.wheelLevel?.(menu.activeCommand?.id) ?? -1
+        currentValue: showMeter ? "" : (level >= 0 ? level + "%" : (menu.mockSession?.wheelValue?.(menu.activeCommand?.id) ?? ""))
+        choices: level >= 0 ? [] : (menu.activeCommand?.choices ?? []).map(choice => menu.tr("mockWheel.choices." + choice, choice.toString()))
+        chosenIndex: menu.activeCommand?.choices?.indexOf(menu.mockSession?.wheelSelection?.(menu.activeCommand?.id)) ?? -1
         companionRows: menu.activeCommand?.id === "social-profile" ? (source.value?.companions ?? []).map(row => ({
             name: row.name,
             status: menu.tr(row.statusKey, "")

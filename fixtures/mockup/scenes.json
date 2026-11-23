@@ -8,6 +8,11 @@
     "scrim": "#100a1a",
     "selectedCard": "#51396c"
   },
+  "defaults": {
+    "brightness-level": 80,
+    "controller-profile": "desktop",
+    "discord-mute": "active"
+  },
   "scenes": {
     "home": {
       "slide": "home",
@@ -173,6 +178,18 @@
     "home-8": {
       "slide": "home",
       "time": "09:51"
+    },
+    "wheel-volume": {
+      "slide": "home",
+      "wheel": "right",
+      "time": "09:52",
+      "reference": "01:27.35"
+    },
+    "wheel-brightness": {
+      "slide": "home",
+      "wheel": "left",
+      "time": "09:52",
+      "reference": "01:42.55"
     }
   }
 }

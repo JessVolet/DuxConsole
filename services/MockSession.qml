@@ -38,6 +38,24 @@ Item {
     onWindowsChanged: resetSelection()
     Component.onCompleted: resetSelection()
 
+    function wheelLevel(id) {
+        if (id === "brightness-level")
+            return wheelSelection(id) ?? -1
+
+        const output = id === "volume-level"
+        if (!output && id !== "microphone-level")
+            return -1
+
+        const devices = output ? audio.outputs : audio.inputs
+        const selectedId = output ? audio.selectedOutput : audio.selectedInput
+        const device = devices?.find(entry => entry.id === selectedId)
+        return device ? (device.muted ? 0 : device.level) : -1
+    }
+
+    function wheelSelection(id) {
+        return wheelChoices[id] ?? sceneData.data?.defaults?.[id] ?? null
+    }
+
     function wheelValue(id) {
         const value = wheelChoices[id]
         return typeof value === "number" ? value + "%" : ""

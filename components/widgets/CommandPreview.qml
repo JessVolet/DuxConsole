@@ -4,6 +4,7 @@ import QtQuick
 import qs.Common
 import qs.Widgets
 import qs.DCommon.Widgets as DCommon
+import "../primitives/meters"
 import "../primitives/surfaces"
 import "../primitives/text"
 
@@ -15,16 +16,23 @@ SlantedSurface {
     property string positionLabel: ""
     property string currentValue: ""
     property var choices: []
+    property int chosenIndex: -1
     property var companionRows: []
+    property real level: -1
+    property bool meterOnLeft: false
+
+    readonly property bool showMeter: level >= 0 && width >= 460
+    readonly property real meterSize: 140
 
     skewAngle: 0
-    implicitHeight: contents.implicitHeight + Theme.spacingL * 2
+    implicitHeight: Math.max(contents.implicitHeight, showMeter ? meterSize : 0) + Theme.spacingL * 2
     surfaceOpacity: 1.08
 
     Column {
         id: contents
-        width: parent.width - Theme.spacingL * 2
-        anchors.centerIn: parent
+        width: parent.width - Theme.spacingL * 2 - (preview.showMeter ? preview.meterSize + Theme.spacingM : 0)
+        x: Theme.spacingL + (preview.showMeter && preview.meterOnLeft ? preview.meterSize + Theme.spacingM : 0)
+        anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.spacingM
 
         Flow {
@@ -62,10 +70,10 @@ SlantedSurface {
 
             SlantedSurface {
                 id: iconSurface
-                width: 64
+                anchors.verticalCenter: parent.verticalCenter
+                width: 68
                 height: width
-                role: "card"
-                selected: true
+                role: "selectedCard"
                 skewAngle: 0
                 styleTokens: preview.styleTokens
 
@@ -93,7 +101,7 @@ SlantedSurface {
                     width: parent.width
                     text: preview.command?.title ?? ""
                     styleTokens: preview.styleTokens
-                    font.pixelSize: Theme.fontSizeXXLarge
+                    font.pixelSize: Theme.fontSizeXXLarge + Theme.spacingS
                     elide: Text.ElideRight
                 }
 
@@ -127,10 +135,10 @@ SlantedSurface {
                     required property string modelData
                     required property int index
 
-                    implicitWidth: optionLabel.implicitWidth + Theme.spacingL * 2
+                    implicitWidth: Math.max(120, optionLabel.implicitWidth + Theme.spacingL * 2)
                     implicitHeight: 34
                     radius: Theme.cornerRadius
-                    color: index === 0
+                    color: option.index === preview.chosenIndex
                         ? (preview.styleTokens?.accentColor ?? Theme.primary)
                         : (preview.styleTokens?.surfaceColor("selectedCard") ?? Theme.surfaceContainerHighest)
 
@@ -138,7 +146,7 @@ SlantedSurface {
                         id: optionLabel
                         anchors.centerIn: parent
                         text: option.modelData
-                        color: preview.styleTokens?.onSurfaceColor(option.index === 0 ? "chrome" : "card") ?? Theme.surfaceText
+                        color: preview.styleTokens?.onSurfaceColor(option.index === preview.chosenIndex ? "chrome" : "card") ?? Theme.surfaceText
                         font.pixelSize: Theme.fontSizeSmall
                     }
                 }
@@ -181,4 +189,18 @@ SlantedSurface {
             }
         }
     }
+    ValueMeter {
+        visible: preview.showMeter
+        x: preview.meterOnLeft ? Theme.spacingL : parent.width - width - Theme.spacingL
+        anchors.verticalCenter: parent.verticalCenter
+        width: preview.meterSize
+        height: width
+        radial: true
+        value: Math.max(0, preview.level)
+        unit: "%"
+        label: preview.command?.title ?? ""
+        styleTokens: preview.styleTokens
+        motionTokens: preview.motionTokens
+    }
+
 }

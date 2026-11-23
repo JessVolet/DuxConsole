@@ -11,7 +11,11 @@ Text {
         sports_esports: "✛", volume_up: "◖", volume_off: "⊘", brightness_6: "☀",
         power_settings_new: "⏻", play_arrow: "▶", pause: "Ⅱ", settings: "⚙",
         emoji_events: "✦", person: "✿", headset: "♫", mic: "♩", close: "×",
-        apps: "⠿", computer: "▣", language: "◎", headphones: "♫"
+        apps: "⠿", computer: "▣", language: "◎", headphones: "♫",
+        auto_awesome: "✦", bedtime: "☾", bolt: "ϟ", group: "♟", light_mode: "☀",
+        mic_off: "⊘", monitor: "▱", nightlight: "☾", play_pause: "⏯",
+        queue_music: "♬", replay_30: "↺", skip_next: "⏭", skip_previous: "⏮",
+        speed: "◴", tune: "≋"
     })
 
     font.pixelSize: Theme.iconSize

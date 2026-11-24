@@ -24,7 +24,7 @@
 - [x] `components/primitives/surfaces/`: `SlantedSurface.qml` y `SlantedImage.qml` (`FocusCard.qml` basada en `SlantedSurface`).
 - [x] `core/motion/ContainerTransform.qml` + `ContainerGeometry.js` and reusable `TransformSurface`: anchored, reversible container transition with global tokens and bounded geometry.
 - [x] Adopt `TransformSurface` in `WindowOptionsModal`, `MediaPlayerPicker` and `AudioDeviceOptions`, retaining consumer-owned input, layers and focus restoration.
-- [ ] Migrate `MediaPlayerModal` from `ContainerTransform` to `TransformSurface`.
+- [x] `MediaPlayerModal` keeps `ContainerTransform`: `MediaPlayerExpanded` already owns its `SlantedSurface`, so wrapping it in `TransformSurface` would nest surfaces and padding. `TransformSurface` is for content without its own surface (`WindowOptionsModal`, `MediaPlayerPicker`, `AudioDeviceOptions`).
 - [x] Expanded media player: Y opens a `TransformSurface` player picker, with manual/automatic selection, session pinning, inert background and focus return.
 - [x] Rectangular lyrics panel with native synchronized lines and no shader mask or text shear.
 - [x] Symmetric expanded media controls: top Y selector, centered Lyrics/Repeat/Shuffle row and bottom-right volume icon.

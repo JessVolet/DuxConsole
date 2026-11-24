@@ -2,15 +2,16 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.Common
 
-// Translucent section surface for the Sound tab. It is only a background:
-// content keeps its own layout and interaction.
+// Material 3 section surface: tonal container, rounded, no outline. Content
+// keeps its own layout and interaction.
 Item {
     id: panel
 
     property real padding: Theme.spacingL
-    property real radius: Theme.cornerRadius
-    property real backgroundOpacity: 0.72
+    property real radius: 28
+    property real backgroundOpacity: 0.92
     property var styleTokens: null
+    property bool outlined: false
 
     default property alias content: inner.data
 
@@ -18,12 +19,10 @@ Item {
         anchors.fill: parent
         radius: panel.radius
         color: panel.styleTokens
-               ? panel.styleTokens.surfaceColor("card", panel.backgroundOpacity)
-               : Qt.alpha(Theme.surfaceContainerHigh, panel.backgroundOpacity)
-        border.width: 1
-        border.color: panel.styleTokens
-                      ? panel.styleTokens.borderColor("card")
-                      : Qt.alpha(Theme.outlineVariant, 0.5)
+               ? panel.styleTokens.m3Alpha(panel.styleTokens.m3SurfaceLow, panel.backgroundOpacity)
+               : Qt.alpha(Theme.surfaceContainerLow, panel.backgroundOpacity)
+        border.width: panel.outlined ? 1 : 0
+        border.color: panel.styleTokens ? panel.styleTokens.m3OutlineVariant : Theme.outlineVariant
     }
 
     Item {

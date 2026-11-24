@@ -30,7 +30,7 @@ Item {
     readonly property real columnWidth: Math.max(300, width * 0.30)
     readonly property real knobPanelHeight: 470
     readonly property real devicePanelHeight: 242
-    readonly property real playerHeight: 132
+    readonly property real playerHeight: 242
     readonly property string summary: {
         const parts = [];
         if (activeOutput)
@@ -49,7 +49,6 @@ Item {
         widget.muteRequested.connect((key, muted) => audioService?.setMuted(key, muted));
         widget.optionsRequested.connect((key, source) => options.open(key, source));
     }
-    // Mouse twin of LT/RT on the focused carousel.
     function browse(delta) {
         controls.focusedWidget?.focusZone?.cycleSubItem(delta);
     }
@@ -67,7 +66,7 @@ Item {
         anchors.rightMargin: Theme.spacingXL
         title: controls.tr("nav.sound", "Sound")
         subtitle: controls.summary
-        titleSize: Theme.fontSizeLarge
+        titleSize: Theme.fontSizeXXLarge
         styleTokens: controls.styleTokens
     }
 
@@ -92,6 +91,7 @@ Item {
             Layout.preferredWidth: controls.columnWidth
             Layout.preferredHeight: controls.knobPanelHeight
             Layout.alignment: Qt.AlignTop
+            padding: Theme.spacingXL
             styleTokens: controls.styleTokens
 
             Column {
@@ -102,7 +102,7 @@ Item {
 
                 AngularVolumeKnob {
                     id: knob
-                    width: Math.min(340, controls.width * 0.22)
+                    width: Math.min(300, controls.width * 0.20)
                     height: width
                     value: controls.focusedTarget?.volume ?? 0
                     maximum: controls.focusedTarget?.maxVolume ?? 1
@@ -125,7 +125,7 @@ Item {
                     width: parent.width
                     title: controls.focusedTarget?.title ?? controls.tr("audio.select_target", "Select an audio target")
                     subtitle: controls.audioService?.error ? controls.tr("audio.operation_failed", "Audio operation failed") : controls.tr("audio.knob_hint", "Right stick: volume · R3: mute")
-                    role: "card"
+                    titleSize: Theme.fontSizeXLarge
                     styleTokens: controls.styleTokens
                 }
 
@@ -138,7 +138,7 @@ Item {
                         styleTokens: controls.styleTokens
                         text: knob.muted ? controls.tr("audio.unmute", "Unmute") : controls.tr("audio.mute", "Mute")
                         enabled: knob.enabled
-                        primary: knob.muted
+                        primary: true
                         onClicked: knob.mute()
                     }
 
@@ -170,6 +170,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredWidth: controls.columnWidth
+            padding: Theme.spacingXL
             styleTokens: controls.styleTokens
 
             AppVolumeMixer {
@@ -192,8 +193,8 @@ Item {
             Layout.column: 0
             Layout.fillWidth: true
             Layout.preferredWidth: controls.columnWidth
+            Layout.fillHeight: true
             Layout.preferredHeight: controls.playerHeight
-            Layout.alignment: Qt.AlignVCenter
             hiddenVisual: controls.mediaTransformActive
             zoneId: "sound-media"
             layerName: controls.layerName
@@ -214,6 +215,7 @@ Item {
             Layout.minimumWidth: 300
             Layout.preferredWidth: controls.columnWidth
             Layout.preferredHeight: controls.devicePanelHeight
+            padding: Theme.spacingL
             styleTokens: controls.styleTokens
 
             AudioOutputSelector {
@@ -237,6 +239,7 @@ Item {
             Layout.minimumWidth: 300
             Layout.preferredWidth: controls.columnWidth
             Layout.preferredHeight: controls.devicePanelHeight
+            padding: Theme.spacingL
             styleTokens: controls.styleTokens
 
             AudioInputSelector {

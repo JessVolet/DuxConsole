@@ -30,9 +30,11 @@ Item {
     function maximum(node) { return Math.max(0.01, (backend?.getMaxVolumePercent ? backend.getMaxVolumePercent(node) : 100) / 100) }
     function snapshot(group, kind) {
         const node = group[0], key = nodeKey(node, kind)
+        const p = node.properties ?? ({})
         const pins = kind === "app" ? [] : preferences.pins(kind)
         return { key: key, kind: kind, title: backend?.displayName ? backend.displayName(node) : String(node.description || node.name || ""),
             subtitle: kind === "app" ? String(node.properties?.["media.name"] ?? "") : String(node.name ?? ""),
+            appId: kind === "app" ? String(p["application.id"] || p["application.process.binary"] || "") : "",
             volume: Math.max(...group.map(n => Number(n.audio.volume) || 0)),
             maxVolume: Math.min(...group.map(n => maximum(n))), muted: group.every(n => Boolean(n.audio.muted)),
             canSetVolume: true, canMute: true, pinned: pins.includes(key),

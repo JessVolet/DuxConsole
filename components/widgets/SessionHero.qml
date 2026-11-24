@@ -10,7 +10,7 @@ Column {
     property var session: null
     property string fallbackTitle: ""
     property real scaleFactor: 1
-    readonly property int titleSize: Math.round(Theme.fontSizeDisplayLarge * 1.05 * scaleFactor)
+    readonly property int titleSize: Math.round(Theme.fontSizeXXLarge * 4.0 * scaleFactor)
     default property alias actions: actionRow.data
 
     spacing: Theme.spacingS * scaleFactor

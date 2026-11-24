@@ -19,7 +19,7 @@ AbstractButton {
     readonly property color containerColor: styleTokens
         ? (primary ? styleTokens.m3Primary : styleTokens.m3SurfaceContainer)
         : (primary ? Theme.primary : Theme.surfaceContainer)
-    readonly property color onContainerColor: styleTokens
+    readonly property color contentColor: styleTokens
         ? (primary ? styleTokens.m3OnPrimary : styleTokens.m3OnSurface)
         : (primary ? Theme.onPrimary : Theme.onSurface)
 
@@ -64,7 +64,7 @@ AbstractButton {
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     colorization: 1.0
-                    colorizationColor: pill.onContainerColor
+                    colorizationColor: pill.contentColor
                 }
             }
 
@@ -73,7 +73,7 @@ AbstractButton {
                 anchors.verticalCenter: labels.verticalCenter
                 text: pill.text
                 font.pixelSize: Theme.fontSizeMedium
-                color: pill.onContainerColor
+                color: pill.contentColor
             }
         }
     }

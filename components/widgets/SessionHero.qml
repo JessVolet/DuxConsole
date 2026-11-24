@@ -10,7 +10,7 @@ Column {
     property var session: null
     property string fallbackTitle: ""
     property real scaleFactor: 1
-    readonly property int titleSize: Math.round(Theme.fontSizeXXLarge * 4.0 * scaleFactor)
+    readonly property int titleSize: Math.round(Theme.fontSizeDisplayLarge * 1.05 * scaleFactor)
     default property alias actions: actionRow.data
 
     spacing: Theme.spacingS * scaleFactor
@@ -37,7 +37,7 @@ Column {
         text: hero.session?.metadata?.join(" · ") ?? ""
         textFormat: Text.PlainText
         font.pixelSize: Math.round(Theme.fontSizeLarge * hero.scaleFactor)
-        color: hero.styleTokens?.onSurfaceColor("card") ?? Theme.surfaceText
+        color: hero.styleTokens?.m3OnSurfaceVariant ?? Theme.onSurfaceVariant ?? Theme.surfaceText
         elide: Text.ElideRight
     }
 

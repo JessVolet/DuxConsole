@@ -30,6 +30,8 @@ QtObject {
     readonly property int fontSizeLarge: 18
     readonly property int fontSizeXLarge: 22
     readonly property int fontSizeXXLarge: 28
+    readonly property int fontSizeDisplay: 36
+    readonly property int fontSizeDisplayLarge: 57
 
     Component.onCompleted: {
         onPrimary = "#1a1c1e"

@@ -30,7 +30,7 @@ Item {
     readonly property real columnWidth: Math.max(300, width * 0.30)
     readonly property real knobPanelHeight: 470
     readonly property real devicePanelHeight: 242
-    readonly property real playerHeight: 242
+    readonly property real playerHeight: 132
     readonly property string summary: {
         const parts = [];
         if (activeOutput)
@@ -167,10 +167,12 @@ Item {
             id: mixerPanel
             Layout.row: 0
             Layout.column: 2
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.preferredWidth: controls.columnWidth
-            padding: Theme.spacingXL
+            Layout.fillWidth: false
+            Layout.preferredWidth: Math.round(controls.columnWidth * 0.6)
+            Layout.fillHeight: false
+            Layout.preferredHeight: Math.round(controls.knobPanelHeight * 0.6)
+            Layout.alignment: Qt.AlignRight | Qt.AlignTop
+            padding: Theme.spacingL
             styleTokens: controls.styleTokens
 
             AppVolumeMixer {
@@ -193,8 +195,8 @@ Item {
             Layout.column: 0
             Layout.fillWidth: true
             Layout.preferredWidth: controls.columnWidth
-            Layout.fillHeight: true
             Layout.preferredHeight: controls.playerHeight
+            Layout.alignment: Qt.AlignVCenter
             hiddenVisual: controls.mediaTransformActive
             zoneId: "sound-media"
             layerName: controls.layerName

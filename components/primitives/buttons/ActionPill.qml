@@ -17,11 +17,11 @@ AbstractButton {
     property bool primary: false
     readonly property string role: primary ? "chrome" : "card"
     readonly property color containerColor: styleTokens
-        ? (primary ? styleTokens.m3SecondaryContainer : styleTokens.m3SurfaceContainer)
-        : (primary ? Theme.secondaryContainer : Theme.surfaceContainer)
+        ? (primary ? styleTokens.m3Primary : styleTokens.m3SurfaceContainer)
+        : (primary ? Theme.primary : Theme.surfaceContainer)
     readonly property color onContainerColor: styleTokens
-        ? (primary ? styleTokens.m3OnSecondaryContainer : styleTokens.m3OnSurface)
-        : (primary ? Theme.onSecondaryContainer : Theme.onSurface)
+        ? (primary ? styleTokens.m3OnPrimary : styleTokens.m3OnSurface)
+        : (primary ? Theme.onPrimary : Theme.onSurface)
 
     implicitHeight: Math.max(36, labels.implicitHeight + Theme.spacingS * 2)
     implicitWidth: labels.implicitWidth + Theme.spacingM * 2

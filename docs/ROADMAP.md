@@ -50,7 +50,7 @@
 - [ ] `services/StartupCheck.qml`: validación de dependencias opcionales (`dconsole` daemon, InputPlumber, `gpu-screen-recorder`).
 
 ## FASE 5 — Widgets y Pantallas Reales (`components/widgets/` + `screens/`)
-- [x] Independent AppVolumeMixer (vertical, up to five), AudioOutputSelector and AudioInputSelector; anchored device options, reusable VolumeKnob and assembled Sound screen.
+- [x] Independent AppVolumeMixer, AudioOutputSelector and AudioInputSelector over Material 3 lists; tonal panels, anchored device options, reusable VolumeKnob and assembled Sound screen (carousel removed).
 - [x] Angular 270-degree knob controller with configurable deadzone/hysteresis, target rearming and R3 mute; frontend normalized-axis receiver.
 - [x] Right-stick axis production in the separate dconsole daemon (ABS_X/Y/RX/RY normalized, sent only while grabbed, released on disconnect/failure).
 - [x] Verify real stick control with a physical pad: axes reach the daemon only while grabbed, a second reader of the device receives nothing, app volume follows the stick and R3 mutes without changing volume. Physical hotplug/reconnect remains covered only by unit tests.

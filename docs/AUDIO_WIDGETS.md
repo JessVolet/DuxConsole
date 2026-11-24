@@ -20,32 +20,33 @@
   action pills, mounted by `screens/slides/AudioScreen.qml` under the existing
   Sound tab. `AudioScreen` also mounts the existing `MediaPlayerModal` with
   `ContainerTransform`, anchored to that card.
-- `AudioPanel`: translucent section surface (rounded, token colors) used only
-  as a background around the knob stage, mixer and device selectors.
+- `AudioPanel`: Material 3 tonal section surface (rounded, no normal outline)
+  used as a background around the knob stage, mixer and device lists.
 - `AudioNowPlaying`: stretched now-playing card for the Sound tab, separate
   from Home's `MediaPlayerCard` so each screen can change independently.
-- `AudioWheel`: stable-item wheel for the vertical mixer. Every app keeps one
-  delegate and animates its offset; wrapping never recreates a card at the
-  other end.
+- `AudioTargetList` / `AudioListItem`: one Material 3 list per zone. LT/RT
+  cycle the selection, A activates devices, Y opens supported options; rows
+  keep their identity through model updates via a stable ListModel.
 
 ## Sound tab layout
 
 The composition follows the reference layout without new behavior:
 
 - Header: screen title plus the active output and input names with their volume.
-- Sections use `AudioPanel` translucent backgrounds with equal columns, so the
-  knob, mixer, now-playing card, outputs and inputs read as separate cards.
+- Sections use `AudioPanel` tonal backgrounds with equal columns, so the knob,
+  mixer, now-playing card, outputs and inputs read as separate cards. Surfaces
+  and text colors come from the host Material 3 roles (`surfaceContainerLow`,
+  `secondaryContainer`, `onSurfaceVariant`, `primary`), not a second palette.
 - Left stage: the absolute-angle knob with the selected target name inside the
   circle, the target title with the knob hint, and Mute/Previous/Next pills.
   Previous/Next are the mouse twin of LT/RT and call the focused carousel's
   `cycleSubItem`; no second browsing state exists.
-- Right: the application mixer, reused unchanged and still the default focus.
-  It uses `AudioWheel`: the selected row stays in the middle and every app keeps
-  its own delegate, so crossing the first/last app animates the same card
-  across instead of recreating it (no teleport).
-- Bottom row: media card (left), output devices (center), input devices (right).
-  A group with a single entry (one microphone) is centered explicitly instead
-  of relying on a zero-length `PathView` path, which kept the item at x=0.
+- Right: the application mixer as a Material 3 list, still the default focus.
+  The selected row is a filled `secondaryContainer`; the list scrolls to reveal
+  it and keeps the selection when the model updates.
+- Bottom row: media card (left), output devices (center), input devices (right)
+  as Material 3 lists. Devices show the active/pinned state in the trailing
+  value instead of a separate carousel card.
   Opening the card pushes the existing `media-player` layer through
   `mediaExpandRequested`; the screen owns that modal so widgets never import
   `screens/modals`.

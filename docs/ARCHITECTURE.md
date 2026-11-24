@@ -7,13 +7,11 @@
 - `services/AudioDevicePreferences.qml` persists independent multiple input and
   output pins through injected DMS plugin state.
 - `components/widgets/audio/` contains independent AppVolumeMixer,
-  AudioOutputSelector and AudioInputSelector; shared internal presentation is
-  AudioTargetCarousel/AudioTargetCard. The vertical mixer renders through
-  AudioWheel (one stable delegate per app, wrapped offsets, no model
-  repetition); AudioPanel provides the translucent section surface and
-  AudioNowPlaying is the Sound-specific player card. AudioDeviceOptions owns
-  reusable option content and anchored presentation; AudioControls composes
-  them with a knob.
+  AudioOutputSelector and AudioInputSelector over the shared
+  AudioTargetList/AudioListItem Material 3 list presentation. AudioPanel
+  provides the tonal section surface and AudioNowPlaying is the Sound-specific
+  player card. AudioDeviceOptions owns reusable option content and anchored
+  presentation; AudioControls composes them with a knob.
 - `components/primitives/controls/VolumeKnob.qml` is a backend-free controlled
   primitive; `core/interaction/AngularKnobController.qml` and AngularKnobMath
   implement absolute 270-degree mapping, deadzone, hysteresis and rearming.

@@ -17,6 +17,19 @@ TestCase {
         property real skewAngle: -8
         property color errorColor: "#B00020"
         property color accentColor: "white"
+        property color m3Surface: "#130c0c"
+        property color m3SurfaceLow: "#191111"
+        property color m3SurfaceContainer: "#201717"
+        property color m3SurfaceHigh: "#271d1d"
+        property color m3SurfaceHighest: "#2e2323"
+        property color m3OnSurface: "#f7e7e6"
+        property color m3OnSurfaceVariant: "#b6a8a7"
+        property color m3OutlineVariant: "#504645"
+        property color m3Primary: "#fd9c97"
+        property color m3OnPrimary: "#5f1f1e"
+        property color m3SecondaryContainer: "#6b3836"
+        property color m3OnSecondaryContainer: "#ffc1bd"
+        function m3Alpha(color, alpha) { return Qt.rgba(color.r, color.g, color.b, alpha) }
         function surfaceColor(role, opacity) { return "black" }
         function onSurfaceColor(role) { return "white" }
         function borderColor(role) { return "gray" }

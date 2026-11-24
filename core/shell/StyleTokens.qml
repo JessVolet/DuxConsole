@@ -47,29 +47,50 @@ Item {
         return themeMode === "light" || (themeMode === "hybrid" && role === "chrome")
     }
 
+    // Existing components keep their role names; the colors now come from the
+    // host Material 3 roles so the plugin follows the dynamic theme.
     function surfaceColor(role, opacityMultiplier) {
         const alpha = role === "card"
             ? Math.max(0.55, Math.min(1.0, cardOpacity * (opacityMultiplier ?? 1.0)))
             : 1.0
-        return _isLightRole(role) ? Qt.rgba(0.95, 0.96, 0.97, alpha) : Qt.rgba(0.08, 0.09, 0.11, alpha)
+        return m3Alpha(role === "chrome" ? m3SurfaceContainer : m3SurfaceHigh, alpha)
     }
 
     function disabledSurfaceColor(role) {
-        return _isLightRole(role) ? Qt.rgba(0.85, 0.86, 0.90, 1.0) : Qt.rgba(0.11, 0.13, 0.17, 1.0)
+        return m3Alpha(m3SurfaceContainer, 0.7)
     }
 
     function onSurfaceColor(role) {
-        return _isLightRole(role) ? "#14161D" : "#F2F4F8"
+        return m3OnSurface
     }
 
     function disabledOnSurfaceColor(role) {
-        return _isLightRole(role) ? "#6B7280" : "#64748B"
+        return m3OnSurfaceVariant
     }
 
     readonly property color errorColor: Theme.error ?? "#B00020"
 
+    // Material 3 roles. The plugin runs inside DMS, so the tonal surfaces come
+    // from the host theme (Matugen) instead of a second palette.
+    readonly property color m3Surface: Theme.surface ?? Theme.surfaceContainer
+    readonly property color m3SurfaceLow: Theme.surfaceContainerLow ?? Theme.surfaceContainer
+    readonly property color m3SurfaceContainer: Theme.surfaceContainer
+    readonly property color m3SurfaceHigh: Theme.surfaceContainerHigh ?? Theme.surfaceContainer
+    readonly property color m3SurfaceHighest: Theme.surfaceContainerHighest ?? Theme.surfaceContainerHigh
+    readonly property color m3OnSurface: Theme.onSurface ?? Theme.surfaceText
+    readonly property color m3OnSurfaceVariant: Theme.onSurfaceVariant ?? Theme.surfaceVariantText
+    readonly property color m3OutlineVariant: Theme.outlineVariant ?? Theme.outline
+    readonly property color m3Primary: Theme.primary
+    readonly property color m3OnPrimary: Theme.onPrimary ?? Theme.surfaceText
+    readonly property color m3SecondaryContainer: Theme.secondaryContainer ?? Theme.primaryContainer
+    readonly property color m3OnSecondaryContainer: Theme.onSecondaryContainer ?? Theme.onPrimaryContainer
+
+    function m3Alpha(color, alpha) {
+        return Qt.rgba(color.r, color.g, color.b, Math.max(0, Math.min(1, alpha ?? 1)))
+    }
+
     function borderColor(role) {
-        return _isLightRole(role) ? Qt.rgba(0, 0, 0, 0.14) : Qt.rgba(1, 1, 1, 0.14)
+        return m3Alpha(m3OutlineVariant, 0.6)
     }
 
     function scrimColor(alphaMultiplier) {

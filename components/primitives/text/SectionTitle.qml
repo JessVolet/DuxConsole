@@ -49,6 +49,9 @@ Column {
         text: section.subtitle
         wrapMode: Text.Wrap
         font.pixelSize: Theme.fontSizeSmall
-        color: Theme.surfaceVariantText ?? "#9CA3AF"
+        color: section.styleTokens?.m3OnSurfaceVariant
+               ?? Theme.onSurfaceVariant
+               ?? Theme.surfaceVariantText
+               ?? "#9CA3AF"
     }
 }

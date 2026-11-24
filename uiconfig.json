@@ -36,7 +36,7 @@
     "mode": "hybrid",
     "accentSource": "primary",
     "customAccent": "#A855F7",
-    "skewAngle": -8,
+    "skewAngle": 0,
     "blurEnabled": true,
     "scrimOpacity": 0.58,
     "cardOpacity": 0.86,

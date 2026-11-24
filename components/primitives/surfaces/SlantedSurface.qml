@@ -23,7 +23,7 @@ Item {
     property real contentPadding: 0
     property int borderWidth: !disabled && focused
         ? focusedBorderWidth
-        : (!disabled && selected ? selectedBorderWidth : 1)
+        : (!disabled && selected ? selectedBorderWidth : 0)
     property alias backdrop: backdropContainer.data
     default property alias content: contentContainer.data
 

@@ -16,6 +16,12 @@ AbstractButton {
     property bool highlighted: false
     property bool primary: false
     readonly property string role: primary ? "chrome" : "card"
+    readonly property color containerColor: styleTokens
+        ? (primary ? styleTokens.m3SecondaryContainer : styleTokens.m3SurfaceContainer)
+        : (primary ? Theme.secondaryContainer : Theme.surfaceContainer)
+    readonly property color onContainerColor: styleTokens
+        ? (primary ? styleTokens.m3OnSecondaryContainer : styleTokens.m3OnSurface)
+        : (primary ? Theme.onSecondaryContainer : Theme.onSurface)
 
     implicitHeight: Math.max(36, labels.implicitHeight + Theme.spacingS * 2)
     implicitWidth: labels.implicitWidth + Theme.spacingM * 2
@@ -26,9 +32,9 @@ AbstractButton {
 
     background: Rectangle {
         radius: height / 2
-        color: pill.styleTokens?.surfaceColor(pill.role) ?? Theme.surfaceContainerHigh
-        border.color: pill.styleTokens?.accentColor ?? Theme.primary
-        border.width: pill.highlighted || pill.hovered ? 2 : 0
+        color: pill.containerColor
+        border.color: pill.styleTokens?.m3Primary ?? Theme.primary
+        border.width: pill.highlighted ? 2 : 0
     }
 
     contentItem: Item {
@@ -58,7 +64,7 @@ AbstractButton {
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     colorization: 1.0
-                    colorizationColor: pill.styleTokens?.onSurfaceColor(pill.role) ?? (Theme.surfaceText ?? "#F2F4F8")
+                    colorizationColor: pill.onContainerColor
                 }
             }
 
@@ -67,7 +73,7 @@ AbstractButton {
                 anchors.verticalCenter: labels.verticalCenter
                 text: pill.text
                 font.pixelSize: Theme.fontSizeMedium
-                color: pill.styleTokens?.onSurfaceColor(pill.role) ?? Theme.surfaceText
+                color: pill.onContainerColor
             }
         }
     }

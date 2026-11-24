@@ -194,6 +194,35 @@ TestCase {
         winModal.targetWindowId = 10
     }
 
+    function test_windowOptionsScrollsLongWorkspaceList() {
+        const many = []
+        for (let i = 1; i <= 30; ++i)
+            many.push({ id: i, idx: i, name: "WS" + i, output: "DP-1" })
+        fakeWindowManager.workspaces = many
+        layers.push("modal")
+        verify(winModal.transformActive)
+        wait(160)
+        const panel = findChild(winModal, "window-actions-panel")
+        verify(panel)
+        panel._switchView("workspaces")
+        wait(80)
+        const viewport = findChild(panel, "window-actions-viewport")
+        verify(viewport)
+        verify(panel.availableHeight > 0)
+        verify(panel.implicitHeight <= panel.availableHeight + 1)
+        verify(viewport.contentHeight > viewport.height)
+        const last = findChild(panel, "win-ws-29")
+        verify(last)
+        verify(last.requestZoneFocus())
+        wait(40)
+        const pos = last.mapToItem(viewport.contentItem, 0, 0)
+        verify(pos.y >= viewport.contentY - 1)
+        verify(pos.y + last.height <= viewport.contentY + viewport.height + 1)
+        layers.pop()
+        tryVerify(() => !winModal.transformActive)
+        fakeWindowManager.workspaces = [{ id: 1, idx: 1, name: "Main", output: "DP-1" }]
+    }
+
     function test_mediaCardMorphUpLeftKeepsMiniMountedAndRestoresFocus() {
         compare(layers.activeZone, miniMedia.focusZone)
         layers.push("media-player")

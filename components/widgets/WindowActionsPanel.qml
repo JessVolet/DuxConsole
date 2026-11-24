@@ -19,6 +19,8 @@ Column {
     property int targetWindowId: -1
     property bool open: false
     property bool contentReady: false
+    // Available content height inside the modal surface; 0 means unbounded.
+    property real availableHeight: 0
 
     property int lockedWindowId: -1
     property string viewMode: "main"
@@ -26,6 +28,22 @@ Column {
 
     readonly property var targetWindow: windowManager ? windowManager.windowById(lockedWindowId) : null
     readonly property bool interactive: open && contentReady
+    readonly property FocusZone activeZone: layerManager ? layerManager.activeZone : null
+
+    function _revealActive() {
+        const zone = activeZone
+        if (!zone || zone.layerName !== panel.layerName || viewport.height <= 0)
+            return
+        const pos = zone.mapToItem(contentItem, 0, 0)
+        const margin = Theme.spacingS
+        if (pos.y < viewport.contentY)
+            viewport.contentY = Math.max(0, pos.y - margin)
+        else if (pos.y + zone.height > viewport.contentY + viewport.height)
+            viewport.contentY = Math.min(Math.max(0, viewport.contentHeight - viewport.height),
+                pos.y + zone.height - viewport.height + margin)
+    }
+
+    onActiveZoneChanged: _revealActive()
 
     function tr(key, fallback) {
         return i18n ? i18n.t(key, fallback) : fallback
@@ -57,6 +75,7 @@ Column {
     spacing: Theme.spacingM
 
     SectionTitle {
+        id: title
         width: panel.width
         styleTokens: panel.styleTokens
         title: panel.targetWindow
@@ -68,259 +87,284 @@ Column {
     }
 
     StatusMessage {
+        id: status
         visible: panel.statusMessage !== ""
         width: panel.width
         text: panel.statusMessage
         styleTokens: panel.styleTokens
     }
 
-    // Vista principal
-    Column {
+    Flickable {
+        id: viewport
+        objectName: "window-actions-viewport"
         width: panel.width
-        spacing: Theme.spacingS
-        visible: panel.open && panel.targetWindow !== null && panel.viewMode === "main"
+        height: Math.max(0, Math.min(contentItem.implicitHeight,
+            panel.availableHeight > 0
+                ? panel.availableHeight - title.implicitHeight
+                  - (status.visible ? status.implicitHeight + panel.spacing : 0)
+                  - panel.spacing
+                : contentItem.implicitHeight))
+        contentWidth: width
+        contentHeight: contentItem.implicitHeight
+        clip: true
+        interactive: false
+        boundsBehavior: Flickable.StopAtBounds
+        onHeightChanged: panel._revealActive()
 
-        FocusZone {
-            id: actMonitor
-            zoneId: "win-act-monitor"
-            layerName: panel.layerName
-            layerManager: panel.layerManager
-            navigationManager: panel.navigationManager
-            visible: parent.visible
-            enabled: panel.interactive && visible
-            defaultFocus: true
-            width: panel.width
-            height: 48
-            ringRadius: Theme.cornerRadius
-            actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
-            onActivated: panel._switchView("monitors")
-
-            ActionButton {
-                anchors.fill: parent
-                focused: actMonitor.active
-                enabled: actMonitor.enabled
-                styleTokens: panel.styleTokens
-                motionTokens: panel.motionTokens
-                label: panel.tr("windows.action_move_monitor", "Move to monitor")
-            }
-
-            TapHandler {
-                enabled: actMonitor.enabled
-                onTapped: {
-                    if (actMonitor.requestZoneFocus())
-                        actMonitor.activate()
-                }
-            }
-        }
-
-        FocusZone {
-            id: actWorkspace
-            zoneId: "win-act-workspace"
-            layerName: panel.layerName
-            layerManager: panel.layerManager
-            navigationManager: panel.navigationManager
-            visible: parent.visible
-            enabled: panel.interactive && visible
-            width: panel.width
-            height: 48
-            ringRadius: Theme.cornerRadius
-            actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
-            onActivated: panel._switchView("workspaces")
-
-            ActionButton {
-                anchors.fill: parent
-                focused: actWorkspace.active
-                enabled: actWorkspace.enabled
-                styleTokens: panel.styleTokens
-                motionTokens: panel.motionTokens
-                label: panel.tr("windows.action_move_workspace", "Move to workspace")
-            }
-
-            TapHandler {
-                enabled: actWorkspace.enabled
-                onTapped: {
-                    if (actWorkspace.requestZoneFocus())
-                        actWorkspace.activate()
-                }
-            }
-        }
-
-        FocusZone {
-            id: actFullscreen
-            zoneId: "win-act-fullscreen"
-            layerName: panel.layerName
-            layerManager: panel.layerManager
-            navigationManager: panel.navigationManager
-            visible: parent.visible
-            enabled: panel.interactive && visible
-            width: panel.width
-            height: 48
-            ringRadius: Theme.cornerRadius
-            actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
-            onActivated: {
-                panel.windowManager?.toggleFullscreen(panel.lockedWindowId, (ok, err) => {
-                    if (ok) panel.layerManager?.pop()
-                    else panel.statusMessage = panel.errorText(String(err))
-                })
-            }
-
-            ActionButton {
-                anchors.fill: parent
-                focused: actFullscreen.active
-                enabled: actFullscreen.enabled
-                styleTokens: panel.styleTokens
-                motionTokens: panel.motionTokens
-                label: panel.targetWindow?.isFullscreen
-                       ? panel.tr("windows.action_exit_fullscreen", "Exit fullscreen")
-                       : panel.tr("windows.action_enter_fullscreen", "Enter fullscreen")
-            }
-
-            TapHandler {
-                enabled: actFullscreen.enabled
-                onTapped: {
-                    if (actFullscreen.requestZoneFocus())
-                        actFullscreen.activate()
-                }
-            }
-        }
-
-        FocusZone {
-            id: actClose
-            zoneId: "win-act-close"
-            layerName: panel.layerName
-            layerManager: panel.layerManager
-            navigationManager: panel.navigationManager
-            visible: parent.visible
-            enabled: panel.interactive && visible
-            width: panel.width
-            height: 48
-            ringRadius: Theme.cornerRadius
-            actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
-            onActivated: {
-                panel.windowManager?.closeWindow(panel.lockedWindowId, (ok, err) => {
-                    if (ok) panel.layerManager?.pop()
-                    else panel.statusMessage = panel.errorText(String(err))
-                })
-            }
-
-            ActionButton {
-                anchors.fill: parent
-                focused: actClose.active
-                enabled: actClose.enabled
-                styleTokens: panel.styleTokens
-                motionTokens: panel.motionTokens
-                label: panel.tr("windows.action_close", "Close window")
-            }
-
-            TapHandler {
-                enabled: actClose.enabled
-                onTapped: {
-                    if (actClose.requestZoneFocus())
-                        actClose.activate()
-                }
-            }
-        }
-    }
-
-    // Subvista: Mover a monitor
-    Column {
-        width: panel.width
-        spacing: Theme.spacingS
-        visible: panel.open && panel.targetWindow !== null && panel.viewMode === "monitors"
-
-        Repeater {
-            model: panel.windowManager ? panel.windowManager.outputs : []
-            delegate: FocusZone {
-                id: outZone
-                required property int index
-                required property var modelData
-                readonly property bool isCurrent: panel.targetWindow?.output === modelData.name
-
-                zoneId: "win-out-" + index
-                layerName: panel.layerName
-                layerManager: panel.layerManager
-                navigationManager: panel.navigationManager
-                visible: panel.open && panel.viewMode === "monitors"
-                enabled: panel.interactive && visible
-                defaultFocus: index === 0
+        Column {
+            id: contentItem
+            width: viewport.width
+            spacing: Theme.spacingS
+            // Vista principal
+            Column {
                 width: panel.width
-                height: 44
-                ringRadius: Theme.cornerRadius
-                onActivated: {
-                    panel.windowManager?.moveWindowToMonitor(panel.lockedWindowId, modelData.name, (ok, err) => {
-                        if (ok) panel.layerManager?.pop()
-                        else panel.statusMessage = panel.errorText(String(err))
-                    })
+                spacing: Theme.spacingS
+                visible: panel.open && panel.targetWindow !== null && panel.viewMode === "main"
+
+                FocusZone {
+                    id: actMonitor
+                    zoneId: "win-act-monitor"
+                    layerName: panel.layerName
+                    layerManager: panel.layerManager
+                    navigationManager: panel.navigationManager
+                    visible: parent.visible
+                    enabled: panel.interactive && visible
+                    defaultFocus: true
+                    width: panel.width
+                    height: 48
+                    ringRadius: Theme.cornerRadius
+                    actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
+                    onActivated: panel._switchView("monitors")
+
+                    ActionButton {
+                        anchors.fill: parent
+                        focused: actMonitor.active
+                        enabled: actMonitor.enabled
+                        styleTokens: panel.styleTokens
+                        motionTokens: panel.motionTokens
+                        label: panel.tr("windows.action_move_monitor", "Move to monitor")
+                    }
+
+                    TapHandler {
+                        enabled: actMonitor.enabled
+                        onTapped: {
+                            if (actMonitor.requestZoneFocus())
+                                actMonitor.activate()
+                        }
+                    }
                 }
 
-                ActionButton {
-                    anchors.fill: parent
-                    focused: outZone.active
-                    enabled: outZone.enabled
-                    styleTokens: panel.styleTokens
-                    motionTokens: panel.motionTokens
-                    label: outZone.modelData.name + (outZone.isCurrent ? " (" + panel.tr("windows.current", "current") + ")" : "")
+                FocusZone {
+                    id: actWorkspace
+                    zoneId: "win-act-workspace"
+                    layerName: panel.layerName
+                    layerManager: panel.layerManager
+                    navigationManager: panel.navigationManager
+                    visible: parent.visible
+                    enabled: panel.interactive && visible
+                    width: panel.width
+                    height: 48
+                    ringRadius: Theme.cornerRadius
+                    actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
+                    onActivated: panel._switchView("workspaces")
+
+                    ActionButton {
+                        anchors.fill: parent
+                        focused: actWorkspace.active
+                        enabled: actWorkspace.enabled
+                        styleTokens: panel.styleTokens
+                        motionTokens: panel.motionTokens
+                        label: panel.tr("windows.action_move_workspace", "Move to workspace")
+                    }
+
+                    TapHandler {
+                        enabled: actWorkspace.enabled
+                        onTapped: {
+                            if (actWorkspace.requestZoneFocus())
+                                actWorkspace.activate()
+                        }
+                    }
                 }
 
-                TapHandler {
-                    enabled: outZone.enabled
-                    onTapped: {
-                        if (outZone.requestZoneFocus())
-                            outZone.activate()
+                FocusZone {
+                    id: actFullscreen
+                    zoneId: "win-act-fullscreen"
+                    layerName: panel.layerName
+                    layerManager: panel.layerManager
+                    navigationManager: panel.navigationManager
+                    visible: parent.visible
+                    enabled: panel.interactive && visible
+                    width: panel.width
+                    height: 48
+                    ringRadius: Theme.cornerRadius
+                    actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
+                    onActivated: {
+                        panel.windowManager?.toggleFullscreen(panel.lockedWindowId, (ok, err) => {
+                            if (ok) panel.layerManager?.pop()
+                            else panel.statusMessage = panel.errorText(String(err))
+                        })
+                    }
+
+                    ActionButton {
+                        anchors.fill: parent
+                        focused: actFullscreen.active
+                        enabled: actFullscreen.enabled
+                        styleTokens: panel.styleTokens
+                        motionTokens: panel.motionTokens
+                        label: panel.targetWindow?.isFullscreen
+                               ? panel.tr("windows.action_exit_fullscreen", "Exit fullscreen")
+                               : panel.tr("windows.action_enter_fullscreen", "Enter fullscreen")
+                    }
+
+                    TapHandler {
+                        enabled: actFullscreen.enabled
+                        onTapped: {
+                            if (actFullscreen.requestZoneFocus())
+                                actFullscreen.activate()
+                        }
+                    }
+                }
+
+                FocusZone {
+                    id: actClose
+                    zoneId: "win-act-close"
+                    layerName: panel.layerName
+                    layerManager: panel.layerManager
+                    navigationManager: panel.navigationManager
+                    visible: parent.visible
+                    enabled: panel.interactive && visible
+                    width: panel.width
+                    height: 48
+                    ringRadius: Theme.cornerRadius
+                    actionHints: [{ action: "I.Accept", labelKey: "hints.accept", fallback: "Accept" }]
+                    onActivated: {
+                        panel.windowManager?.closeWindow(panel.lockedWindowId, (ok, err) => {
+                            if (ok) panel.layerManager?.pop()
+                            else panel.statusMessage = panel.errorText(String(err))
+                        })
+                    }
+
+                    ActionButton {
+                        anchors.fill: parent
+                        focused: actClose.active
+                        enabled: actClose.enabled
+                        styleTokens: panel.styleTokens
+                        motionTokens: panel.motionTokens
+                        label: panel.tr("windows.action_close", "Close window")
+                    }
+
+                    TapHandler {
+                        enabled: actClose.enabled
+                        onTapped: {
+                            if (actClose.requestZoneFocus())
+                                actClose.activate()
+                        }
                     }
                 }
             }
-        }
-    }
 
-    // Subvista: Mover a workspace
-    Column {
-        width: panel.width
-        spacing: Theme.spacingS
-        visible: panel.open && panel.targetWindow !== null && panel.viewMode === "workspaces"
-
-        Repeater {
-            model: panel.windowManager ? panel.windowManager.workspaces : []
-            delegate: FocusZone {
-                id: wsZone
-                required property int index
-                required property var modelData
-                readonly property bool isCurrent: panel.targetWindow?.workspaceId === modelData.id
-
-                zoneId: "win-ws-" + index
-                layerName: panel.layerName
-                layerManager: panel.layerManager
-                navigationManager: panel.navigationManager
-                visible: panel.open && panel.viewMode === "workspaces"
-                enabled: panel.interactive && visible
-                defaultFocus: index === 0
+            // Subvista: Mover a monitor
+            Column {
                 width: panel.width
-                height: 44
-                ringRadius: Theme.cornerRadius
-                onActivated: {
-                    panel.windowManager?.moveWindowToWorkspace(panel.lockedWindowId, modelData.id, (ok, err) => {
-                        if (ok) panel.layerManager?.pop()
-                        else panel.statusMessage = panel.errorText(String(err))
-                    })
-                }
+                spacing: Theme.spacingS
+                visible: panel.open && panel.targetWindow !== null && panel.viewMode === "monitors"
 
-                ActionButton {
-                    anchors.fill: parent
-                    focused: wsZone.active
-                    enabled: wsZone.enabled
-                    styleTokens: panel.styleTokens
-                    motionTokens: panel.motionTokens
-                    label: panel.tr("windows.workspace_prefix", "Workspace") + " " + wsZone.modelData.idx
-                           + (wsZone.modelData.name ? " · " + wsZone.modelData.name : "")
-                           + (wsZone.modelData.output ? " [" + wsZone.modelData.output + "]" : "")
-                           + (wsZone.isCurrent ? " (" + panel.tr("windows.current", "current") + ")" : "")
-                }
+                Repeater {
+                    model: panel.windowManager ? panel.windowManager.outputs : []
+                    delegate: FocusZone {
+                        id: outZone
+                        required property int index
+                        required property var modelData
+                        readonly property bool isCurrent: panel.targetWindow?.output === modelData.name
 
-                TapHandler {
-                    enabled: wsZone.enabled
-                    onTapped: {
-                        if (wsZone.requestZoneFocus())
-                            wsZone.activate()
+                        zoneId: "win-out-" + index
+                        layerName: panel.layerName
+                        layerManager: panel.layerManager
+                        navigationManager: panel.navigationManager
+                        visible: panel.open && panel.viewMode === "monitors"
+                        enabled: panel.interactive && visible
+                        defaultFocus: index === 0
+                        width: panel.width
+                        height: 44
+                        ringRadius: Theme.cornerRadius
+                        onActivated: {
+                            panel.windowManager?.moveWindowToMonitor(panel.lockedWindowId, modelData.name, (ok, err) => {
+                                if (ok) panel.layerManager?.pop()
+                                else panel.statusMessage = panel.errorText(String(err))
+                            })
+                        }
+
+                        ActionButton {
+                            anchors.fill: parent
+                            focused: outZone.active
+                            enabled: outZone.enabled
+                            styleTokens: panel.styleTokens
+                            motionTokens: panel.motionTokens
+                            label: outZone.modelData.name + (outZone.isCurrent ? " (" + panel.tr("windows.current", "current") + ")" : "")
+                        }
+
+                        TapHandler {
+                            enabled: outZone.enabled
+                            onTapped: {
+                                if (outZone.requestZoneFocus())
+                                    outZone.activate()
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Subvista: Mover a workspace
+            Column {
+                width: panel.width
+                spacing: Theme.spacingS
+                visible: panel.open && panel.targetWindow !== null && panel.viewMode === "workspaces"
+
+                Repeater {
+                    model: panel.windowManager ? panel.windowManager.workspaces : []
+                    delegate: FocusZone {
+                        id: wsZone
+                        required property int index
+                        required property var modelData
+                        readonly property bool isCurrent: panel.targetWindow?.workspaceId === modelData.id
+
+                        zoneId: "win-ws-" + index
+                        objectName: "win-ws-" + index
+                        layerName: panel.layerName
+                        layerManager: panel.layerManager
+                        navigationManager: panel.navigationManager
+                        visible: panel.open && panel.viewMode === "workspaces"
+                        enabled: panel.interactive && visible
+                        defaultFocus: index === 0
+                        width: panel.width
+                        height: 44
+                        ringRadius: Theme.cornerRadius
+                        onActivated: {
+                            panel.windowManager?.moveWindowToWorkspace(panel.lockedWindowId, modelData.id, (ok, err) => {
+                                if (ok) panel.layerManager?.pop()
+                                else panel.statusMessage = panel.errorText(String(err))
+                            })
+                        }
+
+                        ActionButton {
+                            anchors.fill: parent
+                            focused: wsZone.active
+                            enabled: wsZone.enabled
+                            styleTokens: panel.styleTokens
+                            motionTokens: panel.motionTokens
+                            label: panel.tr("windows.workspace_prefix", "Workspace") + " " + wsZone.modelData.idx
+                                   + (wsZone.modelData.name ? " · " + wsZone.modelData.name : "")
+                                   + (wsZone.modelData.output ? " [" + wsZone.modelData.output + "]" : "")
+                                   + (wsZone.isCurrent ? " (" + panel.tr("windows.current", "current") + ")" : "")
+                        }
+
+                        TapHandler {
+                            enabled: wsZone.enabled
+                            onTapped: {
+                                if (wsZone.requestZoneFocus())
+                                    wsZone.activate()
+                            }
+                        }
                     }
                 }
             }

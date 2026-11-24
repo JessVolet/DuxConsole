@@ -22,6 +22,7 @@ Item {
     readonly property bool isOpen: layerManager ? layerManager.isLayerActive(layerName) : false
     readonly property bool transformActive: isOpen || transition.progress > 0
     readonly property real targetWidth: Math.min(Math.max(240, modal.width - 48), 440)
+    readonly property real maxSurfaceHeight: Math.max(160, modal.height - 48)
     readonly property real targetContentWidth: Math.max(120, targetWidth - transition.contentPadding * 2 - 48)
 
     function ensureOptionsFocus() {
@@ -61,7 +62,8 @@ Item {
         shape: "slanted"
         expandedSize: Qt.size(
             modal.targetWidth,
-            Math.min(Math.max(160, modal.height - 48), Math.max(180, actionsPanel.implicitHeight + transition.contentPadding * 2 + 16))
+            Math.min(modal.maxSurfaceHeight,
+                Math.max(180, actionsPanel.implicitHeight + transition.contentPadding * 2 + 16))
         )
         originContentSize: Qt.size(
             modal.sourceItem ? modal.sourceItem.width : 44,
@@ -79,6 +81,7 @@ Item {
 
         WindowActionsPanel {
             id: actionsPanel
+            objectName: "window-actions-panel"
             width: modal.targetContentWidth
             opacity: transition.contentOpacity
             windowManager: modal.windowManager
@@ -91,6 +94,7 @@ Item {
             targetWindowId: modal.targetWindowId
             open: modal.isOpen
             contentReady: transition.contentReady
+            availableHeight: Math.max(0, modal.maxSurfaceHeight - transition.contentPadding * 2)
         }
     }
 }
